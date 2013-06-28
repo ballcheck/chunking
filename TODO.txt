@@ -1,0 +1,7 @@
+backup project
+get project into repo
+get tests running without rails, just including Test::Unit
+write tests for Chunking::Image
+
+write functional tests (using actial Chunking::Image)
+arrange tests to they can be run with various Detector variables e.g. axis
