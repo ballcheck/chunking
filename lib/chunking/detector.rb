@@ -39,15 +39,12 @@ module Chunking
       is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
     end
 
-etetet
     def detect_boundary( img, start_index = 0, invert_direction = false )
       # default direction is left to right, top to bottom.
       img = img.invert( axis ) if invert_direction
       
-      # TODO: untested
       run = Detector::Run.new( self, img, start_index )
 
-# TODO: test run.state is updated?
       lines = img.size( axis ) - start_index.to_i
       lines.times do |line|
         index = start_index + line
