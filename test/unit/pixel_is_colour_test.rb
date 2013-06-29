@@ -1,4 +1,3 @@
-require "test_helper"
 require File.expand_path( "../../../lib/chunking/image/base.rb", __FILE__ )
 
 # TODO: all these nils seem suspicious.

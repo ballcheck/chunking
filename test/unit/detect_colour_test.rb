@@ -1,5 +1,3 @@
-require "test_helper"
-
 class DetectColourTest < ActiveSupport::TestCase
   
   def test_should_detect_colour_if_pixel_is_colour

@@ -1,5 +1,3 @@
-require "test_helper"
-
 class DetectorTest < ActiveSupport::TestCase
 
   # ---------------
