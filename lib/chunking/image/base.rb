@@ -22,6 +22,7 @@ module Chunking
 
       # template pattern style method declarations
       # TODO: enforce these methods are implemented in the child class
+      # preferably called with the same arguments
       def self.compare_colours( *args )
         raise NotImplementedError
       end
@@ -30,7 +31,11 @@ module Chunking
         raise NotImplementedError
       end
         
-      def pixel_colour( *args )
+      def get_pixel_colour( *args )
+        raise NotImplementedError
+      end
+
+      def set_pixel_colour( *args )
         raise NotImplementedError
       end
 

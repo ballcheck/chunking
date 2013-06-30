@@ -26,11 +26,15 @@ module Image
       end
     end
 
-    def pixel_colour( x, y )
+    def get_pixel_colour( x, y )
       # TODO: must be a method to do this
       p = base_image.pixel_color( x, y )
       [ p.red, p.green, p.blue, p.opacity ]
     end
 
+    def set_pixel_colour( x, y, rgba )
+      p = base_image.pixel_color( x, y, rgba )
+      [ p.red, p.green, p.blue, p.opacity ]
+    end
   end
 end
