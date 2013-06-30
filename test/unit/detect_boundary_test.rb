@@ -84,7 +84,6 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     build_run( detector, img ).expects( :state_changed? ).times( row_count ).returns( false )
     detector.detect_boundary( img )
   end
-    
 
   def test_should_stop_checking_when_detected
     detector = build_detector
@@ -105,12 +104,14 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     assert !detector.detect_boundary( img, starting_index )
   end
 
+  # TODO: these tests (if/if not) could be combined
   def test_should_detect_if_tolerance_reached
     detector = build_detector
     detector.stubs( :detect_colour? )
     img = build_image
     build_run( detector, img ).expects( :tolerance_reached? ).once.with( detector.tolerance ).returns( true )
-    assert detector.detect_boundary( img )
+    assert result = detector.detect_boundary( img )
+    assert_equal Chunking::Detector::Run, result.class
   end
     
   def test_should_not_detect_if_tolerance_not_reached

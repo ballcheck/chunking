@@ -40,11 +40,10 @@ module Chunking
 
     # end of untested
 
-    # TODO: annotate. could store resulting boundary index in Run and runs.
+    # TODO: annotate.
     def detect_boundary( img, start_index = 0, invert_direction = false )
       # default direction is left to right, top to bottom.
       img = img.invert( axis ) if invert_direction
-      
       run = Detector::Run.new( self, img, start_index )
 
       lines = img.size( axis ) - start_index.to_i
@@ -52,7 +51,10 @@ module Chunking
         index = start_index + line
         run.state = detect_colour?( img, index )
         run.increment_tolerance_counter if run.state_changed?
-        return Boundary.new( index ) if run.tolerance_reached?( tolerance )
+        if run.tolerance_reached?( tolerance )
+          run.boundary = Boundary.new( index )
+          return run
+        end
       end
 
       # we've run out of image
