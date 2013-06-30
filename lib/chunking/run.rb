@@ -27,7 +27,6 @@ module Chunking
       
       # untested
       def annotate( image = self.image )
-
       end
 
       private
