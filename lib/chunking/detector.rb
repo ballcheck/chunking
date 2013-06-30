@@ -26,7 +26,6 @@ module Chunking
       pixel_count >= density ? true : false
     end
 
-    # TODO: untested 
     def determine_offset( img )
       is_percent_string?( offset ) ? apply_percent_string( img.size( axis ), offset ) : offset
     end
@@ -39,6 +38,9 @@ module Chunking
       is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
     end
 
+    # end of untested
+
+    # TODO: annotate. could store resulting boundary index in Run and runs.
     def detect_boundary( img, start_index = 0, invert_direction = false )
       # default direction is left to right, top to bottom.
       img = img.invert( axis ) if invert_direction
@@ -50,17 +52,26 @@ module Chunking
         index = start_index + line
         run.state = detect_colour?( img, index )
         run.increment_tolerance_counter if run.state_changed?
-        return index if run.tolerance_reached?( tolerance )
+        return Boundary.new( index ) if run.tolerance_reached?( tolerance )
       end
 
-      return false
+      # we've run out of image
+      return nil
     end
 
-    # TODO: percent size for density
+    def detect_nth_boundary( img, n, start_index = 0, invert_direction = false )
+      index = start_index
+      n.times do
+        index = detect_boundary( img, index, invert_direction )
+        return nil unless index
+      end
+
+      return index
+    end
+
     def detect_colour?( img, line_index = nil )
       line_index ||= 0
       pixel_count = 0
-      # TODO: these 2 calls untested
       offset = determine_offset( img )
       size = determine_size( img )
 
@@ -69,7 +80,6 @@ module Chunking
         y = axis == :y ? ind + offset : line_index
         
         if img.pixel_is_colour?( img, x, y, rgb, fuzz )
-          # TODO: call with img untested
           if density_reached?( pixel_count += 1, img )
             return true
           end
@@ -78,26 +88,40 @@ module Chunking
       return false
     end
     
-    def self.detect_colour?( img, index = nil, *args )
-      self.new( *args ).detect_colour?( img, index )
-    end
-
     alias detect_color? detect_colour?
 
-    class << self
-      alias detect_color? detect_colour?
+
+
+
+
+
+
+
+
+
+    # TODO: instance versions of class methods not tested
+    def is_percent_string?( *args )
+      self.class.is_percent_string?( *args )
     end
-      
     
-    private
-
-    # TODO: untested
-    def is_percent_string?( string )
-      string.is_a?( String ) && string.match(/(^[\d.]+)%$/)
+    def apply_percent_string?( *args )
+      self.class.apply_percent_string?( *args )
     end
 
-    def apply_percent_string( number, string )
-      number * ( string.to_i / 100 )
+    class << self
+      def detect_colour?( img, index = nil, *args )
+        self.new( *args ).detect_colour?( img, index )
+      end
+
+      alias detect_color? detect_colour?
+    
+      def is_percent_string?( string )
+        string.is_a?( String ) && !!string.match(/(^[\d\.]+)%$/)
+      end
+
+      def apply_percent_string( number, string )
+        number * ( string.to_f / 100 )
+      end
     end
   end
 end

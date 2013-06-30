@@ -23,12 +23,48 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector.detect_boundary( img, start_index )
   end
 
+  def test_should_return_nil_if_we_run_out_of_image
+    detector = build_detector
+    img = build_image( 0 )
+    Chunking::Detector::Run.stubs( :new )
+    assert_equal nil, detector.detect_boundary( img )
+  end
+
+  # works the same if starting on a colour and moving off.
+  def test_should_change_state_on_detect_colour
+    detector = build_detector
+    detector.stubs( :detect_colour? )
+    img = build_image
+    run = build_run( detector, img )
+    state = mock( "state" )
+    detector.expects( :detect_colour? ).once.returns( state )
+    assert_not_equal state, run.state
+    detector.detect_boundary( img )
+    assert_equal state, run.state
+  end
+    
+  def test_should_increment_runs_tolerance_counter_when_state_changes
+    detector = build_detector
+    detector.stubs( :detect_colour? )
+    img = build_image( 2 )
+    run = build_run( detector, img )
+    # fails first time
+    run.expects( :state_changed? ).once.returns( false )
+    run.expects( :increment_tolerance_counter ).never
+    # succeeds seconds time
+    run.expects( :state_changed? ).once.returns( true )
+    run.expects( :increment_tolerance_counter ).once
+    detector.detect_boundary( img )
+  end
+
+=begin
   def test_should_detect_if_state_changed
     detector = build_detector
     detector.stubs( :detect_colour? )
     img = build_image
     build_run( detector, img ).expects( :state_changed? ).once.returns( true )
-    assert detector.detect_boundary( img )
+    result = detector.detect_boundary( img )
+    assert_equal Chunking::Boundary, result.class
   end
 
   def test_should_not_detect_if_state_not_changed
@@ -38,6 +74,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     build_run( detector, img ).expects( :state_changed? ).once.returns( false )
     assert !detector.detect_boundary( img )
   end
+=end
 
   def test_should_check_all_rows
     detector = build_detector
@@ -48,6 +85,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector.detect_boundary( img )
   end
     
+
   def test_should_stop_checking_when_detected
     detector = build_detector
     detector.stubs( :detect_colour? )

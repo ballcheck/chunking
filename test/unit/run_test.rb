@@ -24,6 +24,15 @@ class RunTest < ActiveSupport::TestCase
     assert_equal initial_state, run.initial_state
     assert_equal initial_state, run.state
   end
+
+  def test_method_determine_initial_state
+    detector = mock( "detector" )
+    image = mock( "image" )
+    start_index = mock( "start_index" )
+    state = mock( "state" )
+    detector.expects( :detect_colour? ).with( image, start_index ).returns( state )
+    assert_equal state, ::Chunking::Detector::Run.determine_initial_state( detector, image, start_index )
+  end
   
   def test_method_state_changed?
     initial_state = mock( "initial_state" )

@@ -41,7 +41,7 @@ class DetectColourTest < ActiveSupport::TestCase
     detector = build_detector
     img = mock( "img" )
     img.stubs( :pixel_is_colour? ).returns( true )
-    detector.expects( :density_reached? ).returns( true )
+    detector.expects( :density_reached? ).with( 1, img ).returns( true )
     assert detector.detect_colour?( img, detector )
   end
 
@@ -49,7 +49,7 @@ class DetectColourTest < ActiveSupport::TestCase
     detector = build_detector
     img = mock( "img" )
     img.stubs( :pixel_is_colour? ).returns( true )
-    detector.expects( :density_reached? ).returns( false )
+    detector.expects( :density_reached? ).with( 1, img ).returns( false )
     assert !detector.detect_colour?( img, detector )
   end
 

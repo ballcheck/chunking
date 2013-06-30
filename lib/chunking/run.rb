@@ -4,7 +4,6 @@ module Chunking
       attr_accessor :state, :image, :start_index
       attr_reader :initial_state, :tolerance_counter, :detector
 
-      # TODO: untested
       def initialize( detector, image, start_index = 0 )
         @detector = detector
         @image = image
@@ -30,7 +29,6 @@ module Chunking
 
       # this is only here so it can be stubbed
       # TODO: this is only a class method because I was not sure how to access it from initialize & stub
-      # TODO: untested
       def self.determine_initial_state( detector, image, start_index )
         detector.detect_colour?( image, start_index )
       end
