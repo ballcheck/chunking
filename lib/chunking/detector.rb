@@ -52,7 +52,7 @@ module Chunking
         run.state = detect_colour?( img, index )
         run.increment_tolerance_counter if run.state_changed?
         if run.tolerance_reached?( tolerance )
-          run.boundary = Boundary.new( index )
+          run.boundary = Boundary.new( axis, index )
           return run
         end
       end

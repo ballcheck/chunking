@@ -1,8 +1,9 @@
 # TODO: untested
 module Chunking
   class Boundary
-    attr_accessor :index
-    def initialize( index )
+    attr_accessor :index, :axis
+    def initialize( axis, index )
+      @axis = axis
       @index = index
     end
 

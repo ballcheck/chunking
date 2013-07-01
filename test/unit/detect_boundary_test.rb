@@ -138,4 +138,10 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector.detect_boundary( img, 0, false )
   end
     
+
+
+  # ----------------
+  # functional tests
+  # ----------------
+
 end
