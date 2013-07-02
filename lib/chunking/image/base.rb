@@ -20,6 +20,15 @@ module Chunking
         return false
       end
 
+      # only really used for testing.
+      def draw_pixel_map( pixel_map )
+        pixel_map.each_with_index do |row, row_ind|
+          row.each_with_index do |px, px_ind|
+            set_pixel_colour( px_ind, row_ind, px ) unless px.nil?
+          end
+        end
+      end
+
       # template pattern style method declarations
       # TODO: enforce these methods are implemented in the child class
       # preferably called with the same arguments

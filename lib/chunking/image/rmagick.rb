@@ -40,7 +40,7 @@ module Chunking
       end
 
       def set_pixel_colour( x, y, rgba )
-        p = base_image.pixel_color( x, y, rgba )
+        p = base_image.pixel_color( x, y, Magick::Pixel.new( *rgba ) )
         [ p.red, p.green, p.blue, p.opacity ]
       end
     end

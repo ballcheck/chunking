@@ -143,5 +143,22 @@ class DetectBoundaryTest < ActiveSupport::TestCase
   # ----------------
   # functional tests
   # ----------------
+  def test_testing
+    img = Chunking::Image::RMagickImage.new( 5,5)
+    rgb = [30000, 3000, 300]
+
+    pixel_map = [
+      [ nil, nil, nil, nil, nil ],
+      [ rgb, rgb, rgb, rgb, rgb ],
+      [ nil, nil, nil, nil, nil ],
+      [ nil, nil, nil, nil, nil ],
+      [ nil, nil, nil, nil, nil ]
+    ]
+
+    img.draw_pixel_map( pixel_map )
+
+    # TODO: image save method
+    img.base_image.write( "tester.bmp" )
+  end
 
 end
