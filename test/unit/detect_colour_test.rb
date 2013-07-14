@@ -62,11 +62,11 @@ class DetectColourTest < ActiveSupport::TestCase
     line_index = 2
     detector = build_detector( :size => size, :offset => offset, :axis => :x )
     img = mock( "img" )
-    # TODO: is it possible to do this using the "_" variable?
+
     img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset && args[1] == line_index }
-    img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset+1 && args[1] == line_index }
-    img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset+2 && args[1] == line_index }
-    img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset+3 && args[1] == line_index }
+    img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset + 1 && args[1] == line_index }
+    img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset + 2 && args[1] == line_index }
+    img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset + 3 && args[1] == line_index }
     detector.detect_colour?( img, line_index )
   end
 
@@ -76,10 +76,14 @@ class DetectColourTest < ActiveSupport::TestCase
     line_index = 2
     detector = build_detector( :size => size, :offset => offset, :axis => :y )
     img = mock( "img" )
-    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == offset && args[0] == line_index }
-    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == offset+1 && args[0] == line_index }
-    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == offset+2 && args[0] == line_index }
-    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == offset+3 && args[0] == line_index }
+    img_size = 10
+    img.stubs( :size ).returns( img_size )
+    real_offset = img_size - 1 - offset
+
+    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == real_offset && args[0] == line_index }
+    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == real_offset - 1 && args[0] == line_index }
+    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == real_offset - 2 && args[0] == line_index }
+    img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == real_offset - 3 && args[0] == line_index }
     detector.detect_colour?( img, line_index )
   end
 

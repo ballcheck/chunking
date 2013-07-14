@@ -20,7 +20,7 @@ module Chunking
     attr_accessor :axis, :offset, :size, :rgb, :fuzz, :density, :tolerance
     RGB_BLACK = [0,0,0,0]
 
-    # NOTE: "size" represents width OR height and "offset" represents top OR left depending on axis supplied 
+    # NOTE: "size" represents width OR height and "offset" represents left or bottom depending on axis supplied 
     def initialize( args = {} )
       @axis = args.has_key?(:axis) ? args[:axis].to_sym : :x
       @offset = args.has_key?(:offset) ? args[:offset] : 0
@@ -58,8 +58,8 @@ module Chunking
     end
     
     # TODO: untested
-    def determine_remaining_lines( img, start_index )
-      img.size( axis_of_travel ) - start_index.to_i
+    def determine_remaining_lines( img, index )
+      img.size( axis_of_travel ) - index.to_i
     end
 
     # TODO: annotate.
@@ -77,7 +77,6 @@ module Chunking
         run.state = detect_colour?( img, index )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
-        # TODO: should return boundary here, not run. Otherwise should return run at end, instead of nil.
         if run.tolerance_reached?( tolerance )
           run.boundary = Boundary.new( axis, index )
           return run.boundary
@@ -105,8 +104,8 @@ module Chunking
 
       size.times do |ind|
         x = axis == :x ? ind + offset : line_index
-        y = axis == :y ? ind + offset : line_index
-        
+        y = axis == :y ? img.size( axis ) - 1 - ( ind + offset ) : line_index
+
         if img.pixel_is_colour?( x, y, rgb, fuzz )
           if density_reached?( pixel_count += 1, img )
             return true
