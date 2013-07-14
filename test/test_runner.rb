@@ -1,7 +1,3 @@
-require "test_helper"
-
-require "unit/detector_test.rb"
-require "unit/detect_colour_test.rb"
-require "unit/detect_boundary_test.rb"
-require "unit/pixel_is_colour_test.rb"
-require "unit/run_test.rb"
+require File.expand_path( "../test_helper", __FILE__ )
+Dir.glob( File.expand_path( "../unit/**/*.rb", __FILE__ ), &method( :load ) )
+Dir.glob( File.expand_path( "../../lib/chunking/**/*.rb", __FILE__ ), &method( :load ) )

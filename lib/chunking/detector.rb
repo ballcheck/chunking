@@ -1,6 +1,18 @@
 #--------------------------------------------------------------------
 # chunking - breaking document up by identifying content boundaries
 #--------------------------------------------------------------------
+class Array
+
+  def invert( axis )
+    case axis.to_s
+    when "y"
+      self.map( &:reverse )
+    when "x"
+      self.reverse
+    end
+  end
+        
+end
 
 module Chunking
 
@@ -40,23 +52,36 @@ module Chunking
 
     # end of untested
 
+    # TODO: untested
+    def axis_of_travel
+      axis == :x ? :y : :x
+    end
+    
+    def determine_remaining_lines( img, start_index )
+      img.size( axis_of_travel ) - start_index.to_i
+    end
+
     # TODO: annotate.
+    # TODO: should have colour_tolerance and non_colour_tolerance
+    # TODO: axis vs axis of travel
     def detect_boundary( img, start_index = 0, invert_direction = false )
       # default direction is left to right, top to bottom.
       img = img.invert( axis ) if invert_direction
       run = Detector::Run.new( self, img, start_index )
 
-      lines = img.size( axis ) - start_index.to_i
+      lines = img.size( axis_of_travel ) - start_index.to_i
+
       lines.times do |line|
         index = start_index + line
         run.state = detect_colour?( img, index )
-        run.increment_tolerance_counter if run.state_changed?
+        run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
+
+        # TODO: should return boundary here, not run. Otherwise should return run at end, instead of nil.
         if run.tolerance_reached?( tolerance )
           run.boundary = Boundary.new( axis, index )
-          return run
+          return run.boundary
         end
       end
-
       # we've run out of image
       return nil
     end
@@ -81,7 +106,7 @@ module Chunking
         x = axis == :x ? ind + offset : line_index
         y = axis == :y ? ind + offset : line_index
         
-        if img.pixel_is_colour?( img, x, y, rgb, fuzz )
+        if img.pixel_is_colour?( x, y, rgb, fuzz )
           if density_reached?( pixel_count += 1, img )
             return true
           end

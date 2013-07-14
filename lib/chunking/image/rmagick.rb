@@ -1,3 +1,4 @@
+require File.expand_path( "../base.rb", __FILE__ )
 require "RMagick"
 
 # TODO: untested
@@ -8,7 +9,11 @@ module Chunking
       attr_reader :base_image
 
       def initialize( *args )
-        @base_image = Magick::Image.new( *args )
+        if args[0].is_a?( Magick::Image )
+          @base_image = args[0]
+        else
+          @base_image = Magick::Image.new( *args )
+        end
       end
 
       def self.compare_colours( rgb1, rgb2, fuzz )
@@ -24,13 +29,18 @@ module Chunking
         end
       end
 
+      # TODO: not sure about affecting the base_image
       def invert( axis )
         case axis
         when :x
-          base_image.flip
+          self.class.new( base_image.flip )
         when :y
-          base_image.flop
+          self.class.new( base_image.flop )
         end
+      end
+
+      def rotate( deg )
+        self.class.new( base_image.rotate( deg ) )
       end
 
       def get_pixel_colour( x, y )

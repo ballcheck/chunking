@@ -11,22 +11,13 @@ module Chunking
       def pixel_is_colour?( x, y, rgb, fuzz )
         # expects "rgb" to be an array - [r,g,b] / [r,g,b,a]
         colours = rgb[0].is_a?( Array ) ? rgb :  [rgb]
-        colour_of_pixel = pixel_colour( x, y )
+        colour_of_pixel = get_pixel_colour( x, y )
 
         colours.each do |colour|
           return true if self.class.compare_colours( colour, colour_of_pixel, fuzz )
         end
 
         return false
-      end
-
-      # only really used for testing.
-      def draw_pixel_map( pixel_map )
-        pixel_map.each_with_index do |row, row_ind|
-          row.each_with_index do |px, px_ind|
-            set_pixel_colour( px_ind, row_ind, px ) unless px.nil?
-          end
-        end
       end
 
       # template pattern style method declarations
@@ -54,6 +45,28 @@ module Chunking
 
       # TODO: create colour / color aliases
       # aliases created here would refer to the template methods and raise.
+
+      # only really used for testing.
+      # TODO: untested
+      def draw_pixel_map!( pixel_map )
+        pixel_map.each_with_index do |row, row_ind|
+          row.each_with_index do |px, px_ind|
+            set_pixel_colour( px_ind, row_ind, px ) unless px.nil?
+          end
+        end
+      end
+
+      # TODO: untested
+      class << self
+        def new_from_pixel_map( pixel_map )
+          rows = pixel_map.length
+          cols = pixel_map[0].length
+          img = self.new( cols, rows )
+          img.draw_pixel_map!( pixel_map )
+          return img
+        end
+      end
+
     end
   end
 end
