@@ -57,6 +57,7 @@ module Chunking
       axis == :x ? :y : :x
     end
     
+    # TODO: untested
     def determine_remaining_lines( img, start_index )
       img.size( axis_of_travel ) - start_index.to_i
     end
@@ -69,7 +70,7 @@ module Chunking
       img = img.invert( axis ) if invert_direction
       run = Detector::Run.new( self, img, start_index )
 
-      lines = img.size( axis_of_travel ) - start_index.to_i
+      lines = determine_remaining_lines( img, start_index )
 
       lines.times do |line|
         index = start_index + line
