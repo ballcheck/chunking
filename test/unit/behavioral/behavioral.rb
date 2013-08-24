@@ -1,12 +1,15 @@
 # TODO: run these test again, inverting the colour.
 # TODO: run these tests again, swapping image library
-module BehavioralTest
+
+# TODO: is this being included? should we even use array in this way?
+require "array.rb"
+module Behavioral
   module Setup
     def setup
       @axis = :x
-      @rgb = [ 0, 0, 0 ]
+      @rgb = ::Chunking::Image::RMagickImage::BLACK_RGB
       @foreground_rgb = @rgb
-      @background_rgb = [ 65535, 65535, 65535 ]
+      @background_rgb = ::Chunking::Image::RMagickImage::WHITE_RGB
     end
 
     def invert?
@@ -18,7 +21,8 @@ module BehavioralTest
     end
   end
 
-  module ColourFast
+  # Tests that are NOT affected if bg/fg colours are inverted.
+  module ColourFastTests
     include Setup
     def test_start_index
       o = @background_rgb
@@ -33,6 +37,8 @@ module BehavioralTest
       ]
 
       img = build_image_from_pixel_map pixel_map
+
+      # TODO: remove these 2 lines from all over this file
       img = img.rotate( -90 ) if @axis == :y
       img = img.invert( @axis ) if invert?
 
@@ -94,11 +100,13 @@ module BehavioralTest
     end
 
     def test_all_matches
+      # TODO: eh? waaa?
       # this is covered by inverting bg/fg colours
     end
   end
   
-  module NonColourFast
+  # Tests that ARE affected if bg/fg colours are inverted.
+  module NonColourFastTests
     include Setup
     def test_offset
       o = @background_rgb
@@ -198,54 +206,8 @@ module BehavioralTest
     end
   end
 
-  module All
-    include BehavioralTest::ColourFast
-    include BehavioralTest::NonColourFast
-  end
-end
-
-class BehavioralTestXAxis < ActiveSupport::TestCase
-  include BehavioralTest::All
-end
-
-class BehavioralTestYAxis < ActiveSupport::TestCase
-  include BehavioralTest::All
-
-  def setup
-    super
-    @axis = :y
-  end
-end
-
-class BehavioralTestXAxisInvert < ActiveSupport::TestCase
-  include BehavioralTest::All
-
-  def invert?
-    true
-  end
-end
-
-class BehavioralTestYAxisInvert < ActiveSupport::TestCase
-  include BehavioralTest::All
-
-  def setup
-    super
-    @axis = :y
-  end
-
-  def invert?
-    true
-  end
-end
-
-# NOTE: starting on colour, moving off. 
-# TODO: this does not work on some tests
-class BehavioralTestXAxisSwapFGBG < ActiveSupport::TestCase
-  include BehavioralTest::ColourFast
-
-  def setup
-    super
-    @background_rgb = @rgb
-    @foreground_rgb = nil
+  module AllTests
+    include ColourFastTests
+    include NonColourFastTests
   end
 end
