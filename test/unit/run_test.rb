@@ -1,15 +1,23 @@
 class RunTest < ActiveSupport::TestCase
 
   # TODO: need to test these methods
-  def build_run
+  def build_run( detector = nil, image = nil )
+    # TODO: this is only a class method so it can be stubbed.
     Chunking::Detector::Run.stubs( :determine_initial_state )
-    run = Chunking::Detector::Run.new( nil, nil )
+    run = Chunking::Detector::Run.new( detector, image )
   end
 
   def test_should_set_counter_to_zero
     assert_equal 0, build_run.tolerance_counter
   end
 
+  def test_method_tolerance
+    tolerance = mock( "tolerance" )
+    detector = mock( :tolerance => tolerance )
+    run = build_run( detector )
+    assert_equal run.tolerance, tolerance
+  end
+    
   def test_method_increment_tolerance_counter
     run = build_run
     assert_equal 0, run.tolerance_counter
@@ -49,8 +57,11 @@ class RunTest < ActiveSupport::TestCase
     run = build_run
     run.stubs( :tolerance_counter ).returns( 1 )
     assert_equal 1, run.tolerance_counter
-    assert run.tolerance_reached?( 0 )
-    assert !run.tolerance_reached?( 1 )
-    assert !run.tolerance_reached?( 2 )
+    run.stubs( :detector => stub( :tolerance => 0 ) )
+    assert run.tolerance_reached?
+    run.stubs( :detector => stub( :tolerance => 1 ) )
+    assert !run.tolerance_reached?
+    run.stubs( :detector => stub( :tolerance => 2 ) )
+    assert !run.tolerance_reached?
   end
 end

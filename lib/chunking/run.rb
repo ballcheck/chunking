@@ -1,5 +1,6 @@
 module Chunking
   class Detector
+    # Container for holding the results of Detector.detect_boundary
     class Run
       attr_accessor :state, :boundary
       attr_reader :image, :start_index, :initial_state, :tolerance_counter, :detector
@@ -25,8 +26,12 @@ module Chunking
         initial_state != state
       end
 
-      def tolerance_reached?( tolerance )
+      def tolerance_reached?
         tolerance_counter.to_i > tolerance.to_i
+      end
+
+      def tolerance
+        detector.tolerance
       end
       
       private

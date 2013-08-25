@@ -116,18 +116,17 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector = build_detector( :tolerance => tolerance )
     detector.stubs( :detect_colour? )
     img = build_image
-    build_run( detector, img ).expects( :tolerance_reached? ).once.with( tolerance ).returns( true )
+    build_run( detector, img ).expects( :tolerance_reached? ).once.returns( true )
     assert result = detector.detect_boundary( img )
     assert_equal -tolerance, result.index
   end
 
   #-- TODO: these tests (if/if not) could be combined
   def test_should_detect_if_tolerance_reached
-    tolerance = 99
-    detector = build_detector( :tolerance => tolerance )
+    detector = build_detector
     detector.stubs( :detect_colour? )
     img = build_image
-    build_run( detector, img ).expects( :tolerance_reached? ).once.with( tolerance ).returns( true )
+    build_run( detector, img ).expects( :tolerance_reached? ).once.returns( true )
     assert result = detector.detect_boundary( img )
     assert_equal Chunking::Boundary, result.class
   end

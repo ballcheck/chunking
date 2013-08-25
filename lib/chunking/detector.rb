@@ -42,7 +42,8 @@ module Chunking
         run.state = detect_colour?( img, index )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
-        if run.tolerance_reached?( tolerance )
+        # TODO: is run too closely tied now?
+        if run.tolerance_reached?
           run.boundary = Boundary.new( axis, index - tolerance )
           return run.boundary
         end
