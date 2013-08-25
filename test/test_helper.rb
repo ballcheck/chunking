@@ -3,7 +3,6 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
 require "debugger"
-Dir.glob(Rails.root.to_s + '/lib/chunking/*.rb', &method( :require ) )
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.

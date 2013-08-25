@@ -2,6 +2,9 @@
 # TODO: should have colour_tolerance and non_colour_tolerance.
 # TODO: detector could have many runs.
 # TODO: @axis could be a class, thus preventing passing strings / syms around.
+# TODO: surely you don't need to require files in the same module?
+require File.expand_path( "../detector_run.rb", __FILE__ )
+require File.expand_path( "../boundary.rb", __FILE__ )
 
 # Chunking - extracting blocks of content from an image by identifying content boundaries.
 module Chunking
@@ -33,7 +36,7 @@ module Chunking
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
       img = img.invert( axis ) if invert_direction
-      runs << ( run = Detector::Run.new( self, img, start_index ) )
+      runs << ( run = DetectorRun.new( self, img, start_index ) )
 
       lines = determine_remaining_lines( img, start_index )
 
@@ -105,15 +108,18 @@ module Chunking
     end
 
     def determine_offset( img )
-      is_percent_string?( offset ) ? apply_percent_string( img.size( axis ), offset ) : offset
+      offset_value = is_percent_string?( offset ) ? apply_percent_string( img.size( axis ), offset ) : offset
+      return offset_value.to_i
     end
       
     def determine_size( img )
-      is_percent_string?( size ) ? apply_percent_string( img.size( axis ), size ) : size
+      size_value = is_percent_string?( size ) ? apply_percent_string( img.size( axis ), size ) : size
+      return size_value.to_i
     end
 
     def determine_density( img )
-      is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
+      density_value = is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
+      return density_value.to_i
     end
 
     def axis_of_travel
@@ -123,16 +129,16 @@ module Chunking
     def determine_remaining_lines( img, index )
       img.size( axis_of_travel ) - index.to_i
     end
-    #-- end of untested methods
 
     def is_percent_string?( *args )
       # TODO: instance versions of class methods not tested
       self.class.is_percent_string?( *args )
     end
     
-    def apply_percent_string?( *args )
-      self.class.apply_percent_string?( *args )
+    def apply_percent_string( *args )
+      self.class.apply_percent_string( *args )
     end
+    #-- end of untested methods
 
     class << self
       def is_percent_string?( string )

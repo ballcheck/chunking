@@ -2,8 +2,8 @@ class RunTest < ActiveSupport::TestCase
 
   def build_run( detector = nil, image = nil )
     # TODO: this is only a class method so it can be stubbed.
-    Chunking::Detector::Run.stubs( :determine_initial_state )
-    run = Chunking::Detector::Run.new( detector, image )
+    Chunking::DetectorRun.stubs( :determine_initial_state )
+    run = Chunking::DetectorRun.new( detector, image )
   end
 
   def test_should_set_counter_to_zero
@@ -26,8 +26,8 @@ class RunTest < ActiveSupport::TestCase
 
   def test_initial_state_and_state_are_set_on_initialisation
     initial_state = mock( "initial_state" )
-    Chunking::Detector::Run.expects( :determine_initial_state ).returns( initial_state )
-    run = Chunking::Detector::Run.new( nil, nil )
+    Chunking::DetectorRun.expects( :determine_initial_state ).returns( initial_state )
+    run = Chunking::DetectorRun.new( nil, nil )
     assert_equal initial_state, run.initial_state
     assert_equal initial_state, run.state
   end
@@ -38,14 +38,14 @@ class RunTest < ActiveSupport::TestCase
     start_index = mock( "start_index" )
     state = mock( "state" )
     detector.expects( :detect_colour? ).with( image, start_index ).returns( state )
-    assert_equal state, ::Chunking::Detector::Run.determine_initial_state( detector, image, start_index )
+    assert_equal state, ::Chunking::DetectorRun.determine_initial_state( detector, image, start_index )
   end
   
   def test_method_state_changed?
     initial_state = mock( "initial_state" )
     new_state = mock( "new_state" )
-    Chunking::Detector::Run.expects( :determine_initial_state ).returns( initial_state )
-    run = Chunking::Detector::Run.new( nil, nil )
+    Chunking::DetectorRun.expects( :determine_initial_state ).returns( initial_state )
+    run = Chunking::DetectorRun.new( nil, nil )
     assert !run.state_changed?
     run.state = new_state
     assert run.state_changed?
