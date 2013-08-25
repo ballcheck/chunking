@@ -1,17 +1,17 @@
 class DetectorTest < ActiveSupport::TestCase
 
-  # ---------------
+  #---------------
   # initialisation
-  # ---------------
+  #---------------
 
   def test_should_detect_black_by_default
     detector = Chunking::Detector.new
     assert_equal Chunking::Detector::RGB_BLACK, detector.rgb
   end
 
-  # --------
+  #--------
   # methods
-  # --------
+  #--------
 
   def test_method_detect_nth_boundary
     detector = build_detector
@@ -44,9 +44,9 @@ class DetectorTest < ActiveSupport::TestCase
   end
 
 
-  # --------------------------------------------
+  #--------------------------------------------
   # aliases, class versions of instance methods
-  # --------------------------------------------
+  #--------------------------------------------
 
   def test_should_call_detect_colour_as_class_method
     detector = build_detector
@@ -58,20 +58,22 @@ class DetectorTest < ActiveSupport::TestCase
     Chunking::Detector.detect_colour? img, index, args
   end
 
-  # TODO: this is not a conclusive test.
   def test_should_alias_colour_with_color
+    # TODO: this is not a conclusive test.
+    # TODO: is this kind of test necessary?
     assert Chunking::Detector.instance_method( :detect_color? ) == Chunking::Detector.instance_method( :detect_colour? )
     assert Chunking::Detector.method( :detect_color? ) == Chunking::Detector.method( :detect_colour? )
   end
 
 
 
-  # ---------------
+  #---------------
   # library methods
-  # ---------------
+  #---------------
+  #-- TODO: these methods are in the wrong place anyway
 
-  # TODO: are these kind of tests really needed?
   def test_method_is_percent_string
+    # TODO: are these kind of tests really needed?
     assert Chunking::Detector.send( :is_percent_string?, "1%" )
     assert Chunking::Detector.send( :is_percent_string?, "10%" )
     assert Chunking::Detector.send( :is_percent_string?, "1.1%" )
@@ -85,6 +87,5 @@ class DetectorTest < ActiveSupport::TestCase
     assert_equal 9.9, Chunking::Detector.send( :apply_percent_string, 99, "10%" )
     assert_equal 10.989, Chunking::Detector.send( :apply_percent_string, 999, "1.1%" )
   end
-    
 
 end

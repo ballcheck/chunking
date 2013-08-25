@@ -1,6 +1,8 @@
 require "test/unit"
 require File.expand_path( "../test_helper", __FILE__ )
 
+# TODO: this does not work all the time.
+
 class CTR
   class << self
     def run
