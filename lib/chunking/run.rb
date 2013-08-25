@@ -29,11 +29,6 @@ module Chunking
         tolerance_counter.to_i > tolerance.to_i
       end
       
-      # TODO: untested
-      def annotate( image = self.image )
-        
-      end
-
       private
 
       # this is only here so it can be stubbed

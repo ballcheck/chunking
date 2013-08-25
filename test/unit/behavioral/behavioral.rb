@@ -1,5 +1,5 @@
-# TODO: run these test again, inverting the colour.
 # TODO: run these tests again, swapping image library
+# TODO: behavioral tests for other methods e.g. nth_boundary
 
 # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.
 module Behavioral
@@ -143,7 +143,7 @@ module Behavioral
     end
   end
   
-  # Tests that break if background / foreground colours are inverted.
+  # Tests that don't make sense if background / foreground colours are inverted relative to @rgb.
   module NonColourFastTests
     include Setup
     def test_offset

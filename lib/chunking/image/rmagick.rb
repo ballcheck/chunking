@@ -1,7 +1,7 @@
+# TODO: untested
 require File.expand_path( "../base.rb", __FILE__ )
 require "RMagick"
 
-# TODO: untested
 module Chunking
   module Image
     class RMagickImage < Base

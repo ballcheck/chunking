@@ -1,14 +1,18 @@
-#--------------------------------------------------------------------
-# chunking - breaking document up by identifying content boundaries
-#--------------------------------------------------------------------
+# TODO: annotate.
+# TODO: should have colour_tolerance and non_colour_tolerance.
+# TODO: detector could have many runs.
+# TODO: @axis could be a class, thus preventing passing strings / syms around.
+
+# Chunking - extracting blocks of content from an image by identifying content boundaries.
 module Chunking
 
   class Detector
     attr_accessor :axis, :offset, :size, :rgb, :fuzz, :density, :tolerance
     RGB_BLACK = [0,0,0]
 
-    # NOTE: "size" represents width OR height and "offset" represents left or bottom depending on axis supplied 
     def initialize( args = {} )
+      # "size" represents width OR height and "offset" represents
+      # left or bottom depending on axis supplied 
       @axis = args.has_key?(:axis) ? args[:axis].to_sym : :x
       @offset = args.has_key?(:offset) ? args[:offset] : 0
       @size = args.has_key?(:size) ? args[:size] : nil
@@ -19,41 +23,13 @@ module Chunking
       @tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
     end
 
-    def density_reached?( pixel_count, img = nil )
-      # TODO: untested
-      density = determine_density( img )
-      pixel_count >= density ? true : false
-    end
-
-    def determine_offset( img )
-      is_percent_string?( offset ) ? apply_percent_string( img.size( axis ), offset ) : offset
-    end
-      
-    def determine_size( img )
-      is_percent_string?( size ) ? apply_percent_string( img.size( axis ), size ) : size
-    end
-
-    def determine_density( img )
-      is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
-    end
-
-    # end of untested
-
-    # TODO: untested
-    def axis_of_travel
-      axis == :x ? :y : :x
-    end
-    
-    # TODO: untested
-    def determine_remaining_lines( img, index )
-      img.size( axis_of_travel ) - index.to_i
-    end
-
-    # TODO: annotate.
-    # TODO: should have colour_tolerance and non_colour_tolerance
-    # TODO: axis vs axis of travel
+    #:main:
+    # Detects the next content boundary from a given starting position i.e.
+    # the position where a block of content starts or finishes (depending on
+    # whether the starting position was inside or ouside a content block).
     def detect_boundary( img, start_index = 0, invert_direction = false )
-      # default direction is left to right, top to bottom.
+      # The default direction is left to right, top to bottom.
+      # To go from right to left, or bottom to top we simply invert the image.
       img = img.invert( axis ) if invert_direction
       run = Detector::Run.new( self, img, start_index )
 
@@ -69,10 +45,12 @@ module Chunking
           return run.boundary
         end
       end
-      # we've run out of image
+
+      # we've run out of lines, so no boundary was detected in the image.
       return nil
     end
 
+    # Skip n - 1 boundaries and return the nth.
     def detect_nth_boundary( img, n, start_index = 0, invert_direction = false )
       index = start_index
       n.times do
@@ -83,7 +61,9 @@ module Chunking
       return index
     end
 
+    # Tell if a given line within an image contains the Detector @rgb.
     def detect_colour?( img, line_index = nil )
+      # TODO: would it be cleaner to ignore the axis and just rotate the image? Performance issues?
       line_index ||= 0
       pixel_count = 0
       offset = determine_offset( img )
@@ -104,17 +84,46 @@ module Chunking
     
     alias detect_color? detect_colour?
 
+    class << self
+      # Class method version of instance method of the same name. Provided for simplicity.
+      def detect_colour?( img, index = nil, *args )
+        self.new( *args ).detect_colour?( img, index )
+      end
 
+      alias detect_color? detect_colour?
+    end
 
+    private 
 
+    #-- TODO: start of untested methods
+    def density_reached?( pixel_count, img = nil )
+      density = determine_density( img )
+      pixel_count >= density ? true : false
+    end
 
+    def determine_offset( img )
+      is_percent_string?( offset ) ? apply_percent_string( img.size( axis ), offset ) : offset
+    end
+      
+    def determine_size( img )
+      is_percent_string?( size ) ? apply_percent_string( img.size( axis ), size ) : size
+    end
 
+    def determine_density( img )
+      is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
+    end
 
+    def axis_of_travel
+      axis == :x ? :y : :x
+    end
+    
+    def determine_remaining_lines( img, index )
+      img.size( axis_of_travel ) - index.to_i
+    end
+    #-- end of untested methods
 
-
-
-    # TODO: instance versions of class methods not tested
     def is_percent_string?( *args )
+      # TODO: instance versions of class methods not tested
       self.class.is_percent_string?( *args )
     end
     
@@ -123,12 +132,6 @@ module Chunking
     end
 
     class << self
-      def detect_colour?( img, index = nil, *args )
-        self.new( *args ).detect_colour?( img, index )
-      end
-
-      alias detect_color? detect_colour?
-    
       def is_percent_string?( string )
         string.is_a?( String ) && !!string.match(/(^[\d\.]+)%$/)
       end

@@ -38,9 +38,9 @@ class DetectorTest < ActiveSupport::TestCase
     
   def test_method_density_reached?
     detector = build_detector( :density => 1 )
-    assert !detector.density_reached?( 0 )
-    assert detector.density_reached?( 1 )
-    assert detector.density_reached?( 2 )
+    assert !detector.send( :density_reached?, 0 )
+    assert detector.send( :density_reached?, 1 )
+    assert detector.send( :density_reached?, 2 )
   end
 
 

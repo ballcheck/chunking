@@ -1,4 +1,5 @@
-# TODO: Whole module untested.
+#-- TODO: module untested.
+
 module Chunking
   module Image
     class Base
