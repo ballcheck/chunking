@@ -1,8 +1,6 @@
 # TODO: run these test again, inverting the colour.
 # TODO: run these tests again, swapping image library
 
-# TODO: is this being included? should we even use array in this way?
-require "array.rb"
 # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.
 module Behavioral
   # These methods get overridden in test_cases.rb in this module.
@@ -107,6 +105,42 @@ module Behavioral
     # def test_all_matches
     # # this is covered by inverting bg/fg colours
     # end
+    
+    def test_tolerance
+      o = @background_rgb
+      x = @foreground_rgb
+      pixel_map = [
+        [ o, o, o ],
+        [ x, x, x ],
+        [ o, o, o ],
+        [ x, x, x ],
+        [ x, x, x ],
+        [ o, o, o ],
+        [ x, x, x ],
+        [ x, x, x ],
+        [ x, x, x ],
+      ]
+
+      img = build_image_from_pixel_map pixel_map
+      img = img.rotate( -90 ) if @axis == :y
+      img = img.invert( @axis ) if invert?
+
+      size = img.size( @axis )
+
+      tolerance_index_map = {
+        0 => 1,
+        1 => 3,
+        2 => 6,
+        3 => nil
+      }
+
+      tolerance_index_map.each do |k,v|
+        detector = Chunking::Detector.new( :axis => @axis, :tolerance => k, :size => size, :rgb => @rgb )
+        boundary = detector.detect_boundary( img, 0, invert? )
+        index = boundary ? boundary.index : nil
+        assert_equal v, index
+      end
+    end
   end
   
   # Tests that break if background / foreground colours are inverted.
@@ -185,40 +219,6 @@ module Behavioral
       end
     end
 
-    def test_tolerance
-      o = @background_rgb
-      x = @foreground_rgb
-      pixel_map = [
-        [ o, o, o ],
-        [ x, o, o ],
-        [ o, o, o ],
-        [ o, x, o ],
-        [ o, x, o ],
-        [ o, o, o ],
-        [ o, o, x ],
-        [ o, o, x ],
-        [ o, o, x ],
-      ]
-
-      img = build_image_from_pixel_map pixel_map
-      img = img.rotate( -90 ) if @axis == :y
-      img = img.invert( @axis ) if invert?
-
-      size = img.size( @axis )
-
-      tolerance_index_map = {
-        0 => 1,
-        1 => 3,
-        2 => 6#,
-        # TODO: at present, nil breaks test
-        #3 => nil
-      }
-
-      (0..2).each do |i|
-        detector = Chunking::Detector.new( :axis => @axis, :tolerance => i, :size => size, :rgb => @rgb )
-        assert_equal tolerance_index_map[i], detector.detect_boundary( img, 0, invert? ).index
-      end
-    end
   end
 
   # Container for ColourFastTests and NonColourFastTests
