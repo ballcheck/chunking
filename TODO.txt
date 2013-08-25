@@ -5,12 +5,14 @@ try it out with a real image
 write functional tests (using actial Chunking::Image)
 arrange tests to they can be run with various Detector variables e.g. axis
 
+remove rails crap from the project
+
 
 
 my notes
 --------
 
 Code is easier to test when it is accessible e.g.
-  in class methods
-  not hidden in if/else blocks
-  in method calls instead of in the block body
+in class methods
+not hidden in if/else blocks
+in method calls instead of in the block body

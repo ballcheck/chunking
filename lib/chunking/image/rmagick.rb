@@ -5,6 +5,8 @@ require "RMagick"
 module Chunking
   module Image
     class RMagickImage < Base
+      BLACK_RGB = [ 0, 0, 0 ]
+      WHITE_RGB = [ Magick::QuantumRange, Magick::QuantumRange, Magick::QuantumRange ]
 
       attr_reader :base_image
 

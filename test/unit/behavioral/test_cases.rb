@@ -35,16 +35,15 @@ module Behavioral
     end
   end
 
-  # NOTE: starting on colour, moving off. 
-  # TODO: this does not work on some tests
   class XAxisSwapFGBG < ActiveSupport::TestCase
     include ColourFastTests
 
+    # Swap background / foreground colours so we start on a colour, and move off. 
+    # Only works on ColourFastTests.
     def setup
       super
       @background_rgb = @rgb
       @foreground_rgb = ::Chunking::Image::RMagickImage::WHITE_RGB
-      @write = true
     end
   end
 end

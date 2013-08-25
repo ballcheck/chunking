@@ -1,6 +1,6 @@
 class DetectBoundaryTest < ActiveSupport::TestCase
 
-  # TODO: be able to run these tests with various detector options
+  #-- TODO: be able to run these tests with various detector options
   def build_run( *args )
     run = Chunking::Detector::Run.new( *args )
     # ensure that when a run is created in 'detect_boundary' this run (the one
@@ -30,7 +30,6 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     assert_equal nil, detector.detect_boundary( img )
   end
 
-  # works the same if starting on a colour and moving off.
   def test_should_change_state_on_detect_colour
     detector = build_detector
     detector.stubs( :detect_colour? )
@@ -49,6 +48,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     img = build_image( 2 )
     run = build_run( detector, img )
     # fails first time
+    # TODO: is this expecting once more than one expected mock behavior?
     run.expects( :state_changed? ).once.returns( false )
     run.expects( :state_changed? ).once.returns( true )
     run.expects( :increment_tolerance_counter ).once
@@ -94,12 +94,23 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     assert !detector.detect_boundary( img, starting_index )
   end
 
-  # TODO: these tests (if/if not) could be combined
-  def test_should_detect_if_tolerance_reached
-    detector = build_detector
+  def test_should_not_include_tolerance_in_boundary_index
+    tolerance = 99
+    detector = build_detector( :tolerance => tolerance )
     detector.stubs( :detect_colour? )
     img = build_image
-    build_run( detector, img ).expects( :tolerance_reached? ).once.with( detector.tolerance ).returns( true )
+    build_run( detector, img ).expects( :tolerance_reached? ).once.with( tolerance ).returns( true )
+    assert result = detector.detect_boundary( img )
+    assert_equal -tolerance, result.index
+  end
+
+  #-- TODO: these tests (if/if not) could be combined
+  def test_should_detect_if_tolerance_reached
+    tolerance = 99
+    detector = build_detector( :tolerance => tolerance )
+    detector.stubs( :detect_colour? )
+    img = build_image
+    build_run( detector, img ).expects( :tolerance_reached? ).once.with( tolerance ).returns( true )
     assert result = detector.detect_boundary( img )
     assert_equal Chunking::Boundary, result.class
   end
@@ -119,7 +130,8 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     img.expects( :invert ).once.with( detector.axis ).returns( img )
     detector.detect_boundary( img, 0, true )
   end
-    
+
+  #-- TODO: test_should_not_alter_original_image_to_invert_direction
   def test_should_not_invert_image_to_invert_direction
     detector = build_detector
     detector.stubs( :detect_colour? )

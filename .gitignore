@@ -17,3 +17,6 @@
 # vim tmp files
 *.swp
 *.swo
+
+# doc files
+/doc

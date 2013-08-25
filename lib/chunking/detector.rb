@@ -1,24 +1,11 @@
 #--------------------------------------------------------------------
 # chunking - breaking document up by identifying content boundaries
 #--------------------------------------------------------------------
-class Array
-
-  def invert( axis )
-    case axis.to_s
-    when "y"
-      self.map( &:reverse )
-    when "x"
-      self.reverse
-    end
-  end
-        
-end
-
 module Chunking
 
   class Detector
     attr_accessor :axis, :offset, :size, :rgb, :fuzz, :density, :tolerance
-    RGB_BLACK = [0,0,0,0]
+    RGB_BLACK = [0,0,0]
 
     # NOTE: "size" represents width OR height and "offset" represents left or bottom depending on axis supplied 
     def initialize( args = {} )
@@ -32,8 +19,8 @@ module Chunking
       @tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
     end
 
-    # TODO: untested
     def density_reached?( pixel_count, img = nil )
+      # TODO: untested
       density = determine_density( img )
       pixel_count >= density ? true : false
     end
@@ -78,7 +65,7 @@ module Chunking
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
         if run.tolerance_reached?( tolerance )
-          run.boundary = Boundary.new( axis, index )
+          run.boundary = Boundary.new( axis, index - tolerance )
           return run.boundary
         end
       end
