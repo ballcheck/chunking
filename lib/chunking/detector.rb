@@ -8,6 +8,7 @@ module Chunking
 
   class Detector
     attr_accessor :axis, :offset, :size, :rgb, :fuzz, :density, :tolerance
+    attr_reader :runs
     RGB_BLACK = [0,0,0]
 
     def initialize( args = {} )
@@ -21,6 +22,7 @@ module Chunking
       # pixel "density", line "tolerance"
       @density = args.has_key?(:density) ? args[:density] : 1
       @tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
+      @runs = []
     end
 
     #:main:
@@ -31,7 +33,7 @@ module Chunking
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
       img = img.invert( axis ) if invert_direction
-      run = Detector::Run.new( self, img, start_index )
+      runs << ( run = Detector::Run.new( self, img, start_index ) )
 
       lines = determine_remaining_lines( img, start_index )
 

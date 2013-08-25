@@ -2,6 +2,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
 
   #-- TODO: be able to run these tests with various detector options
   def build_run( *args )
+    #-- TODO: this seems a little fishy.
     run = Chunking::Detector::Run.new( *args )
     # ensure that when a run is created in 'detect_boundary' this run (the one
     # that was created with *args) is returned
@@ -19,8 +20,24 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector = build_detector
     img = build_image( 0 )
     start_index = mock( "start_index", :to_i => 0 )
-    Chunking::Detector::Run.expects( :new ).once.with( detector, img, start_index )
+    run = mock( "run" )
+    Chunking::Detector::Run.expects( :new ).once.with( detector, img, start_index ).returns( run )
     detector.detect_boundary( img, start_index )
+    assert_equal [ run ], detector.runs
+  end
+
+  def test_runs_should_persist
+    detector = build_detector
+    img = build_image( 0 )
+    start_index = stub( "start_index", :to_i => 0 )
+    run1 = mock( "run1" )
+    run2 = mock( "run2" )
+    # TODO: is this expecting once more than one expected mock behavior?
+    Chunking::Detector::Run.expects( :new ).once.with( detector, img, start_index ).returns( run1 )
+    Chunking::Detector::Run.expects( :new ).once.with( detector, img, start_index ).returns( run2 )
+    detector.detect_boundary( img, start_index )
+    detector.detect_boundary( img, start_index )
+    assert_equal [ run2, run1 ], detector.runs
   end
 
   def test_should_return_nil_if_we_run_out_of_image

@@ -1,8 +1,8 @@
 module Chunking
   class Detector
     class Run
-      attr_accessor :state, :image, :start_index, :boundary
-      attr_reader :initial_state, :tolerance_counter, :detector
+      attr_accessor :state, :boundary
+      attr_reader :image, :start_index, :initial_state, :tolerance_counter, :detector
 
       def initialize( detector, image, start_index = 0 )
         @detector = detector
