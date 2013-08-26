@@ -6,6 +6,7 @@ module Chunking
   module Image
     # An extension of Image::Base wrapper for RMagick
     class RMagickImage < Base
+      #-- TODO: rename to Image::RMagick
       BLACK_RGB = [ 0, 0, 0 ]
       WHITE_RGB = [ Magick::QuantumRange, Magick::QuantumRange, Magick::QuantumRange ]
 
@@ -18,11 +19,6 @@ module Chunking
         else
           @base_image = Magick::Image.new( *args )
         end
-      end
-
-      # Check equality of 2 rgb values.
-      def self.compare_colours?( rgb1, rgb2, fuzz )
-        Magick::Pixel.new( *rgb1 ).fcmp(  Magick::Pixel.new( *rgb2 ), fuzz )
       end
 
       # Determine the size of the base_image on the given axis.
@@ -45,8 +41,8 @@ module Chunking
       end
 
       # Set the colour of the pixel at the given coordinates.
-      def set_pixel_colour( x, y, rgba )
-        p = base_image.pixel_color( x, y, Magick::Pixel.new( *rgba ) )
+      def set_pixel_colour( x, y, colour )
+        p = base_image.pixel_color( x, y, Magick::Pixel.new( *colour ) )
         [ p.red, p.green, p.blue, p.opacity ]
       end
 

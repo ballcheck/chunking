@@ -1,3 +1,4 @@
+# TODO: benchmark & performance
 # TODO: annotate.
 # TODO: should have colour_tolerance and non_colour_tolerance.
 # TODO: detector could have many runs.

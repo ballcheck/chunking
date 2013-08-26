@@ -33,11 +33,12 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     run1 = mock( "run1" )
     run2 = mock( "run2" )
     # TODO: is this expecting once more than one expected mock behavior?
-    Chunking::DetectorRun.expects( :new ).once.with( detector, img, start_index ).returns( run1 )
+    # same for expecting them in reverse order?
     Chunking::DetectorRun.expects( :new ).once.with( detector, img, start_index ).returns( run2 )
+    Chunking::DetectorRun.expects( :new ).once.with( detector, img, start_index ).returns( run1 )
     detector.detect_boundary( img, start_index )
     detector.detect_boundary( img, start_index )
-    assert_equal [ run2, run1 ], detector.runs
+    assert_equal [ run1, run2 ], detector.runs
   end
 
   def test_should_return_nil_if_we_run_out_of_image
@@ -155,5 +156,25 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     img.expects( :invert ).never
     detector.detect_boundary( img, 0, false )
   end
+    
+  #def test_benchmark
+  #  n = 100000
+  #  Benchmark.bm { |x|
+  #    px = Magick::Pixel.new( 0, 0, 0 )
+
+  #    x.report( "fcmp" ){
+  #      n.times do
+  #        px.fcmp( px )
+  #      end
+  #    }
+
+  #    x.report( "compare_colours?" ) {
+  #      n.times do
+  #        Chunking::Image::Base.compare_colours?( [ 0, 0, 0 ], [ 0, 0, 0 ] )
+  #      end
+  #    }
+
+  #  }
+  #end
     
 end
