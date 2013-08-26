@@ -19,7 +19,7 @@ module Chunking
         raise NotImplementedError
       end
 
-      # Determine the size of the base_image on the given axis.
+      # Determine the size of the image on the given axis.
       def size( *args )
         raise NotImplementedError
       end
@@ -44,6 +44,10 @@ module Chunking
         raise NotImplementedError
       end
 
+      # Maximum value for any single colour value ( r/g/b/a/c/m/k/y )
+      def quantum_range( *args )
+        raise NotImplementedError
+      end
       #-- TODO: create colour / color aliases
       # aliases created here would refer to the template methods and raise.
     end

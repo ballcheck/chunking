@@ -21,7 +21,7 @@ module Chunking
         end
       end
 
-      # Determine the size of the base_image on the given axis.
+      # Determine the size of the image on the given axis.
       def size( axis )
         case axis
         when :x
@@ -62,6 +62,12 @@ module Chunking
       def rotate( deg )
         self.class.new( base_image.rotate( deg ) )
       end
+
+      # Maximum value for any single colour value ( r/g/b/a/c/m/k/y )
+      def quantum_range
+        Magick::QuantumRange
+      end
+
     end
   end
 end

@@ -1,7 +1,5 @@
-# TODO: benchmark & performance
 # TODO: annotate.
 # TODO: should have colour_tolerance and non_colour_tolerance.
-# TODO: detector could have many runs.
 # TODO: @axis could be a class, thus preventing passing strings / syms around.
 # TODO: surely you don't need to require files in the same module?
 require File.expand_path( "../detector_run.rb", __FILE__ )
@@ -22,7 +20,7 @@ module Chunking
       @offset = args.has_key?(:offset) ? args[:offset] : 0
       @size = args.has_key?(:size) ? args[:size] : nil
       @colour = args.has_key?(:colour) ? args[:colour] : RGB_BLACK
-      @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0.2
+      @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 2
       # pixel "density", line "tolerance"
       @density = args.has_key?(:density) ? args[:density] : 1
       @tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
@@ -60,17 +58,18 @@ module Chunking
     # Skip n - 1 boundaries and return the nth.
     def detect_nth_boundary( img, n, start_index = 0, invert_direction = false )
       index = start_index
+      boundary = nil
       n.times do
-        index = detect_boundary( img, index, invert_direction )
-        return nil unless index
+        boundary = detect_boundary( img, index, invert_direction )
+        return nil unless boundary
+        index = boundary.index
       end
 
-      return index
+      return boundary
     end
 
     # Tell if a given line within an image contains the Detector @colour.
     def detect_colour?( img, line_index = nil )
-      # TODO: would it be cleaner to ignore the axis and just rotate the image? Performance issues?
       line_index ||= 0
       pixel_count = 0
       offset = determine_offset( img )
@@ -121,6 +120,11 @@ module Chunking
     def determine_density( img )
       density_value = is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
       return density_value.to_i
+    end
+
+    def determine_fuzz( img )
+      fuzz_value = is_percent_string?( fuzz ) ? apply_percent_string( img.quantum_range, fuzz ) : fuzz
+      return fuzz_value.to_i
     end
 
     def axis_of_travel

@@ -20,11 +20,13 @@ class DetectorTest < ActiveSupport::TestCase
     start_index = 0
     first_index = 1
     second_index = 5
+    first_boundary = Chunking::Boundary.new( nil, first_index )
+    second_boundary = Chunking::Boundary.new( nil, second_index )
     # 'n' times
     n = 2
-    detector.expects( :detect_boundary ).times( 1 ).with( img, start_index, invert ).returns( first_index )
-    detector.expects( :detect_boundary ).times( 1 ).with( img, start_index + first_index, invert ).returns( second_index )
-    final_index = detector.detect_nth_boundary( img, n, start_index, invert )
+    detector.expects( :detect_boundary ).times( 1 ).with( img, start_index, invert ).returns( first_boundary )
+    detector.expects( :detect_boundary ).times( 1 ).with( img, start_index + first_index, invert ).returns( second_boundary )
+    final_index = detector.detect_nth_boundary( img, n, start_index, invert ).index
     assert_equal second_index, final_index
   end
 
