@@ -14,6 +14,17 @@ class DetectColourTest < ActiveSupport::TestCase
     assert !detector.detect_colour?( img )
   end
 
+  def test_should_annotate_correctly
+    detector = build_detector
+    detector.expects( :annotate_image ).once.with( 0, 0, :negative )
+    detector.expects( :annotate_image ).once.with( 0, 0, :positive )
+    img = mock( "img" )
+    img.expects( :pixel_is_colour? ).once.returns( true )
+    img.expects( :pixel_is_colour? ).once.returns( false )
+    assert !detector.detect_colour?( img, nil, true )
+    assert detector.detect_colour?( img, nil, true )
+  end
+
   def test_should_check_all_pixels
     size = 4
     detector = build_detector( :size => size )

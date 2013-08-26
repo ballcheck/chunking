@@ -12,6 +12,9 @@ module Chunking
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance
     attr_reader :runs
     RGB_BLACK = [0,0,0]
+    ANNOTATE_POSITIVE = [ 65000, 0, 0, 0 ]
+    ANNOTATE_NEGATIVE = [ 40000, 40000, 40000 ]
+    ANNOTATE_START = [ 0, 0, 65000 ]
 
     def initialize( args = {} )
       # "size" represents width OR height and "offset" represents
@@ -31,17 +34,18 @@ module Chunking
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or ouside a content block).
-    def detect_boundary( img, start_index = 0, invert_direction = false )
+    def detect_boundary( img, start_index = 0, invert_direction = false, annotate = false )
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
       img = img.invert( axis ) if invert_direction
-      runs << ( run = DetectorRun.new( self, img, start_index ) )
+      run = DetectorRun.new( self, img, start_index )
+      runs << run
 
       lines = determine_remaining_lines( img, start_index )
 
       lines.times do |line|
         index = start_index + line
-        run.state = detect_colour?( img, index )
+        run.state = detect_colour?( img, index, annotate )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
         # TODO: is run too closely tied now?
@@ -56,11 +60,11 @@ module Chunking
     end
 
     # Skip n - 1 boundaries and return the nth.
-    def detect_nth_boundary( img, n, start_index = 0, invert_direction = false )
+    def detect_nth_boundary( img, n, start_index = 0, invert_direction = false, annotate = false )
       index = start_index
       boundary = nil
       n.times do
-        boundary = detect_boundary( img, index, invert_direction )
+        boundary = detect_boundary( img, index, invert_direction, annotate )
         return nil unless boundary
         index = boundary.index
       end
@@ -69,7 +73,7 @@ module Chunking
     end
 
     # Tell if a given line within an image contains the Detector @colour.
-    def detect_colour?( img, line_index = nil )
+    def detect_colour?( img, line_index = nil, annotate = false )
       line_index ||= 0
       pixel_count = 0
       offset = determine_offset( img )
@@ -80,15 +84,32 @@ module Chunking
         y = axis == :y ? img.size( axis ) - 1 - ( ind + offset ) : line_index
 
         if img.pixel_is_colour?( x, y, colour, fuzz )
+          annotate_image( x, y, :positive ) if annotate
           if density_reached?( pixel_count += 1, img )
             return true
           end
+        else
+          annotate_image( x, y, :negative ) if annotate
         end
       end
+
       return false
     end
     
     alias detect_color? detect_colour?
+
+    def annotate_image( x, y, result )
+      #-- TODO: untested
+      image = runs.last.image
+      if result == :positive
+        image.set_pixel_colour( x, y, ANNOTATE_POSITIVE )
+      elsif result == :start
+        image.set_pixel_colour( x, y, ANNOTATE_START )
+      elsif result == :negative
+        image.set_pixel_colour( x, y, ANNOTATE_NEGATIVE )
+      end
+    end
+        
 
     class << self
       # Class method version of instance method of the same name. Provided for simplicity.
