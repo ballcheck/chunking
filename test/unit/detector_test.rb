@@ -6,7 +6,7 @@ class DetectorTest < ActiveSupport::TestCase
 
   def test_should_detect_black_by_default
     detector = Chunking::Detector.new
-    assert_equal Chunking::Detector::RGB_BLACK, detector.rgb
+    assert_equal Chunking::Detector::RGB_BLACK, detector.colour
   end
 
   #--------

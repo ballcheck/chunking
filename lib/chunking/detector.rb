@@ -11,7 +11,7 @@ require File.expand_path( "../boundary.rb", __FILE__ )
 module Chunking
 
   class Detector
-    attr_accessor :axis, :offset, :size, :rgb, :fuzz, :density, :tolerance
+    attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance
     attr_reader :runs
     RGB_BLACK = [0,0,0]
 
@@ -21,7 +21,7 @@ module Chunking
       @axis = args.has_key?(:axis) ? args[:axis].to_sym : :x
       @offset = args.has_key?(:offset) ? args[:offset] : 0
       @size = args.has_key?(:size) ? args[:size] : nil
-      @rgb = args.has_key?(:rgb) ? args[:rgb] : RGB_BLACK
+      @colour = args.has_key?(:colour) ? args[:colour] : RGB_BLACK
       @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0.2
       # pixel "density", line "tolerance"
       @density = args.has_key?(:density) ? args[:density] : 1
@@ -68,7 +68,7 @@ module Chunking
       return index
     end
 
-    # Tell if a given line within an image contains the Detector @rgb.
+    # Tell if a given line within an image contains the Detector @colour.
     def detect_colour?( img, line_index = nil )
       # TODO: would it be cleaner to ignore the axis and just rotate the image? Performance issues?
       line_index ||= 0
@@ -80,7 +80,7 @@ module Chunking
         x = axis == :x ? ind + offset : line_index
         y = axis == :y ? img.size( axis ) - 1 - ( ind + offset ) : line_index
 
-        if img.pixel_is_colour?( x, y, rgb, fuzz )
+        if img.pixel_is_colour?( x, y, colour, fuzz )
           if density_reached?( pixel_count += 1, img )
             return true
           end

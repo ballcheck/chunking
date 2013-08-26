@@ -2,6 +2,7 @@
 # TODO: behavioral tests for other methods e.g. nth_boundary
 # TODO: these tests are only really for detect_boundary.rb so should be reorganised.
 # TODO: test nth_boundary create n runs
+# TODO: cmyk? rgba?
 
 # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.
 module Behavioral
@@ -10,9 +11,10 @@ module Behavioral
     # Set up for the test.
     def setup
       @axis = :x
-      @rgb = ::Chunking::Image::RMagickImage::BLACK_RGB
-      @foreground_rgb = @rgb
-      @background_rgb = ::Chunking::Image::RMagickImage::WHITE_RGB
+      @colour = ::Chunking::Image::RMagickImage::BLACK_RGB
+      @foreground_colour = @colour
+      @background_colour = ::Chunking::Image::RMagickImage::WHITE_RGB
+      @fuzz = 0
     end
 
     # Whether the image should be inverted for this test or not.
@@ -30,8 +32,8 @@ module Behavioral
   module ColourFastTests
     include Setup
     def test_start_index
-      o = @background_rgb
-      x = @foreground_rgb
+      o = @background_colour
+      x = @foreground_colour
       pixel_map = [
         [ o, o, o, o, o ],
         [ x, x, x, x, x ],
@@ -47,7 +49,7 @@ module Behavioral
       img = img.rotate( -90 ) if @axis == :y
       img = img.invert( @axis ) if invert?
 
-      detector = Chunking::Detector.new( :axis => @axis, :size => 5, :rgb => @rgb )
+      detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :size => 5, :colour => @colour )
 
       # immediate boundary
       assert_equal 1, detector.detect_boundary( img, 0, invert? ).index
@@ -60,8 +62,8 @@ module Behavioral
     end
 
     def test_invert
-      o = @background_rgb
-      x = @foreground_rgb
+      o = @background_colour
+      x = @foreground_colour
       pixel_map = [
         [ o, o, o, o, o ],
         [ x, x, x, x, x ],
@@ -75,10 +77,10 @@ module Behavioral
 
       size = img.size( @axis )
 
-      detector = Chunking::Detector.new( :axis => @axis, :size => size, :rgb => @rgb )
+      detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
       assert_equal 1, detector.detect_boundary( img, 0, invert? ).index
      
-      detector = Chunking::Detector.new( :axis => @axis, :size => size, :rgb => @rgb )
+      detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
       assert_equal 2, detector.detect_boundary( img, 0, !invert? ).index
     end
 
@@ -87,8 +89,8 @@ module Behavioral
     end
 
     def test_no_matches
-      o = @background_rgb
-      x = @foreground_rgb
+      o = @background_colour
+      x = @foreground_colour
       pixel_map = [
         [ o, o, o, o, o ],
         [ o, o, o, o, o ],
@@ -100,7 +102,7 @@ module Behavioral
       img = img.invert( @axis ) if invert?
       size = img.size( @axis )
 
-      detector = Chunking::Detector.new( :axis => @axis, :size => size, :rgb => @rgb )
+      detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
       assert_equal nil, detector.detect_boundary( img, 0, invert? )
     end
 
@@ -109,8 +111,8 @@ module Behavioral
     # end
     
     def test_tolerance
-      o = @background_rgb
-      x = @foreground_rgb
+      o = @background_colour
+      x = @foreground_colour
       pixel_map = [
         [ o, o, o ],
         [ x, x, x ],
@@ -137,7 +139,7 @@ module Behavioral
       }
 
       tolerance_index_map.each do |k,v|
-        detector = Chunking::Detector.new( :axis => @axis, :tolerance => k, :size => size, :rgb => @rgb )
+        detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :tolerance => k, :size => size, :colour => @colour )
         boundary = detector.detect_boundary( img, 0, invert? )
         index = boundary ? boundary.index : nil
         assert_equal v, index
@@ -145,12 +147,12 @@ module Behavioral
     end
   end
   
-  # Tests that don't make sense if background / foreground colours are inverted relative to @rgb.
+  # Tests that don't make sense if background / foreground colours are inverted relative to @colour.
   module NonColourFastTests
     include Setup
     def test_offset
-      o = @background_rgb
-      x = @foreground_rgb
+      o = @background_colour
+      x = @foreground_colour
       pixel_map = [
         [ o, o, o, o, o ],
         [ x, o, o, o, o ],
@@ -167,15 +169,15 @@ module Behavioral
       size = img.size( @axis )
 
       size.times do |i|
-         detector = Chunking::Detector.new( :axis => @axis, :offset => i, :size => size - i, :rgb => @rgb )
+         detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :offset => i, :size => size - i, :colour => @colour )
          assert_equal i+1,  detector.detect_boundary( img, 0, invert? ).index
       end
     end
 
     def test_size
       # TODO: what should happen when detector bigger than image?
-      o = @background_rgb
-      x = @foreground_rgb
+      o = @background_colour
+      x = @foreground_colour
       pixel_map = [
         [ o, o, o, o, o ],
         [ o, o, o, o, x ],
@@ -192,14 +194,14 @@ module Behavioral
       size = img.size( @axis )
 
       size.times do |i|
-         detector = Chunking::Detector.new( :axis => @axis, :size => size - i, :rgb => @rgb )
+         detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size - i, :colour => @colour )
          assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
       end
     end
 
     def test_density
-      o = @background_rgb
-      x = @foreground_rgb
+      o = @background_colour
+      x = @foreground_colour
       pixel_map = [
         [ o, o, o, o, o ],
         [ o, o, x, o, o ],
@@ -216,7 +218,7 @@ module Behavioral
       size = img.size( @axis )
 
       5.times do |i|
-         detector = Chunking::Detector.new( :axis => @axis, :density => i + 1, :size => size, :rgb => @rgb )
+         detector = Chunking::Detector.new( :fuzz => @fuzz, :axis => @axis, :density => i + 1, :size => size, :colour => @colour )
          assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
       end
     end

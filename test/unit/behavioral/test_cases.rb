@@ -35,6 +35,32 @@ module Behavioral
     end
   end
 
+  class XAxisArrayOfColours < ActiveSupport::TestCase
+    include AllTests
+
+    def setup
+      super
+      @colour = [
+        [ 0, 0, 0, 0 ],
+        [ 1000, 1000, 1000, 0 ],
+        [ 10000, 10000, 10000, 0 ]
+      ]
+
+      @foreground_colour = @colour[ 1 ]
+    end
+  end
+
+  class XAxisFuzz < ActiveSupport::TestCase
+    include AllTests
+
+    def setup
+      super
+      @colour = [ 0, 0, 0, 0 ]
+      @foreground_colour = [ 1000, 1000, 1000, 0 ]
+      @fuzz = 1000
+    end
+  end
+
   class XAxisSwapFGBG < ActiveSupport::TestCase
     include ColourFastTests
 
@@ -42,8 +68,22 @@ module Behavioral
     # Only works on ColourFastTests.
     def setup
       super
-      @background_rgb = @rgb
-      @foreground_rgb = ::Chunking::Image::RMagickImage::WHITE_RGB
+      @background_colour = @colour
+      @foreground_colour = ::Chunking::Image::RMagickImage::WHITE_RGB
     end
   end
+
+  class YAxisSwapFGBG < ActiveSupport::TestCase
+    include ColourFastTests
+
+    # Swap background / foreground colours so we start on a colour, and move off. 
+    # Only works on ColourFastTests.
+    def setup
+      super
+      @background_colour = @colour
+      @foreground_colour = ::Chunking::Image::RMagickImage::WHITE_RGB
+      @axis = :y
+    end
+  end
+
 end
