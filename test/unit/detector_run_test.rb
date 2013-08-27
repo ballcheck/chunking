@@ -1,8 +1,7 @@
 class DetectorRunTest < ActiveSupport::TestCase
 
   def build_run( detector = nil, image = nil )
-    # TODO: this is only a class method so it can be stubbed.
-    Chunking::DetectorRun.stubs( :determine_initial_state )
+    Chunking::DetectorRun.any_instance.stubs( :determine_initial_state )
     run = Chunking::DetectorRun.new( detector, image )
   end
 
@@ -26,25 +25,26 @@ class DetectorRunTest < ActiveSupport::TestCase
 
   def test_initial_state_and_state_are_set_on_initialisation
     initial_state = mock( "initial_state" )
-    Chunking::DetectorRun.expects( :determine_initial_state ).returns( initial_state )
+    Chunking::DetectorRun.any_instance.expects( :determine_initial_state ).returns( initial_state )
     run = Chunking::DetectorRun.new( nil, nil )
     assert_equal initial_state, run.initial_state
     assert_equal initial_state, run.state
   end
 
   def test_method_determine_initial_state
+    image = stub( "image", :create_mask => nil )
+    start_index = stub( "start_index" )
+    state = stub( "state" )
     detector = mock( "detector" )
-    image = mock( "image" )
-    start_index = mock( "start_index" )
-    state = mock( "state" )
-    detector.expects( :detect_colour? ).with( image, start_index ).returns( state )
-    assert_equal state, ::Chunking::DetectorRun.determine_initial_state( detector, image, start_index )
+    detector.stubs( :detect_colour? ).returns( state )
+    run = ::Chunking::DetectorRun.new( detector, image ) # triggers determine_initial_state once
+    assert_equal state, run.send( :determine_initial_state, detector, image, start_index )
   end
   
   def test_method_state_changed?
     initial_state = mock( "initial_state" )
     new_state = mock( "new_state" )
-    Chunking::DetectorRun.expects( :determine_initial_state ).returns( initial_state )
+    Chunking::DetectorRun.any_instance.expects( :determine_initial_state ).returns( initial_state )
     run = Chunking::DetectorRun.new( nil, nil )
     assert !run.state_changed?
     run.state = new_state
@@ -67,7 +67,7 @@ class DetectorRunTest < ActiveSupport::TestCase
   def test_annotation_mask_is_set_on_initialisation
     mask = mock( "mask" )
     Chunking::DetectorRun.any_instance.expects( :create_annotation_mask ).returns( mask )
-    Chunking::DetectorRun.stubs( :determine_initial_state )
+    Chunking::DetectorRun.any_instance.stubs( :determine_initial_state )
     run = Chunking::DetectorRun.new( nil, nil )
     assert_equal mask, run.annotation_mask
   end

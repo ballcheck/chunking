@@ -158,7 +158,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     
   def test_tmp
     mag = Magick::Image.read( "/home/tim/Desktop/random.jpg" ).first
-    img = Chunking::Image::RMagickImage.new( mag )
+    img = Chunking::Image::RMagick.new( mag )
     colour = [ 60000, 25000, 0, 0 ]
     d = Chunking::Detector.new( :colour => colour, :size => 100, :offset => 100, :fuzz => "30%", :density => 3, :tolerance => 2 )
     d.detect_boundary( img, 0, true, true )

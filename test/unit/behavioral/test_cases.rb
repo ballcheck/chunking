@@ -69,7 +69,7 @@ module Behavioral
     def setup
       super
       @background_colour = @colour
-      @foreground_colour = ::Chunking::Image::RMagickImage::WHITE_RGB
+      @foreground_colour = ::Chunking::Image::RMagick::WHITE_RGB
     end
   end
 
@@ -81,7 +81,7 @@ module Behavioral
     def setup
       super
       @background_colour = @colour
-      @foreground_colour = ::Chunking::Image::RMagickImage::WHITE_RGB
+      @foreground_colour = ::Chunking::Image::RMagick::WHITE_RGB
       @axis = :y
     end
   end

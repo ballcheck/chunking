@@ -11,9 +11,9 @@ module Behavioral
     # Set up for the test.
     def setup
       @axis = :x
-      @colour = ::Chunking::Image::RMagickImage::BLACK_RGB
+      @colour = ::Chunking::Image::RMagick::BLACK_RGB
       @foreground_colour = @colour
-      @background_colour = ::Chunking::Image::RMagickImage::WHITE_RGB
+      @background_colour = ::Chunking::Image::RMagick::WHITE_RGB
       @fuzz = 0
     end
 
@@ -24,7 +24,7 @@ module Behavioral
 
     # Provides loose-coupling with the method of the same name in the image library.
     def build_image_from_pixel_map( pixel_map )
-      Chunking::Image::RMagickImage.new_from_pixel_map pixel_map
+      Chunking::Image::RMagick.new_from_pixel_map pixel_map
     end
   end
 

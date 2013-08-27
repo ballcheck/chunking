@@ -9,7 +9,7 @@ module Chunking
       @image = image
       @annotation_mask = create_annotation_mask
       @start_index = start_index
-      @initial_state = self.class.determine_initial_state( @detector, @image, @start_index )
+      @initial_state = determine_initial_state( @detector, @image, @start_index )
       @state = @initial_state
       @tolerance_counter = 0
     end
@@ -49,9 +49,7 @@ module Chunking
       image.create_mask if image.present?
     end
 
-    # this is only here so it can be stubbed
-    # TODO: this is only a class method because I was not sure how to access it from initialize & stub
-    def self.determine_initial_state( detector, image, start_index )
+    def determine_initial_state( detector, image, start_index )
       detector.detect_colour?( image, start_index )
     end
 

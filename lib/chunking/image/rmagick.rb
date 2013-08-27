@@ -5,8 +5,7 @@ require "RMagick"
 module Chunking
   module Image
     # An extension of Image::Base wrapper for RMagick
-    class RMagickImage < Base
-      #-- TODO: rename to Image::RMagick
+    class RMagick < Base
       BLACK_RGB = [ 0, 0, 0 ]
       WHITE_RGB = [ Magick::QuantumRange, Magick::QuantumRange, Magick::QuantumRange ]
 

@@ -1,4 +1,3 @@
-# TODO: annotate.
 # TODO: should have colour_tolerance and non_colour_tolerance.
 # TODO: @axis could be a class, thus preventing passing strings / syms around.
 # TODO: surely you don't need to require files in the same module?
@@ -36,6 +35,7 @@ module Chunking
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or ouside a content block).
     def detect_boundary( img, start_index = 0, invert_direction = false, annotate = false )
+      #-- TODO: should be able to call this method with a base_image
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
       #-- TODO: the run gets the inverted copy image here. 
@@ -50,7 +50,6 @@ module Chunking
         run.state = detect_colour?( img, index, annotate )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
-        # TODO: is run too closely tied now?
         if run.tolerance_reached?
           run.boundary = Boundary.new( axis, index - tolerance )
           return run.boundary
@@ -105,7 +104,6 @@ module Chunking
 
     def annotate_image( x, y, result )
       #-- TODO: untested
-      #-- TODO: annotate start, boundary vs tolerance reached
       image = runs.last.annotation_mask
       if result == :density_reached
         image.set_pixel_colour( x, y, ANNOTATE_DENSITY_REACHED )
