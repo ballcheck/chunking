@@ -12,9 +12,10 @@ module Chunking
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance
     attr_reader :runs
     RGB_BLACK = [0,0,0]
-    ANNOTATE_POSITIVE = [ 65000, 0, 0, 0 ]
-    ANNOTATE_NEGATIVE = [ 40000, 40000, 40000 ]
-    ANNOTATE_START = [ 0, 0, 65000 ]
+    #-- TODO: are these max rgb values coupled to rmagick?
+    ANNOTATE_DENSITY_REACHED = [ 65535, 0, 0, 0 ]
+    ANNOTATE_PIXEL_IS_COLOUR = [ 0, 0, 65535 ]
+    ANNOTATE_NIL = [ 40000, 40000, 40000 ]
 
     def initialize( args = {} )
       # "size" represents width OR height and "offset" represents
@@ -23,7 +24,7 @@ module Chunking
       @offset = args.has_key?(:offset) ? args[:offset] : 0
       @size = args.has_key?(:size) ? args[:size] : nil
       @colour = args.has_key?(:colour) ? args[:colour] : RGB_BLACK
-      @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 2
+      @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
       # pixel "density", line "tolerance"
       @density = args.has_key?(:density) ? args[:density] : 1
       @tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
@@ -37,6 +38,7 @@ module Chunking
     def detect_boundary( img, start_index = 0, invert_direction = false, annotate = false )
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
+      #-- TODO: the run gets the inverted copy image here. 
       img = img.invert( axis ) if invert_direction
       run = DetectorRun.new( self, img, start_index )
       runs << run
@@ -78,18 +80,21 @@ module Chunking
       pixel_count = 0
       offset = determine_offset( img )
       size = determine_size( img )
+      fuzz = determine_fuzz( img )
 
       size.times do |ind|
         x = axis == :x ? ind + offset : line_index
         y = axis == :y ? img.size( axis ) - 1 - ( ind + offset ) : line_index
 
         if img.pixel_is_colour?( x, y, colour, fuzz )
-          annotate_image( x, y, :positive ) if annotate
           if density_reached?( pixel_count += 1, img )
+            annotate_image( x, y, :density_reached ) if annotate
             return true
+          else
+            annotate_image( x, y, :pixel_is_colour ) if annotate
           end
         else
-          annotate_image( x, y, :negative ) if annotate
+          annotate_image( x, y, nil ) if annotate
         end
       end
 
@@ -100,13 +105,14 @@ module Chunking
 
     def annotate_image( x, y, result )
       #-- TODO: untested
-      image = runs.last.image
-      if result == :positive
-        image.set_pixel_colour( x, y, ANNOTATE_POSITIVE )
-      elsif result == :start
-        image.set_pixel_colour( x, y, ANNOTATE_START )
-      elsif result == :negative
-        image.set_pixel_colour( x, y, ANNOTATE_NEGATIVE )
+      #-- TODO: annotate start, boundary vs tolerance reached
+      image = runs.last.annotation_mask
+      if result == :density_reached
+        image.set_pixel_colour( x, y, ANNOTATE_DENSITY_REACHED )
+      elsif result == :pixel_is_colour
+        image.set_pixel_colour( x, y, ANNOTATE_PIXEL_IS_COLOUR )
+      else
+        image.set_pixel_colour( x, y, ANNOTATE_NIL )
       end
     end
         

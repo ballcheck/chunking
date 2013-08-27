@@ -13,11 +13,11 @@ module Chunking
       attr_reader :base_image
 
       # Either a) create a wrapper for a pre-existing base_image or b) create a new blank base_image from rows and cols.
-      def initialize( *args )
+      def initialize( *args, &block )
         if args[0].is_a?( Magick::Image )
           @base_image = args[0]
         else
-          @base_image = Magick::Image.new( *args )
+          @base_image = Magick::Image.new( *args, &block )
         end
       end
 
@@ -66,6 +66,11 @@ module Chunking
       # Maximum value for any single colour value ( r/g/b/a/c/m/k/y )
       def quantum_range
         Magick::QuantumRange
+      end
+
+      # Create a blank image of the same size, but with a transparent background.
+      def create_mask( *args )
+        self.class.new( size( :x ), size( :y ) ){ self.background_color = "none" }
       end
 
     end

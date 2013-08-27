@@ -48,6 +48,11 @@ module Chunking
       def quantum_range( *args )
         raise NotImplementedError
       end
+
+      # Create a blank image of the same size, but with a transparent background.
+      def create_mask( *args )
+        raise NotImplementedError
+      end
       #-- TODO: create colour / color aliases
       # aliases created here would refer to the template methods and raise.
     end

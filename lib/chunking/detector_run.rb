@@ -2,11 +2,12 @@ module Chunking
   # Container used in Detector.detect_boundary to monitor detection progress and hold results.
   class DetectorRun
     attr_accessor :state, :boundary
-    attr_reader :image, :start_index, :initial_state, :tolerance_counter, :detector
+    attr_reader :image, :start_index, :initial_state, :tolerance_counter, :detector, :annotation_mask
 
     def initialize( detector, image, start_index = 0 ) #:nodoc:
       @detector = detector
       @image = image
+      @annotation_mask = create_annotation_mask
       @start_index = start_index
       @initial_state = self.class.determine_initial_state( @detector, @image, @start_index )
       @state = @initial_state
@@ -31,12 +32,23 @@ module Chunking
       tolerance_counter.to_i > tolerance.to_i
     end
 
+    # Apply the annotation_mask to the base_image. Visual representation of the DetectorRun useful in debugging.
+    def annotate
+      #-- TODO: coupled with RMagick and untested.
+      image.base_image.dissolve( annotation_mask.base_image, 0.95, 1 )
+    end
+      
     private
 
     def tolerance
       detector.tolerance
     end
-    
+
+    def create_annotation_mask
+      #-- TODO: untested
+      image.create_mask if image.present?
+    end
+
     # this is only here so it can be stubbed
     # TODO: this is only a class method because I was not sure how to access it from initialize & stub
     def self.determine_initial_state( detector, image, start_index )

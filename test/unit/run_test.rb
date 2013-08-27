@@ -1,4 +1,4 @@
-class RunTest < ActiveSupport::TestCase
+class DetectorRunTest < ActiveSupport::TestCase
 
   def build_run( detector = nil, image = nil )
     # TODO: this is only a class method so it can be stubbed.
@@ -62,5 +62,13 @@ class RunTest < ActiveSupport::TestCase
     assert !run.tolerance_reached?
     run.stubs( :detector => stub( :tolerance => 2 ) )
     assert !run.tolerance_reached?
+  end
+
+  def test_annotation_mask_is_set_on_initialisation
+    mask = mock( "mask" )
+    Chunking::DetectorRun.any_instance.expects( :create_annotation_mask ).returns( mask )
+    Chunking::DetectorRun.stubs( :determine_initial_state )
+    run = Chunking::DetectorRun.new( nil, nil )
+    assert_equal mask, run.annotation_mask
   end
 end
