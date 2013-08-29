@@ -14,17 +14,21 @@ class DetectColourTest < ActiveSupport::TestCase
     assert !detector.detect_colour?( img )
   end
 
-  #-- TODO: this test is broken
-  #def test_should_annotate_correctly
-  #  detector = build_detector
-  #  detector.expects( :annotate_image ).once.with( 0, 0, nil )
-  #  detector.expects( :annotate_image ).once.with( 0, 0, :pixel_is_colour )
-  #  img = mock( "img" )
-  #  img.expects( :pixel_is_colour? ).once.returns( true )
-  #  img.expects( :pixel_is_colour? ).once.returns( false )
-  #  assert !detector.detect_colour?( img, nil, true )
-  #  assert detector.detect_colour?( img, nil, true )
-  #end
+  def test_should_annotate_correctly
+    detector = build_detector
+    img = stub_everything( "img" )
+    detector.expects( :annotate_image ).once.with( 0, 0, :density_reached )
+    detector.expects( :annotate_image ).once.with( 0, 0, :pixel_is_colour )
+    detector.expects( :annotate_image ).once.with( 0, 0, nil )
+    detector.expects( :density_reached? ).once.returns( true )
+    detector.expects( :density_reached? ).once.returns( false )
+    img.expects( :pixel_is_colour? ).once.returns( true )
+    img.expects( :pixel_is_colour? ).once.returns( true )
+    img.expects( :pixel_is_colour? ).once.returns( false )
+    assert !detector.detect_colour?( img, nil, true )
+    assert !detector.detect_colour?( img, nil, true )
+    assert detector.detect_colour?( img, nil, true )
+  end
 
   def test_should_check_all_pixels
     size = 4
