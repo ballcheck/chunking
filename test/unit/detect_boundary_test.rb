@@ -1,20 +1,6 @@
 class DetectBoundaryTest < ActiveSupport::TestCase
 
   #-- TODO: be able to run these tests with various detector options
-  def build_run( *args )
-    #-- TODO: this seems a little fishy.
-    run = Chunking::DetectorRun.new( *args )
-    # ensure that when a run is created in 'detect_boundary' this run (the one
-    # that was created with *args) is returned
-    Chunking::DetectorRun.stubs( :new ).once.returns( run )
-    return run
-  end
-
-  def build_image( size = 1 )
-    img = stub( :size => size, :create_mask => nil )
-    return img
-  end
-    
   def test_should_create_run_correctly
     detector = build_detector
     img = build_image( 0 )
