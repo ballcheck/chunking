@@ -56,11 +56,11 @@ class DetectorRunTest < ActiveSupport::TestCase
     run = build_run
     run.stubs( :tolerance_counter ).returns( 1 )
     assert_equal 1, run.tolerance_counter
-    run.stubs( :detector => stub( :tolerance => 0 ) )
+    detector = mock( "detector" )
+    detector.expects( :tolerance ).times( 3 ).returns( 0, 1, 2 )
+    run.stubs( :detector ).returns( detector )
     assert run.tolerance_reached?
-    run.stubs( :detector => stub( :tolerance => 1 ) )
     assert !run.tolerance_reached?
-    run.stubs( :detector => stub( :tolerance => 2 ) )
     assert !run.tolerance_reached?
   end
 

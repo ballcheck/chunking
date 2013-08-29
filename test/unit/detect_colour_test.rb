@@ -17,27 +17,25 @@ class DetectColourTest < ActiveSupport::TestCase
   def test_should_annotate_correctly
     detector = build_detector
     img = stub_everything( "img" )
+    # TODO: dry up
     detector.expects( :annotate_image ).once.with( 0, 0, :density_reached )
     detector.expects( :annotate_image ).once.with( 0, 0, :pixel_is_colour )
     detector.expects( :annotate_image ).once.with( 0, 0, nil )
-    detector.expects( :density_reached? ).once.returns( true )
-    detector.expects( :density_reached? ).once.returns( false )
-    img.expects( :pixel_is_colour? ).once.returns( true )
-    img.expects( :pixel_is_colour? ).once.returns( true )
-    img.expects( :pixel_is_colour? ).once.returns( false )
+    detector.expects( :density_reached? ).times( 2 ).returns( false, true )
+    img.expects( :pixel_is_colour? ).times( 3 ).returns( false, true, true )
     assert !detector.detect_colour?( img, nil, true )
     assert !detector.detect_colour?( img, nil, true )
     assert detector.detect_colour?( img, nil, true )
   end
 
   def test_should_check_all_pixels
-    size = 4
+    size = 3
     detector = build_detector( :size => size )
     img = mock( "img" )
+    # TODO: dry up
     img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 0 }
     img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 1 }
     img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 2 }
-    img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 3 }
     detector.detect_colour?( img )
   end
 
@@ -79,6 +77,7 @@ class DetectColourTest < ActiveSupport::TestCase
     detector = build_detector( :size => size, :offset => offset, :axis => :x )
     img = mock( "img" )
 
+    # TODO: dry up
     img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset && args[1] == line_index }
     img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset + 1 && args[1] == line_index }
     img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset + 2 && args[1] == line_index }
@@ -96,6 +95,7 @@ class DetectColourTest < ActiveSupport::TestCase
     img.stubs( :size ).returns( img_size )
     real_offset = img_size - 1 - offset
 
+    # TODO: dry up
     img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == real_offset && args[0] == line_index }
     img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == real_offset - 1 && args[0] == line_index }
     img.expects( :pixel_is_colour? ).once.with { |*args| args[1] == real_offset - 2 && args[0] == line_index }

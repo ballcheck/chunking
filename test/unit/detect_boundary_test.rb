@@ -17,10 +17,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     start_index = stub( "start_index", :to_i => 0 )
     run1 = mock( "run1" )
     run2 = mock( "run2" )
-    # TODO: is this expecting once more than one expected mock behavior?
-    # same for expecting them in reverse order?
-    Chunking::DetectorRun.expects( :new ).once.with( detector, img, start_index ).returns( run2 )
-    Chunking::DetectorRun.expects( :new ).once.with( detector, img, start_index ).returns( run1 )
+    Chunking::DetectorRun.expects( :new ).times( 2 ).with( detector, img, start_index ).returns( run1, run2 )
     detector.detect_boundary( img, start_index )
     detector.detect_boundary( img, start_index )
     assert_equal [ run1, run2 ], detector.runs
@@ -35,6 +32,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
 
   def test_should_change_state_on_detect_colour
     detector = build_detector
+    # TODO: is this really needed everywhere?
     detector.stubs( :detect_colour? )
     img = build_image
     run = build_run( detector, img )
@@ -50,10 +48,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector.stubs( :detect_colour? )
     img = build_image( 2 )
     run = build_run( detector, img )
-    # fails first time
-    # TODO: is this expecting once more than one expected mock behavior?
-    run.expects( :state_changed? ).once.returns( false )
-    run.expects( :state_changed? ).once.returns( true )
+    run.expects( :state_changed? ).times( 2 ).returns( false, true )
     run.expects( :increment_tolerance_counter ).once
     detector.detect_boundary( img )
   end
@@ -63,8 +58,7 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector.stubs( :detect_colour? )
     img = build_image( 2 )
     run = build_run( detector, img )
-    run.expects( :state_changed? ).once.returns( true )
-    run.expects( :state_changed? ).once.returns( false )
+    run.expects( :state_changed? ).times( 2 ).returns( false, true )
     run.expects( :reset_tolerance_counter ).once
     detector.detect_boundary( img )
   end
