@@ -136,16 +136,6 @@ class DetectBoundaryTest < ActiveSupport::TestCase
     detector.detect_boundary( img, 0, false )
   end
     
-  def test_tmp
-    mag = Magick::Image.read( "/home/tim/Desktop/random.jpg" ).first
-    img = Chunking::Image::RMagick.new( mag )
-    colour = [ 60000, 25000, 0, 0 ]
-    d = Chunking::Detector.new( :colour => colour, :size => 100, :offset => 100, :fuzz => "30%", :density => 3, :tolerance => 2 )
-    d.detect_boundary( img, 0, true, true )
-    composite = d.runs.last.annotate
-    composite.write( "tester.jpg" )
-  end
-
   #def test_benchmark
   #  n = 100000
   #  Benchmark.bm { |x|
