@@ -39,6 +39,20 @@ module Chunking
       boundary = detector.detect_nth_boundary( nil, n )
       assert_equal nil, boundary
     end
+
+    def test_method_detect_nth_boundary_should_create_n_runs
+      n = 3
+      run1 = build_run
+      run2 = build_run
+      run3 = build_run
+      DetectorRun.stubs( :new ).returns( run1, run2, run3 )
+      DetectorRun.any_instance.stubs( :tolerance_reached? => true )
+      detector = build_detector
+      image = build_image
+      detector.detect_nth_boundary( image, n )
+      assert_equal n, detector.runs.length
+    end
+      
       
     def test_method_density_reached?
       detector = build_detector( :density => 1 )

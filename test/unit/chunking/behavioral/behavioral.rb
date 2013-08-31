@@ -4,7 +4,6 @@ module Chunking
   # TODO: run these tests again, swapping image library
   # TODO: behavioral tests for other methods e.g. nth_boundary
   # TODO: these tests are only really for detect_boundary.rb so should be reorganised.
-  # TODO: test nth_boundary create n runs
   # TODO: cmyk? rgba?
 
   # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.

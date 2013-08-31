@@ -46,7 +46,7 @@ module Chunking
 
       lines = determine_remaining_lines( img, start_index )
 
-      lines.times do |line|
+      lines.to_i.times do |line|
         index = start_index + line
         run.state = detect_colour?( img, index, annotate )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
