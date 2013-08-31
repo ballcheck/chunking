@@ -46,7 +46,7 @@ module Chunking
 
     def create_annotation_mask
       #-- TODO: untested
-      image.create_mask if image.present?
+      image.create_mask unless image.nil?
     end
 
     def determine_initial_state( detector, image, start_index )

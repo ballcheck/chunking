@@ -1,5 +1,5 @@
 module Chunking
-  class DetectBoundaryTest < ActiveSupport::TestCase
+  class DetectBoundaryTest < TestCase
     #-- TODO: be able to run these tests with various detector options
     def test_should_create_run_correctly
       detector = build_detector

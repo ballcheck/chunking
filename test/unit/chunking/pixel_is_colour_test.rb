@@ -4,7 +4,7 @@ module Chunking
   #-- TODO: these are Image::Base tests
 
   #-- TODO: all these nils seem suspicious.
-  class PixelIsColourTest < ActiveSupport::TestCase
+  class PixelIsColourTest < TestCase
     def test_equality
       img = Image::Base.new( nil )
       img.stubs( :get_pixel_colour )

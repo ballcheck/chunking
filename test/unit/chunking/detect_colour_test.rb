@@ -1,5 +1,5 @@
 module Chunking
-  class DetectColourTest < ActiveSupport::TestCase
+  class DetectColourTest < TestCase
     
     def test_should_detect_colour_if_pixel_is_colour
       detector = build_detector

@@ -3,11 +3,11 @@ module Chunking
   # TODO: surely you don't have to require the other files in the module...
   require File.expand_path( "../behavioral.rb", __FILE__ )
   module Behavioral
-    class XAxis < ActiveSupport::TestCase
+    class XAxis < TestCase
       include AllTests
     end
 
-    class YAxis < ActiveSupport::TestCase
+    class YAxis < TestCase
       include AllTests
 
       def setup
@@ -16,7 +16,7 @@ module Chunking
       end
     end
 
-    class XAxisInvert < ActiveSupport::TestCase
+    class XAxisInvert < TestCase
       include AllTests
 
       def invert?
@@ -24,7 +24,7 @@ module Chunking
       end
     end
 
-    class YAxisInvert < ActiveSupport::TestCase
+    class YAxisInvert < TestCase
       include AllTests
 
       def setup
@@ -37,7 +37,7 @@ module Chunking
       end
     end
 
-    class XAxisArrayOfColours < ActiveSupport::TestCase
+    class XAxisArrayOfColours < TestCase
       include AllTests
 
       def setup
@@ -52,7 +52,7 @@ module Chunking
       end
     end
 
-    class XAxisFuzz < ActiveSupport::TestCase
+    class XAxisFuzz < TestCase
       include AllTests
 
       def setup
@@ -63,7 +63,7 @@ module Chunking
       end
     end
 
-    class XAxisSwapFGBG < ActiveSupport::TestCase
+    class XAxisSwapFGBG < TestCase
       include ColourFastTests
 
       # Swap background / foreground colours so we start on a colour, and move off. 
@@ -75,7 +75,7 @@ module Chunking
       end
     end
 
-    class YAxisSwapFGBG < ActiveSupport::TestCase
+    class YAxisSwapFGBG < TestCase
       include ColourFastTests
 
       # Swap background / foreground colours so we start on a colour, and move off. 

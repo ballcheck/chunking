@@ -1,5 +1,5 @@
 module Chunking
-  class DetectorTest < ActiveSupport::TestCase
+  class DetectorTest < TestCase
 
     #---------------
     # initialisation

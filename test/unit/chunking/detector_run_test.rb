@@ -1,5 +1,5 @@
 module Chunking
-  class DetectorRunTest < ActiveSupport::TestCase
+  class DetectorRunTest < TestCase
 
     def test_should_set_counter_to_zero
       assert_equal 0, build_run.tolerance_counter
