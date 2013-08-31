@@ -1,3 +1,4 @@
+require File.expand_path( "../test_helper.rb", __FILE__ )
 module Chunking
   class DetectBoundaryTest < TestCase
     #-- TODO: be able to run these tests with various detector options

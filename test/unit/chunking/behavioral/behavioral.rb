@@ -1,3 +1,4 @@
+require File.expand_path( "../../test_helper.rb", __FILE__ )
 module Chunking
 
   # TODO: run these tests again, swapping image library
