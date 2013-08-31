@@ -1,5 +1,5 @@
 module Chunking
-  require File.expand_path( "../../../lib/chunking/image/base.rb", __FILE__ )
+  require File.expand_path( "../../../../lib/chunking/image/base.rb", __FILE__ )
 
   #-- TODO: these are Image::Base tests
 
