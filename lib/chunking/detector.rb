@@ -1,5 +1,6 @@
 # TODO: should have colour_tolerance and non_colour_tolerance.
 # TODO: @axis could be a class, thus preventing passing strings / syms around.
+# TODO: method to split image up
 # TODO: surely you don't need to require files in the same module?
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
