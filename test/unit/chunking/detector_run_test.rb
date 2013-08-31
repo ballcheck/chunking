@@ -1,11 +1,6 @@
 module Chunking
   class DetectorRunTest < ActiveSupport::TestCase
 
-    def build_run( detector = nil, image = nil )
-      DetectorRun.any_instance.stubs( :determine_initial_state )
-      run = DetectorRun.new( detector, image )
-    end
-
     def test_should_set_counter_to_zero
       assert_equal 0, build_run.tolerance_counter
     end
