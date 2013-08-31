@@ -1,11 +1,11 @@
 # TODO: should have colour_tolerance and non_colour_tolerance.
 # TODO: @axis could be a class, thus preventing passing strings / syms around.
 # TODO: method to split image up
-# TODO: surely you don't need to require files in the same module?
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
 
-# Chunking - extracting blocks of content from an image by identifying content boundaries.
+# Chunking - extracting blocks of content from an image.
+# Image traversal by identifying content boundaries.
 module Chunking
 
   class Detector

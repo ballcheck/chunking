@@ -17,6 +17,7 @@ class ActiveSupport::TestCase
     return img
   end
 
+  # TODO: move these out
   def build_run( *args )
     run = Chunking::DetectorRun.new( *args )
     # ensure that when a run is created in 'detect_boundary' this run (the one
