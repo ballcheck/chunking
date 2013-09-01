@@ -57,6 +57,18 @@ module Chunking
         end
       end
 
+      # Flip the image on the given axis (destructive).
+      def invert!( axis )
+        case axis
+        when :x
+          base_image.flip!
+        when :y
+          base_image.flop!
+        else
+          nil
+        end
+      end
+
       # Rotate image by the number of degrees given.
       def rotate( deg )
         self.class.new( base_image.rotate( deg ) )

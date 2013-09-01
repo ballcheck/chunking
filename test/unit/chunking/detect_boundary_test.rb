@@ -128,7 +128,19 @@ module Chunking
       detector.detect_boundary( img, 0, true )
     end
 
-    #-- TODO: test_should_not_alter_original_image_to_invert_direction
+    def test_should_not_alter_original_image_to_invert_direction
+      detector = build_detector
+      detector.stubs( :detect_colour? )
+      img = build_image
+      img_copy = build_image
+      img.stubs( :invert ).returns( img_copy )
+      img.expects( :invert! ).never
+      img_copy.expects( :invert! ).once.with( detector.axis )
+      detector.detect_boundary( img, 0, true )
+      assert_equal img_copy, detector.runs.last.image
+    end
+
+
     def test_should_not_invert_image_to_invert_direction
       detector = build_detector
       detector.stubs( :detect_colour? )

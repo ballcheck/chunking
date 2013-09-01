@@ -1,5 +1,5 @@
 #-- TODO: module untested.
-
+#-- TODO: crop to coords.
 module Chunking
   # A wrapper-module providing library-agnostic image handling so we are not coupled with one library e.g. RMagick
   module Image
@@ -36,6 +36,11 @@ module Chunking
 
       # Flip the image on the given axis.
       def invert( *args )
+        raise NotImplementedError
+      end
+
+      # Flip the image on the given axis (destructive).
+      def invert!( *args )
         raise NotImplementedError
       end
 

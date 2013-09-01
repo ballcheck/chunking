@@ -1,13 +1,16 @@
 # TODO: should have colour_tolerance and non_colour_tolerance.
 # TODO: @axis could be a class, thus preventing passing strings / syms around.
-# TODO: method to split image up
 # TODO: method for traversing image - as_tree?
 # TODO: rename Chunking
+# TODO: detect_all_boundaries
+# TODO: split_image method
+# TODO: usage examples
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
 
-# Chunking - extracting blocks of content from an image.
-# Image traversal by identifying content boundaries.
+# Extracting blocks of content from an image using boundary detection.
+# Applications includes extracting sections of text prior to ocr operations.
+# Image traversal.
 module Chunking
 
   class Detector
@@ -41,7 +44,6 @@ module Chunking
       #-- TODO: should be able to call this method with a base_image
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
-      #-- TODO: the run gets the inverted copy image here. 
       img = img.invert( axis ) if invert_direction
       run = DetectorRun.new( self, img, start_index )
       runs << run
@@ -58,6 +60,9 @@ module Chunking
           return run.boundary
         end
       end
+
+      # un-invert the run image
+      img.invert!( axis ) if invert_direction
 
       # we've run out of lines, so no boundary was detected in the image.
       return nil
