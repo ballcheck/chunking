@@ -83,28 +83,5 @@ module Chunking
       assert Detector.method( :detect_color? ) == Detector.method( :detect_colour? )
     end
 
-
-
-    #---------------
-    # library methods
-    #---------------
-    #-- TODO: these methods are in the wrong place anyway
-
-    def test_method_is_percent_string
-      # TODO: are these kind of tests really needed?
-      assert Detector.send( :is_percent_string?, "1%" )
-      assert Detector.send( :is_percent_string?, "10%" )
-      assert Detector.send( :is_percent_string?, "1.1%" )
-      assert !Detector.send( :is_percent_string?, "a1%" )
-      assert !Detector.send( :is_percent_string?, "10" )
-      assert !Detector.send( :is_percent_string?, 10 )
-    end
-
-    def test_method_apply_percent_string
-      assert_equal 0.09, Detector.send( :apply_percent_string, 9, "1%" )
-      assert_equal 9.9, Detector.send( :apply_percent_string, 99, "10%" )
-      assert_equal 10.989, Detector.send( :apply_percent_string, 999, "1.1%" )
-    end
-
   end
 end

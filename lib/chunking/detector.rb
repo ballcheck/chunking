@@ -1,6 +1,8 @@
 # TODO: should have colour_tolerance and non_colour_tolerance.
 # TODO: @axis could be a class, thus preventing passing strings / syms around.
 # TODO: method to split image up
+# TODO: method for traversing image - as_tree?
+# TODO: rename Chunking
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
 
@@ -134,22 +136,22 @@ module Chunking
     end
 
     def determine_offset( img )
-      offset_value = is_percent_string?( offset ) ? apply_percent_string( img.size( axis ), offset ) : offset
+      offset_value = offset.is_a?( Rational ) ? img.size * offset.to_f : offset
       return offset_value.to_i
     end
       
     def determine_size( img )
-      size_value = is_percent_string?( size ) ? apply_percent_string( img.size( axis ), size ) : size
+      size_value = size.is_a?( Rational ) ? img.size( axis ) * size.to_f : size
       return size_value.to_i
     end
 
     def determine_density( img )
-      density_value = is_percent_string?( density ) ? apply_percent_string( determine_size( img ), density ) : density
+      density_value = density.is_a?( Rational ) ? determine_size( img ) * density.to_f : density
       return density_value.to_i
     end
 
     def determine_fuzz( img )
-      fuzz_value = is_percent_string?( fuzz ) ? apply_percent_string( img.quantum_range, fuzz ) : fuzz
+      fuzz_value = fuzz.is_a?( Rational ) ? img.quantum_range * fuzz.to_f : fuzz
       return fuzz_value.to_i
     end
 
@@ -161,24 +163,5 @@ module Chunking
       img.size( axis_of_travel ) - index.to_i
     end
 
-    def is_percent_string?( *args )
-      # TODO: instance versions of class methods not tested
-      self.class.is_percent_string?( *args )
-    end
-    
-    def apply_percent_string( *args )
-      self.class.apply_percent_string( *args )
-    end
-    #-- end of untested methods
-
-    class << self
-      def is_percent_string?( string )
-        string.is_a?( String ) && !!string.match(/(^[\d\.]+)%$/)
-      end
-
-      def apply_percent_string( number, string )
-        number * ( string.to_f / 100 )
-      end
-    end
   end
 end
