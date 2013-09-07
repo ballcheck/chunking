@@ -5,6 +5,7 @@
 # TODO: detect_all_boundaries
 # TODO: split_image method
 # TODO: usage examples
+# TODO: one off behavioural test for passing in image string / instance
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
 
@@ -40,19 +41,20 @@ module Chunking
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or ouside a content block).
-    def detect_boundary( img, start_index = 0, invert_direction = false, annotate = false )
-      #-- TODO: should be able to call this method with a base_image
+    def detect_boundary( image, start_index = 0, invert_direction = false, annotate = false )
+      image = retrieve_image( image )
+
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
-      img = img.invert( axis ) if invert_direction
-      run = DetectorRun.new( self, img, start_index )
+      image = image.invert( axis ) if invert_direction
+      run = DetectorRun.new( self, image, start_index )
       runs << run
 
-      lines = determine_remaining_lines( img, start_index )
+      lines = determine_remaining_lines( image, start_index )
 
       lines.to_i.times do |line|
         index = start_index + line
-        run.state = detect_colour?( img, index, annotate )
+        run.state = detect_colour?( image, index, annotate )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
         if run.tolerance_reached?
@@ -62,18 +64,18 @@ module Chunking
       end
 
       # un-invert the run image
-      img.invert!( axis ) if invert_direction
+      image.invert!( axis ) if invert_direction
 
       # we've run out of lines, so no boundary was detected in the image.
       return nil
     end
 
     # Skip n - 1 boundaries and return the nth.
-    def detect_nth_boundary( img, n, start_index = 0, invert_direction = false, annotate = false )
+    def detect_nth_boundary( image, n, start_index = 0, invert_direction = false, annotate = false )
       index = start_index
       boundary = nil
       n.times do
-        boundary = detect_boundary( img, index, invert_direction, annotate )
+        boundary = detect_boundary( image, index, invert_direction, annotate )
         return nil unless boundary
         index = boundary.index
       end
@@ -82,19 +84,19 @@ module Chunking
     end
 
     # Tell if a given line within an image contains the Detector @colour.
-    def detect_colour?( img, line_index = nil, annotate = false )
+    def detect_colour?( image, line_index = nil, annotate = false )
       line_index ||= 0
       pixel_count = 0
-      offset = determine_offset( img )
-      size = determine_size( img )
-      fuzz = determine_fuzz( img )
+      offset = determine_offset( image )
+      size = determine_size( image )
+      fuzz = determine_fuzz( image )
 
       size.times do |ind|
         x = axis == :x ? ind + offset : line_index
-        y = axis == :y ? img.size( axis ) - 1 - ( ind + offset ) : line_index
+        y = axis == :y ? image.size( axis ) - 1 - ( ind + offset ) : line_index
 
-        if img.pixel_is_colour?( x, y, colour, fuzz )
-          if density_reached?( pixel_count += 1, img )
+        if image.pixel_is_colour?( x, y, colour, fuzz )
+          if density_reached?( pixel_count += 1, image )
             annotate_image( x, y, :density_reached ) if annotate
             return true
           else
@@ -125,8 +127,8 @@ module Chunking
 
     class << self
       # Class method version of instance method of the same name. Provided for simplicity.
-      def detect_colour?( img, index = nil, *args )
-        self.new( *args ).detect_colour?( img, index )
+      def detect_colour?( image, index = nil, *args )
+        self.new( *args ).detect_colour?( image, index )
       end
 
       alias detect_color? detect_colour?
@@ -135,28 +137,36 @@ module Chunking
     private 
 
     #-- TODO: start of untested methods
-    def density_reached?( pixel_count, img = nil )
-      density = determine_density( img )
+    def retrieve_image( image_path_or_instance )
+      if image_path_or_instance.is_a?( String ) || image_path_or_instance.is_a?( Magick::Image )
+        Image::RMagick.new( image_path_or_instance )
+      else
+        return image_path_or_instance
+      end
+    end
+
+    def density_reached?( pixel_count, image = nil )
+      density = determine_density( image )
       pixel_count >= density ? true : false
     end
 
-    def determine_offset( img )
-      offset_value = offset.is_a?( Rational ) ? img.size * offset.to_f : offset
+    def determine_offset( image )
+      offset_value = offset.is_a?( Rational ) ? image.size * offset.to_f : offset
       return offset_value.to_i
     end
       
-    def determine_size( img )
-      size_value = size.is_a?( Rational ) ? img.size( axis ) * size.to_f : size
+    def determine_size( image )
+      size_value = size.is_a?( Rational ) ? image.size( axis ) * size.to_f : size
       return size_value.to_i
     end
 
-    def determine_density( img )
-      density_value = density.is_a?( Rational ) ? determine_size( img ) * density.to_f : density
+    def determine_density( image )
+      density_value = density.is_a?( Rational ) ? determine_size( image ) * density.to_f : density
       return density_value.to_i
     end
 
-    def determine_fuzz( img )
-      fuzz_value = fuzz.is_a?( Rational ) ? img.quantum_range * fuzz.to_f : fuzz
+    def determine_fuzz( image )
+      fuzz_value = fuzz.is_a?( Rational ) ? image.quantum_range * fuzz.to_f : fuzz
       return fuzz_value.to_i
     end
 
@@ -164,8 +174,8 @@ module Chunking
       axis == :x ? :y : :x
     end
     
-    def determine_remaining_lines( img, index )
-      img.size( axis_of_travel ) - index.to_i
+    def determine_remaining_lines( image, index )
+      image.size( axis_of_travel ) - index.to_i
     end
 
   end

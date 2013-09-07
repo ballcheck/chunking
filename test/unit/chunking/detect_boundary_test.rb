@@ -2,6 +2,14 @@ require File.expand_path( "../test_helper.rb", __FILE__ )
 module Chunking
   class DetectBoundaryTest < TestCase
     #-- TODO: be able to run these tests with various detector options
+    def test_should_retrieve_image
+      detector = build_detector
+      image = mock( "image" )
+      retrieved_image = build_image( 0 )
+      detector.expects( :retrieve_image ).once.returns( retrieved_image )
+      detector.detect_boundary( image )
+    end
+      
     def test_should_create_run_correctly
       detector = build_detector
       img = build_image( 0 )

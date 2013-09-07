@@ -1,4 +1,4 @@
-# TODO: untested
+# TODO: whole module untested
 require File.expand_path( "../base.rb", __FILE__ )
 require "RMagick"
 
@@ -15,6 +15,8 @@ module Chunking
       def initialize( *args, &block )
         if args[0].is_a?( Magick::Image )
           @base_image = args[0]
+        elsif args[0].is_a?( String )
+          @base_image = Magick::Image.read( args[0] ).first
         else
           @base_image = Magick::Image.new( *args, &block )
         end
