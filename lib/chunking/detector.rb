@@ -40,8 +40,8 @@ module Chunking
     #:main:
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
-    # whether the starting position was inside or ouside a content block).
-    def detect_boundary( image, start_index = 0, invert_direction = false, annotate = false )
+    # whether the starting position was inside or outside a content block).
+    def detect_boundary( image, start_index = 0, invert_direction = false, annotate = true )
       image = retrieve_image( image )
 
       # The default direction is left to right, top to bottom.
