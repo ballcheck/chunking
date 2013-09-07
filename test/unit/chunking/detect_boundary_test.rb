@@ -2,6 +2,7 @@ require File.expand_path( "../test_helper.rb", __FILE__ )
 module Chunking
   class DetectBoundaryTest < TestCase
     #-- TODO: be able to run these tests with various detector options
+
     def test_should_retrieve_image
       detector = build_detector
       image = mock( "image" )
@@ -157,7 +158,7 @@ module Chunking
       detector.detect_boundary( img, 0, false )
     end
       
-    #def test_benchmark
+    #def test_benchmark_compare_colours?
     #  n = 100000
     #  Benchmark.bm { |x|
     #    px = Magick::Pixel.new( 0, 0, 0 )
@@ -175,6 +176,28 @@ module Chunking
     #    }
 
     #  }
+    #end
+
+    #def test_benchmark_annotate
+    #  n = 1
+    #  size = 100
+    #  image = Image::RMagick.new( size, size )
+
+    #  Benchmark.bm { |x|
+
+    #    x.report( "annotate" ){
+    #      n.times do
+    #        Detector.new.detect_boundary( image, 0, false, true )
+    #      end
+    #    }
+
+    #    x.report( "no-annotate" ){
+    #      n.times do
+    #        Detector.new.detect_boundary( image, 0, false, false )
+    #      end
+    #    }
+    #  }
+
     #end
       
   end

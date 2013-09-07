@@ -5,7 +5,6 @@
 # TODO: detect_all_boundaries
 # TODO: split_image method
 # TODO: usage examples
-# TODO: one off behavioural test for passing in image string / instance
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
 
@@ -41,7 +40,7 @@ module Chunking
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or outside a content block).
-    def detect_boundary( image, start_index = 0, invert_direction = false, annotate = true )
+    def detect_boundary( image, start_index = 0, invert_direction = false, annotate = false )
       image = retrieve_image( image )
 
       # The default direction is left to right, top to bottom.
@@ -114,6 +113,7 @@ module Chunking
 
     def annotate_image( x, y, result )
       #-- TODO: untested
+      #-- TODO: should not be using runs like this. It means you can't call detect_colour? outside a run.
       image = runs.last.annotation_mask
       if result == :density_reached
         image.set_pixel_colour( x, y, ANNOTATE_DENSITY_REACHED )
