@@ -28,7 +28,7 @@ module Chunking
       # left or bottom depending on axis supplied 
       @axis = args.has_key?(:axis) ? args[:axis].to_sym : :x
       @offset = args.has_key?(:offset) ? args[:offset] : 0
-      @size = args.has_key?(:size) ? args[:size] : nil
+      @size = args.has_key?(:size) ? args[:size] : Rational( 1 )
       @colour = args.has_key?(:colour) ? args[:colour] : RGB_BLACK
       @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
       # pixel "density", line "tolerance"
