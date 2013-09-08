@@ -53,7 +53,7 @@ module Chunking
 
       lines.to_i.times do |line|
         index = start_index + line
-        run.state = detect_colour?( image, index, annotate )
+        run.state = detect_colour?( image, index, ( annotate ? run.annotation_mask : false ) )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
         if run.tolerance_reached?
@@ -83,7 +83,7 @@ module Chunking
     end
 
     # Tell if a given line within an image contains the Detector @colour.
-    def detect_colour?( image, line_index = nil, annotate = false )
+    def detect_colour?( image, line_index = nil, annotation_mask = nil )
       line_index ||= 0
       pixel_count = 0
       offset = determine_offset( image )
@@ -96,13 +96,13 @@ module Chunking
 
         if image.pixel_is_colour?( x, y, colour, fuzz )
           if density_reached?( pixel_count += 1, image )
-            annotate_image( x, y, :density_reached ) if annotate
+            annotate_image( annotation_mask, x, y, ANNOTATE_DENSITY_REACHED ) if annotation_mask
             return true
           else
-            annotate_image( x, y, :pixel_is_colour ) if annotate
+            annotate_image( annotation_mask, x, y, ANNOTATE_PIXEL_IS_COLOUR ) if annotation_mask
           end
         else
-          annotate_image( x, y, nil ) if annotate
+          annotate_image( annotation_mask, x, y, ANNOTATE_NIL ) if annotation_mask
         end
       end
 
@@ -111,17 +111,9 @@ module Chunking
     
     alias detect_color? detect_colour?
 
-    def annotate_image( x, y, result )
+    def annotate_image( image, x, y, colour )
       #-- TODO: untested
-      #-- TODO: should not be using runs like this. It means you can't call detect_colour? outside a run.
-      image = runs.last.annotation_mask
-      if result == :density_reached
-        image.set_pixel_colour( x, y, ANNOTATE_DENSITY_REACHED )
-      elsif result == :pixel_is_colour
-        image.set_pixel_colour( x, y, ANNOTATE_PIXEL_IS_COLOUR )
-      else
-        image.set_pixel_colour( x, y, ANNOTATE_NIL )
-      end
+      image.set_pixel_colour( x, y, colour )
     end
         
 
