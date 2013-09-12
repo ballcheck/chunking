@@ -81,6 +81,20 @@ module Chunking
       assert_equal result, new_image
     end
 
+    def test_method_create_annotation_mask
+      image = mock( "image" )
+      image.expects( :create_mask ).once
+
+      DetectorRun.any_instance.stubs( :initialize )
+      run1 = DetectorRun.new
+      run1.stubs( :image ).returns( nil )
+      run1.send( :create_annotation_mask )
+
+      run2 = DetectorRun.new
+      run2.stubs( :image ).returns( image )
+      run2.send( :create_annotation_mask )
+    end
+
     def test_annotation_mask_is_set_on_initialisation
       mask = mock( "mask" )
       DetectorRun.any_instance.expects( :create_annotation_mask ).returns( mask )

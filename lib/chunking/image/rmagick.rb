@@ -1,4 +1,3 @@
-# TODO: whole module untested
 require File.expand_path( "../base.rb", __FILE__ )
 require "RMagick"
 
@@ -36,7 +35,6 @@ module Chunking
 
       # Get the colour of the pixel at the given coordinates.
       def get_pixel_colour( x, y )
-        #-- TODO: must be a method to do this
         p = base_image.pixel_color( x, y )
         [ p.red, p.green, p.blue, p.opacity ]
       end

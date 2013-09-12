@@ -1,10 +1,3 @@
-# TODO: should have colour_tolerance and non_colour_tolerance.
-# TODO: @axis could be a class, thus preventing passing strings / syms around.
-# TODO: method for traversing image - as_tree?
-# TODO: rename Chunking
-# TODO: detect_all_boundaries
-# TODO: split_image method
-# TODO: usage examples
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
 
@@ -17,7 +10,6 @@ module Chunking
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance
     attr_reader :runs
     RGB_BLACK = [0,0,0]
-    #-- TODO: are these max rgb values coupled to rmagick?
     ANNOTATE_DENSITY_REACHED = [ 65535, 0, 0, 0 ]
     ANNOTATE_PIXEL_IS_COLOUR = [ 0, 0, 65535 ]
     ANNOTATE_NIL = [ 40000, 40000, 40000 ]
@@ -112,7 +104,6 @@ module Chunking
     alias detect_color? detect_colour?
 
     def annotate_image( image, x, y, colour )
-      #-- TODO: untested
       image.set_pixel_colour( x, y, colour )
     end
         
@@ -128,7 +119,7 @@ module Chunking
 
     private 
 
-    #-- TODO: start of untested methods
+    # start of untested methods
     def retrieve_image( image_path_or_instance )
       if image_path_or_instance.is_a?( String ) || image_path_or_instance.is_a?( Magick::Image )
         Image::RMagick.new( image_path_or_instance )
@@ -169,6 +160,7 @@ module Chunking
     def determine_remaining_lines( image, index )
       image.size( axis_of_travel ) - index.to_i
     end
+    # end of untested.
 
   end
 end

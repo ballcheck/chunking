@@ -1,7 +1,6 @@
 require File.expand_path( "../test_helper.rb", __FILE__ )
 module Chunking
   class DetectBoundaryTest < TestCase
-    #-- TODO: be able to run these tests with various detector options
 
     def test_should_retrieve_image
       detector = build_detector
@@ -42,7 +41,6 @@ module Chunking
 
     def test_should_change_state_on_detect_colour
       detector = build_detector
-      # TODO: is this really needed everywhere?
       detector.stubs( :detect_colour? )
       img = build_image
       run = build_run( detector, img )
@@ -111,7 +109,6 @@ module Chunking
       assert_equal -tolerance, result.index
     end
 
-    #-- TODO: these tests (if/if not) could be combined
     def test_should_detect_if_tolerance_reached
       detector = build_detector
       detector.stubs( :detect_colour? )

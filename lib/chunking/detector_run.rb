@@ -34,7 +34,6 @@ module Chunking
 
     # Apply the annotation_mask to the base_image. Visual representation of the DetectorRun useful in debugging.
     def annotate
-      #-- TODO: untested.
       new_filename = "#{image.file_path}.annotated"
       new_image = image.annotate( annotation_mask, 0.95 )
       new_image.write( new_filename )
@@ -48,7 +47,6 @@ module Chunking
     end
 
     def create_annotation_mask
-      #-- TODO: untested
       image.create_mask unless image.nil?
     end
 

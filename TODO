@@ -1,0 +1,82 @@
+detector.rb
+-----------
+
+*class method version of detect_boundary
+*rename Chunking
+*usage examples
+are max rgb values coupled to rmagick?
+private methods untested
+
+new features
+------------
+have colour_tolerance and non_colour_tolerance.
+@axis could be a class, thus preventing passing strings / syms around.
+method for traversing image - as_tree?
+detect_all_boundaries
+split_image method
+recycle annotation mask on detect_nth_boundary, giving a full report of all runs.
+image crop to coords
+what should happen when detector bigger than image?
+
+detect_colour_test.rb
+---------------------
+*finish test_should_annotate_correctly
+quite a few tests want drying up
+
+lib/chunking/chunking.rb
+------------------------
+this file just includes all the modules in the lib. find out convention.
+
+test/unit/chunking/factories.rb
+-------------------------------
+build_run can only be called once per test because it stubs the 'new' method
+
+lib/chunking/image/rmagick.rb
+-----------------------------
+whole module untested 
+must be a method to do - get_pixel_colour
+
+lib/chunking/image/base.rb
+--------------------------
+*compare colours really wants testing!
+whole module untested 
+Look into the ruby convention for template enforcemnet
+create colour / color aliases
+aliases created here would refer to the template methods and raise.
+draw_pixel_map! this require the base_image to be the same size as the pixel_map
+new_from_pixel_map assumes 'new' method creates a new blank base_image from cols, rows
+
+lib/chunking/boundary.rb
+------------------------
+whole thing untested
+
+test/unit/chunking/pixel_is_colour_test.rb
+------------------------------------------
+*these test are fr Image::Base
+all these nils seem suspicious.
+test_equal_if_any_item_is_equal - redo using sequence
+
+test/unit/chunking/behavioral/test_cases.rb
+-------------------------------------------
+surely you don't have to require the other files in the module...
+test_should_work_with_image_path - not right place for test, not a good test either.
+
+test/unit/chunking/behavioral/behavioral.rb
+-------------------------------------------
+run these tests again, swapping image library
+behavioral tests for other methods e.g. nth_boundary
+these tests are only really for detect_boundary.rb so should be reorganised.
+cmyk? rgba?
+remove these 2 lines from all over this file
+        img = img.rotate( -90 ) if @axis == :y
+        img = img.invert( @axis ) if invert?
+test_fuzz not implemented
+
+test/unit/chunking/detect_boundary_test.rb
+------------------------------------------
+be able to run these tests with various detector options
+is this really needed everywhere?
+  detector.stubs( :detect_colour? )
+these tests (if/if not) could be combined
+test_should_alias_colour_with_color - is it conclusive? is it needed?
+

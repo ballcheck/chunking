@@ -1,18 +1,13 @@
-#-- TODO: module untested.
-#-- TODO: crop to coords.
 module Chunking
   # A wrapper-module providing library-agnostic image handling so we are not coupled with one library e.g. RMagick
   module Image
     # Several "template" pattern style method declarations, pseudo-enforcing that the child override these methods.
     module Template
-      #-- TODO: enforce these methods are implemented in the child class called with the same arguments.
-      # Look into the ruby convention for this.
-
       # Either a) create a wrapper for a pre-existing base_image or b) create a new blank base_image from rows and cols.
-      def initialize( *args )
-        #-- TODO: this gets called before it is overridden in the child class.
+      #def initialize( *args )
+        #this gets called before it is overridden in the child class.
         #raise NotImplementedError
-      end
+      #end
 
       # Check equality of 2 colour values.
       def self.compare_colours?( *args )
@@ -74,8 +69,6 @@ module Chunking
         raise NotImplementedError
       end
 
-      #-- TODO: create colour / color aliases
-      # aliases created here would refer to the template methods and raise.
     end
 
     # The base class from which Image classes should decend.
@@ -92,7 +85,6 @@ module Chunking
       def self.compare_colours?( colour1, colour2, fuzz = 0 )
         # Expects colour to be an array of colour values - [r,g,b] / [r,g,b,a] / [c,m,y] / [c,m,y,k]
         # Only compares values that are present in BOTH colours
-        #-- TODO: this really wants testing!
         cnt = [ colour1.length, colour2.length ].min
         cnt.times do |i|
           return false if ( colour1[ i - 1 ] - colour2[ i - 1 ] ).abs > fuzz
@@ -116,8 +108,6 @@ module Chunking
 
       # Draw an Image from an array (map) of pixels (only really used in testing).
       def draw_pixel_map!( pixel_map )
-        #-- TODO: untested
-        #-- TODO: this require the base_image to be the same size as the pixel_map
         pixel_map.each_with_index do |row, row_ind|
           row.each_with_index do |px, px_ind|
             set_pixel_colour( px_ind, row_ind, px ) unless px.nil?
@@ -128,8 +118,6 @@ module Chunking
       class << self
         # Factory method that creates a new image using Base.draw_pixel_map!
         def new_from_pixel_map( pixel_map )
-          #-- TODO: untested
-          #-- TODO: assumes 'new' method creates a new blank base_image from cols, rows
           rows = pixel_map.length
           cols = pixel_map[0].length
           img = self.new( cols, rows )

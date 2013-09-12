@@ -1,5 +1,3 @@
-#-- TODO: module untested.
-
 module Chunking
   class Boundary
     attr_accessor :index, :axis

@@ -1,10 +1,6 @@
 require File.expand_path( "../test_helper.rb", __FILE__ )
 require File.expand_path( "../../../../lib/chunking/image/base.rb", __FILE__ )
 module Chunking
-
-  #-- TODO: these are Image::Base tests
-
-  #-- TODO: all these nils seem suspicious.
   class PixelIsColourTest < TestCase
     def test_equality
       img = Image::Base.new( nil )
@@ -32,7 +28,6 @@ module Chunking
       img = Image::Base.new( nil )
       img.stubs( :get_pixel_colour )
       colours = [ [nil], [nil], [nil] ]
-      # TODO: expected behavour? mocha tries the last expectation first. In this case compare_colours 
       # runs 3 times, but if you switch them it runs once.
       img.class.expects( :compare_colours? ).times( 1 ).returns( true )
       img.class.expects( :compare_colours? ).times( 2 )

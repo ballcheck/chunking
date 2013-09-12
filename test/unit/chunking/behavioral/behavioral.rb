@@ -1,11 +1,6 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
 module Chunking
 
-  # TODO: run these tests again, swapping image library
-  # TODO: behavioral tests for other methods e.g. nth_boundary
-  # TODO: these tests are only really for detect_boundary.rb so should be reorganised.
-  # TODO: cmyk? rgba?
-
   # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.
   module Behavioral
     # These methods get overridden in test_cases.rb in this module.
@@ -47,7 +42,6 @@ module Chunking
 
         img = build_image_from_pixel_map pixel_map
 
-        # TODO: remove these 2 lines from all over this file
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
@@ -87,7 +81,6 @@ module Chunking
       end
 
       def test_fuzz
-        # TODO: method not implemented
       end
 
       def test_no_matches
@@ -177,7 +170,6 @@ module Chunking
       end
 
       def test_size
-        # TODO: what should happen when detector bigger than image?
         o = @background_colour
         x = @foreground_colour
         pixel_map = [

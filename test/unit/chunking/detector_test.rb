@@ -61,6 +61,17 @@ module Chunking
       assert detector.send( :density_reached?, 2 )
     end
 
+    def test_method_annotate_image
+      x = stub( "x" )
+      y = stub( "y" )
+      colour = stub( "colour" )
+
+      image = stub( "image" )
+      image.expects( :set_pixel_colour ).with( x, y, colour )
+
+      detector = build_detector
+      detector.annotate_image( image, x, y, colour )
+    end
 
     #--------------------------------------------
     # aliases, class versions of instance methods
@@ -77,8 +88,6 @@ module Chunking
     end
 
     def test_should_alias_colour_with_color
-      # TODO: this is not a conclusive test.
-      # TODO: is this kind of test necessary?
       assert Detector.instance_method( :detect_color? ) == Detector.instance_method( :detect_colour? )
       assert Detector.method( :detect_color? ) == Detector.method( :detect_colour? )
     end

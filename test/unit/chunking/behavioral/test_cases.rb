@@ -1,6 +1,5 @@
 module Chunking
 
-  # TODO: surely you don't have to require the other files in the module...
   require File.expand_path( "../behavioral.rb", __FILE__ )
   module Behavioral
     class XAxis < TestCase
@@ -88,7 +87,6 @@ module Chunking
       end
     end
 
-    # TODO: not the best place. Not a very good test either.
     class Other < TestCase
       def test_should_work_with_image_path
         ::Dir.mktmpdir do |d|
