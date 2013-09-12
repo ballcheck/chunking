@@ -58,6 +58,22 @@ module Chunking
       def create_mask( *args )
         raise NotImplementedError
       end
+
+      # The full path of the underlying image file
+      def file_path
+        raise NotImplementedError
+      end
+
+      # Annotate this image using another as a mask
+      def annotate( mask, opacity )
+        raise NotImplementedError
+      end
+
+      # Write image to disk
+      def write( path )
+        raise NotImplementedError
+      end
+
       #-- TODO: create colour / color aliases
       # aliases created here would refer to the template methods and raise.
     end

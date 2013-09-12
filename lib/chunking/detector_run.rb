@@ -34,9 +34,11 @@ module Chunking
 
     # Apply the annotation_mask to the base_image. Visual representation of the DetectorRun useful in debugging.
     def annotate
-      #-- TODO: coupled with RMagick and untested.
-      new_filename = "#{image.base_image.base_filename}.annotated"
-      image.base_image.dissolve( annotation_mask.base_image, 0.95, 1 ).write( new_filename )
+      #-- TODO: untested.
+      new_filename = "#{image.file_path}.annotated"
+      new_image = image.annotate( annotation_mask, 0.95 )
+      new_image.write( new_filename )
+      return new_image
     end
       
     private
