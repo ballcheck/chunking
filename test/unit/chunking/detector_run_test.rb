@@ -60,6 +60,26 @@ module Chunking
       assert !run.tolerance_reached?
       assert !run.tolerance_reached?
     end
+    
+    def test_method_annotate
+      file_path = "some_path"
+      new_filename = "#{file_path}.annotated"
+      mask = mock( "mask" )
+      new_image = mock( "new_image" )
+
+      image = mock( "image" )
+      image.stubs( :file_path ).returns( file_path )
+      image.expects( :annotate ).with{ |*a| a[0] == mask }.returns( new_image )
+
+      new_image.expects( :write ).with( new_filename )
+
+      run = build_run
+      run.stubs( :image ).returns( image )
+      run.stubs( :annotation_mask ).returns( mask )
+      result = run.annotate
+
+      assert_equal result, new_image
+    end
 
     def test_annotation_mask_is_set_on_initialisation
       mask = mock( "mask" )
