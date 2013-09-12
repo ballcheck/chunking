@@ -88,12 +88,12 @@ module Chunking
 
       # The full path of the underlying image file
       def file_path
-        base_image? ? base_image.base_filename : nil
+        base_image ? base_image.base_filename : nil
       end
 
       # Annotate this image using another as a mask
       def annotate( mask, opacity )
-        new_image = dissolve( mask.base_image, opacity, 1 )
+        new_image = base_image.dissolve( mask.base_image, opacity, 1 )
         self.class.new( new_image )
       end
 
