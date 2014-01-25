@@ -1,79 +1,8 @@
 module Chunking
   # A wrapper-module providing library-agnostic image handling so we are not coupled with one library e.g. RMagick
   module Image
-    # Several "template" pattern style method declarations, pseudo-enforcing that the child override these methods.
-    module Template
-      # Either a) create a wrapper for a pre-existing base_image or b) create a new blank base_image from rows and cols.
-      #def initialize( *args )
-        #this gets called before it is overridden in the child class.
-        #raise NotImplementedError
-      #end
-
-      # Check equality of 2 colour values.
-      def self.compare_colours?( *args )
-        raise NotImplementedError
-      end
-
-      # Determine the size of the image on the given axis.
-      def size( *args )
-        raise NotImplementedError
-      end
-        
-      # Get the colour of the pixel at the given coordinates.
-      def get_pixel_colour( *args )
-        raise NotImplementedError
-      end
-
-      # Set the colour of the pixel at the given coordinates.
-      def set_pixel_colour( *args )
-        raise NotImplementedError
-      end
-
-      # Flip the image on the given axis.
-      def invert( *args )
-        raise NotImplementedError
-      end
-
-      # Flip the image on the given axis (destructive).
-      def invert!( *args )
-        raise NotImplementedError
-      end
-
-      # Rotate image by the number of degrees given.
-      def rotate( *args )
-        raise NotImplementedError
-      end
-
-      # Maximum value for any single colour value ( r/g/b/a/c/m/k/y )
-      def quantum_range( *args )
-        raise NotImplementedError
-      end
-
-      # Create a blank image of the same size, but with a transparent background.
-      def create_mask( *args )
-        raise NotImplementedError
-      end
-
-      # The full path of the underlying image file
-      def file_path
-        raise NotImplementedError
-      end
-
-      # Annotate this image using another as a mask
-      def annotate( mask, opacity )
-        raise NotImplementedError
-      end
-
-      # Write image to disk
-      def write( path )
-        raise NotImplementedError
-      end
-
-    end
-
     # The base class from which Image classes should decend.
     class Base
-      include Image::Template
       attr_reader :base_image
 
       # Check equality of 2 colour values.
