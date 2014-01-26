@@ -1,3 +1,8 @@
+IMPORTANT! - get rid of trying force Image to be an abstract class! It's looks bad!
+
+use "adapter" design pattern for Image class
+use "__some_method" type methods for internal operations?
+
 detector.rb
 -----------
 

@@ -14,9 +14,11 @@ module Chunking
       return run
     end
 
-    def build_detector( args = {} )
+    def build_detector( image = nil, args = {} )
       args[:size] = args.include?( :size ) ? args[:size] : 1
-      Detector.new( args )
+      detector = Detector.new( args )
+      detector.stubs( :retrieve_image => image ) if image
+      return detector
     end
   end
 end

@@ -8,9 +8,9 @@ module Chunking
       # Set up for the test.
       def setup
         @axis = :x
-        @colour = Image::RMagick::BLACK_RGB
+        @colour = Image::AdapterMagickImage::BLACK_RGB
         @foreground_colour = @colour
-        @background_colour = Image::RMagick::WHITE_RGB
+        @background_colour = Image::AdapterMagickImage::WHITE_RGB
         @fuzz = 0
       end
 
@@ -19,9 +19,9 @@ module Chunking
         false
       end
 
-      # Provides loose-coupling with the method of the same name in the image library.
+      # Build a new image based an array of pixels
       def build_image_from_pixel_map( pixel_map )
-        Image::RMagick.new_from_pixel_map pixel_map
+        Image::AdapterMagickImage.factory( pixel_map )
       end
     end
 

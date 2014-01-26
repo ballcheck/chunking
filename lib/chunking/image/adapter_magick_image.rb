@@ -3,23 +3,38 @@ require "RMagick"
 
 module Chunking
   module Image
-    # An extension of Image::Base wrapper for RMagick
-    class RMagick < Base
+    # TODO: not sure about the adapter getting extra functionality from Image::Base
+    class AdapterMagickImage < Base
+      # TODO: decide where to put these contants.
       BLACK_RGB = [ 0, 0, 0 ]
       WHITE_RGB = [ Magick::QuantumRange, Magick::QuantumRange, Magick::QuantumRange ]
 
       attr_reader :base_image
 
-      # Either a) create a wrapper for a pre-existing base_image or b) create a new blank base_image from rows and cols.
-      def initialize( *args, &block )
-        if args[0].is_a?( Magick::Image )
-          @base_image = args[0]
-        elsif args[0].is_a?( String )
-          @base_image = Magick::Image.read( args[0] ).first
+      # TODO: don't think the factory should be in the adapter.
+      def self.factory( *args, &block )
+        arg = args[0]
+
+        if arg.is_a?( Magick::Image )
+          self.new( arg )
+        elsif arg.is_a?( String )
+          # assume it's a file path
+          self.new( Magick::Image.read( arg ).first )
+        elsif arg.is_a?( Array )
+          # assume it's a pixel map
+          magick_image = Magick::Image.new( arg[0].length, arg.length )
+          self.new( magick_image ).draw_pixel_map!( arg )
         else
-          @base_image = Magick::Image.new( *args, &block )
+          # give the lib a chance
+          self.new( Magick::Image.new( *args, &block ) )
         end
       end
+
+      def initialize( base_image )
+        @base_image = base_image
+      end
+
+      # TODO: forward calls to the base_image as this is an adapter
 
       # Determine the size of the image on the given axis.
       def size( axis )
@@ -33,7 +48,7 @@ module Chunking
         end
       end
 
-      # Get the colour of the pixel at the given coordinates.
+      # Get an array of colour values for the pixel at the given coordinates.
       def get_pixel_colour( x, y )
         p = base_image.pixel_color( x, y )
         [ p.red, p.green, p.blue, p.opacity ]
@@ -74,14 +89,16 @@ module Chunking
         self.class.new( base_image.rotate( deg ) )
       end
 
+      # TODO: rename
       # Maximum value for any single colour value ( r/g/b/a/c/m/k/y )
       def quantum_range
         Magick::QuantumRange
       end
 
+      # TODO: this is extended functionality, remove from adapter.
       # Create a blank image of the same size, but with a transparent background.
       def create_mask( *args )
-        self.class.new( size( :x ), size( :y ) ){ self.background_color = "none" }
+        self.class.factory( size( :x ), size( :y ) ){ self.background_color = "none" }
       end
 
       # The full path of the underlying image file
@@ -89,6 +106,7 @@ module Chunking
         base_image ? base_image.base_filename : nil
       end
 
+      # TODO: this is extended functionality, remove from adapter.
       # Annotate this image using another as a mask
       def annotate( mask, opacity )
         new_image = base_image.dissolve( mask.base_image, opacity, 1 )

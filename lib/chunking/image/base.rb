@@ -42,17 +42,7 @@ module Chunking
             set_pixel_colour( px_ind, row_ind, px ) unless px.nil?
           end
         end
-      end
-
-      class << self
-        # Factory method that creates a new image using Base.draw_pixel_map!
-        def new_from_pixel_map( pixel_map )
-          rows = pixel_map.length
-          cols = pixel_map[0].length
-          img = self.new( cols, rows )
-          img.draw_pixel_map!( pixel_map )
-          return img
-        end
+        return self
       end
 
     end

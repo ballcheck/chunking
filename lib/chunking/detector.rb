@@ -28,6 +28,10 @@ module Chunking
       @runs = []
     end
 
+    def image_adapter_class
+      Image::AdapterMagickImage
+    end
+
     #:main:
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
@@ -120,12 +124,11 @@ module Chunking
     private 
 
     # start of untested methods
-    def retrieve_image( image_path_or_instance )
-      if image_path_or_instance.is_a?( String ) || image_path_or_instance.is_a?( Magick::Image )
-        Image::RMagick.new( image_path_or_instance )
-      else
-        return image_path_or_instance
-      end
+    def retrieve_image( image )
+# TODO: remove this filthly hack!!!!
+#return image if image.is_a?( Mocha::Mock )
+
+      image.is_a?( image_adapter_class ) ? image : image_adapter_class.factory( image )
     end
 
     def density_reached?( pixel_count, image = nil )

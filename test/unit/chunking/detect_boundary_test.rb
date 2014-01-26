@@ -3,16 +3,16 @@ module Chunking
   class DetectBoundaryTest < TestCase
 
     def test_should_retrieve_image
-      detector = build_detector
       image = mock( "image" )
+      detector = build_detector( image )
       retrieved_image = build_image( 0 )
       detector.expects( :retrieve_image ).once.returns( retrieved_image )
       detector.detect_boundary( image )
     end
       
     def test_should_create_run_correctly
-      detector = build_detector
       img = build_image( 0 )
+      detector = build_detector( img )
       start_index = mock( "start_index", :to_i => 0 )
       run = mock( "run" )
       DetectorRun.expects( :new ).once.with( detector, img, start_index ).returns( run )
@@ -21,8 +21,8 @@ module Chunking
     end
 
     def test_runs_should_persist
-      detector = build_detector
       img = build_image( 0 )
+      detector = build_detector( img )
       start_index = stub( "start_index", :to_i => 0 )
       run1 = mock( "run1" )
       run2 = mock( "run2" )
@@ -33,16 +33,16 @@ module Chunking
     end
 
     def test_should_return_nil_if_we_run_out_of_image
-      detector = build_detector
       img = build_image( 0 )
+      detector = build_detector( img )
       DetectorRun.stubs( :new )
       assert_equal nil, detector.detect_boundary( img )
     end
 
     def test_should_change_state_on_detect_colour
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       run = build_run( detector, img )
       state = mock( "state" )
       detector.expects( :detect_colour? ).once.returns( state )
@@ -52,9 +52,9 @@ module Chunking
     end
       
     def test_should_increment_runs_tolerance_counter_when_state_changes
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image( 2 )
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       run = build_run( detector, img )
       run.expects( :state_changed? ).times( 2 ).returns( false, true )
       run.expects( :increment_tolerance_counter ).once
@@ -62,9 +62,9 @@ module Chunking
     end
 
     def test_should_reset_runs_tolerance_when_state_changes_back
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image( 2 )
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       run = build_run( detector, img )
       run.expects( :state_changed? ).times( 2 ).returns( false, true )
       run.expects( :reset_tolerance_counter ).once
@@ -72,72 +72,72 @@ module Chunking
     end
 
     def test_should_check_all_rows
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       row_count = 5
       img = build_image( row_count )
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       build_run( detector, img ).expects( :state_changed? ).times( row_count ).returns( false )
       detector.detect_boundary( img )
     end
 
     def test_should_stop_checking_when_detected
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       row_count = 5
       img = build_image( row_count )
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       build_run( detector, img ).expects( :state_changed? ).once.returns( true )
       assert detector.detect_boundary( img )
     end
 
     def test_should_correctly_observe_starting_index
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       row_count = 5
-      starting_index = 1
       img = build_image( row_count )
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
+      starting_index = 1
       build_run( detector, img ).expects( :state_changed? ).times( row_count - starting_index ).returns( false )
       assert !detector.detect_boundary( img, starting_index )
     end
 
     def test_should_not_include_tolerance_in_boundary_index
-      tolerance = 99
-      detector = build_detector( :tolerance => tolerance )
-      detector.stubs( :detect_colour? )
       img = build_image
+      tolerance = 99
+      detector = build_detector( img, :tolerance => tolerance )
+      detector.stubs( :detect_colour? )
       build_run( detector, img ).expects( :tolerance_reached? ).once.returns( true )
       assert result = detector.detect_boundary( img )
       assert_equal -tolerance, result.index
     end
 
     def test_should_detect_if_tolerance_reached
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       build_run( detector, img ).expects( :tolerance_reached? ).once.returns( true )
       assert result = detector.detect_boundary( img )
       assert_equal Boundary, result.class
     end
       
     def test_should_not_detect_if_tolerance_not_reached
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       build_run( detector, img ).expects( :tolerance_reached? ).once.returns( false )
       assert !detector.detect_boundary( img )
     end
 
     def test_should_invert_image_to_invert_direction
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       img.expects( :invert ).once.with( detector.axis ).returns( img )
       detector.detect_boundary( img, 0, true )
     end
 
     def test_should_not_alter_original_image_to_invert_direction
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       img_copy = build_image
       img.stubs( :invert ).returns( img_copy )
       img.expects( :invert! ).never
@@ -148,9 +148,9 @@ module Chunking
 
 
     def test_should_not_invert_image_to_invert_direction
-      detector = build_detector
-      detector.stubs( :detect_colour? )
       img = build_image
+      detector = build_detector( img )
+      detector.stubs( :detect_colour? )
       img.expects( :invert ).never
       detector.detect_boundary( img, 0, false )
     end

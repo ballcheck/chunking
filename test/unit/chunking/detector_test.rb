@@ -16,8 +16,8 @@ module Chunking
     #--------
 
     def test_method_detect_nth_boundary
-      detector = build_detector
       img = mock( "img" )
+      detector = build_detector( img )
       invert = mock( "invert" )
       start_index = 0
       first_index = 1
@@ -47,8 +47,8 @@ module Chunking
       run3 = build_run
       DetectorRun.stubs( :new ).returns( run1, run2, run3 )
       DetectorRun.any_instance.stubs( :tolerance_reached? => true )
-      detector = build_detector
       image = build_image
+      detector = build_detector( image )
       detector.detect_nth_boundary( image, n )
       assert_equal n, detector.runs.length
     end
@@ -69,7 +69,7 @@ module Chunking
       image = stub( "image" )
       image.expects( :set_pixel_colour ).with( x, y, colour )
 
-      detector = build_detector
+      detector = build_detector( image )
       detector.annotate_image( image, x, y, colour )
     end
 
@@ -78,9 +78,9 @@ module Chunking
     #--------------------------------------------
 
     def test_should_call_detect_colour_as_class_method
-      detector = build_detector
-      args = stub( "args" )
       img = stub( "img" )
+      detector = build_detector( img )
+      args = stub( "args" )
       index = stub( "index" )
       Detector.expects( :new ).once.with( args ).returns( detector )
       detector.expects( :detect_colour? ).once.with( img, index )
