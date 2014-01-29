@@ -70,7 +70,7 @@ module Chunking
       def setup
         super
         @background_colour = @colour
-        @foreground_colour = Image::AdapterMagickImage::WHITE_RGB
+        @foreground_colour = Image::WHITE_RGB
       end
     end
 
@@ -82,7 +82,7 @@ module Chunking
       def setup
         super
         @background_colour = @colour
-        @foreground_colour = Image::AdapterMagickImage::WHITE_RGB
+        @foreground_colour = Image::WHITE_RGB
         @axis = :y
       end
     end

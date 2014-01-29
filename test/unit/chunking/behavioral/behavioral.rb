@@ -8,9 +8,9 @@ module Chunking
       # Set up for the test.
       def setup
         @axis = :x
-        @colour = Image::AdapterMagickImage::BLACK_RGB
+        @colour = Image::BLACK_RGB
         @foreground_colour = @colour
-        @background_colour = Image::AdapterMagickImage::WHITE_RGB
+        @background_colour = Image::WHITE_RGB
         @fuzz = 0
       end
 

@@ -1,14 +1,16 @@
-require File.expand_path( "../base.rb", __FILE__ )
+require File.expand_path( "../pixel_color.rb", __FILE__ )
 require "RMagick"
 
 module Chunking
   module Image
-    # TODO: not sure about the adapter getting extra functionality from Image::Base
-    class AdapterMagickImage < Base
-      # TODO: decide where to put these contants.
-      BLACK_RGB = [ 0, 0, 0 ]
-      WHITE_RGB = [ Magick::QuantumRange, Magick::QuantumRange, Magick::QuantumRange ]
+    # TODO: coupled to rmagick.
+    BLACK_RGB = [ 0, 0, 0 ]
+    WHITE_RGB = [ Magick::QuantumRange, Magick::QuantumRange, Magick::QuantumRange ]
 
+    # TODO: test this bad-boy
+    # Adapter class providing loose-coupling with RMagick
+    class AdapterMagickImage
+      include PixelColor
       attr_reader :base_image
 
       # TODO: don't think the factory should be in the adapter.
