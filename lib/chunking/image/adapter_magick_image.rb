@@ -10,7 +10,7 @@ module Chunking
 
     # TODO: test this bad-boy
     # Adapter class providing loose-coupling with RMagick
-    class AdapterMagickImage < SimpleDelegator
+    class AdapterMagickImage
       include PixelColor
       attr_reader :base_image
 
@@ -39,10 +39,7 @@ module Chunking
         end
       end
 
-      # TODO: this delegation should be tested.
       def initialize( base_image )
-        # call SimpleDelegator initialize to set up delegation.
-        super
         @base_image = base_image
       end
 

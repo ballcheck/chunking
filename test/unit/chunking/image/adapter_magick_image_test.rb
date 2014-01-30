@@ -9,7 +9,6 @@ module Chunking
       assert_equal image, adapter.base_image
     end
 
-    # TODO: test the rest of this adapter
     # TODO: check online if this is too closely testing the implementation
     def test_method_size
       rows = stub( "rows" )
