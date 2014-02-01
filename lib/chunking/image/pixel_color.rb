@@ -13,14 +13,21 @@ module Chunking
         #                    user       system     total      real
         #  fcmp              2.240000   0.270000   2.510000   (2.516855)
         #  compare_colours?  0.240000   0.000000   0.240000   (0.241203)
-        def compare_colours?( colour1, colour2, fuzz = 0 )
-          # Expects colour to be an array of colour values - [r,g,b] / [r,g,b,a] / [c,m,y] / [c,m,y,k]
-          # Only compares values that are present in BOTH colours
-          cnt = [ colour1.length, colour2.length ].min
-          cnt.times do |i|
-            return false if ( colour1[ i - 1 ] - colour2[ i - 1 ] ).abs > fuzz
+        def compare_colours?( a, b, fuzz = 0 )
+          # Expects a and b to be arrays of numerical colour values - [r,g,b] / [r,g,b,a] / [c,m,y] / [c,m,y,k]
+          # Only compare values at indexes present in BOTH colours, so [r,g,b] equals [r,g,b,a]
+          last_index = [ a.length, b.length ].min - 1
+          index_range = ( 0..last_index )
+
+          index_range.each do |i|
+            return false unless compare_single_colours?( a[i], b[i], fuzz )
           end
+
           return true
+        end
+
+        def compare_single_colours?( a, b, fuzz = 0 )
+          ( a - b ).abs <= fuzz
         end
       end
 
