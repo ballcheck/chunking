@@ -1,4 +1,4 @@
-require File.expand_path( "../pixel_color.rb", __FILE__ )
+require File.expand_path( "../pixel_colour.rb", __FILE__ )
 require File.expand_path( "../masking.rb", __FILE__ )
 require "RMagick"
 require "delegate"
@@ -11,7 +11,7 @@ module Chunking
 
     # Adapter class providing loose-coupling with RMagick
     class AdapterMagickImage
-      include PixelColor
+      include PixelColour
       include Masking
       attr_reader :base_image
 

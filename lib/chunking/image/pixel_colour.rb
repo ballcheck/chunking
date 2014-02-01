@@ -1,7 +1,7 @@
 module Chunking
   module Image
 
-    module PixelColor
+    module PixelColour
       def self.included(base)
         base.extend(ClassMethods)
       end

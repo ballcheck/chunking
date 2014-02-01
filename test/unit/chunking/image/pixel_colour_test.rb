@@ -1,5 +1,5 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
-require File.expand_path( "../../../../../lib/chunking/image/pixel_color.rb", __FILE__ )
+require File.expand_path( "../../../../../lib/chunking/image/pixel_colour.rb", __FILE__ )
 
 module Chunking
   class PixelColourTest < TestCase
@@ -9,7 +9,7 @@ module Chunking
     end
 
     def test_method_compare_single_colours
-      image = Class.extend( Image::PixelColor::ClassMethods )
+      image = Class.extend( Image::PixelColour::ClassMethods )
       a, b = (0..max_colour_value).to_a.sample( 2 )
 
       assert image.compare_single_colours?( a, a )
@@ -19,7 +19,7 @@ module Chunking
     end
 
     def test_method_compare_colours
-      klass = Class.extend( Image::PixelColor::ClassMethods )
+      klass = Class.extend( Image::PixelColour::ClassMethods )
       r, g, b, a, x, fuzz = [ stub( "r" ), stub( "g" ), stub( "b" ), stub( "a" ), stub( "x" ), stub( "fuzz" ) ]
       c1 = [ r, g, b, a ]
       c2 = [ r, g, b, a ]
@@ -34,7 +34,7 @@ module Chunking
     end
 
     def test_compare_colours
-      image = Class.extend( Image::PixelColor::ClassMethods )
+      image = Class.extend( Image::PixelColour::ClassMethods )
       r, g, b, a, x = (0..max_colour_value).to_a.sample( 5 )
 
       # rgb equality (same principle for cmy)
