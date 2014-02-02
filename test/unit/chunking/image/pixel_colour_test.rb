@@ -91,25 +91,25 @@ module Chunking
     end
 
     def test_compare_colours_method_without_mocks
-      image = Class.extend( Image::PixelColour::ClassMethods )
+      klass = Image::MixedIn
       r, g, b, a, x = (0..max_colour_value).to_a.sample( 5 )
 
       # rgb equality (same principle for cmy)
-      assert image.compare_colours?( [r, g, b], [r, g, b] )
+      assert klass.compare_colours?( [r, g, b], [r, g, b] )
 
       # rgba equality (same principle for cmyk)
-      assert image.compare_colours?( [r, g, b, a], [r, g, b, a] )
+      assert klass.compare_colours?( [r, g, b, a], [r, g, b, a] )
 
       # opacity is optional
-      assert image.compare_colours?( [r, g, b], [r, g, b, a] )
-      assert image.compare_colours?( [r, g, b, a], [r, g, b] )
+      assert klass.compare_colours?( [r, g, b], [r, g, b, a] )
+      assert klass.compare_colours?( [r, g, b, a], [r, g, b] )
 
       # tolerance works
       colour = [r, g, b, a]
       inequal_colour = colour.reverse
       required_tolerance = colour.zip( inequal_colour ).map{ |a,b| (a-b).abs }.max
-      assert image.compare_colours?( colour, inequal_colour, required_tolerance )
-      assert !image.compare_colours?( colour, inequal_colour, required_tolerance-1 )
+      assert klass.compare_colours?( colour, inequal_colour, required_tolerance )
+      assert !klass.compare_colours?( colour, inequal_colour, required_tolerance-1 )
 
       # inequality at any index / combination of indexes
       # e.g. [[0], [1], [2], [3], [0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3], [0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]]
@@ -119,12 +119,12 @@ module Chunking
         inequal_colour = (0..3).to_a.map{ |p| i.include?( p ) ? x : colour[p] }
 
         # inequality
-        assert !image.compare_colours?( colour, inequal_colour )
+        assert !klass.compare_colours?( colour, inequal_colour )
 
         # tolerance works
         required_tolerance = colour.zip( inequal_colour ).map{ |a,b| (a-b).abs }.max
-        assert image.compare_colours?( colour, inequal_colour, required_tolerance )
-        assert !image.compare_colours?( colour, inequal_colour, required_tolerance-1 )
+        assert klass.compare_colours?( colour, inequal_colour, required_tolerance )
+        assert !klass.compare_colours?( colour, inequal_colour, required_tolerance-1 )
       end
         
     end
