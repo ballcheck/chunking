@@ -32,8 +32,8 @@ module Chunking
       end
 
       # Tell if the pixel and a given set of coordinates is the given colour.
-      def pixel_is_colour?( x, y, colour, fuzz )
-        colours = colour[0].is_a?( Array ) ? colour :  [colour]
+      def pixel_is_colour?( x, y, colours, fuzz = 0 )
+        colours = [colours] unless colours.is_a?( Array ) && colours.first.is_a?( Array )
         colour_of_pixel = get_pixel_colour( x, y )
 
         colours.each do |colour|
