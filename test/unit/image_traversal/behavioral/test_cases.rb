@@ -1,4 +1,4 @@
-module Chunking
+module ImageTraversal
 
   require File.expand_path( "../behavioral.rb", __FILE__ )
   module Behavioral

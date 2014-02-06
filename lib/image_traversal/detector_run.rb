@@ -1,4 +1,4 @@
-module Chunking
+module ImageTraversal
   # Container used in Detector.detect_boundary to monitor detection progress and hold results.
   class DetectorRun
     attr_accessor :state, :boundary

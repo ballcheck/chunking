@@ -1,5 +1,5 @@
 require File.expand_path( "../test_helper.rb", __FILE__ )
-module Chunking
+module ImageTraversal
   class DetectBoundaryTest < TestCase
 
     def test_should_retrieve_image

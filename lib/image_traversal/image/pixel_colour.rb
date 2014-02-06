@@ -1,4 +1,4 @@
-module Chunking
+module ImageTraversal
   module Image
 
     module PixelColour

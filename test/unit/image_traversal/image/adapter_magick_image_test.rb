@@ -1,6 +1,6 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
 require "RMagick"
-module Chunking
+module ImageTraversal
 
   class AdapterMagickImageTest < TestCase
 

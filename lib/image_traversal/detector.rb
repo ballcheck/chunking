@@ -4,7 +4,7 @@ require File.expand_path( "../boundary.rb", __FILE__ )
 # Extracting blocks of content from an image using boundary detection.
 # Applications includes extracting sections of text prior to ocr operations.
 # Image traversal.
-module Chunking
+module ImageTraversal
 
   class Detector
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance

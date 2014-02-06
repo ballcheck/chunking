@@ -1,4 +1,4 @@
-module Chunking
+module ImageTraversal
   class Boundary
     attr_accessor :index, :axis
     def initialize( axis, index )

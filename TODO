@@ -1,13 +1,9 @@
-IMPORTANT! - get rid of trying force Image to be an abstract class! It's looks bad!
-
-use "adapter" design pattern for Image class
 use "__some_method" type methods for internal operations?
 
 detector.rb
 -----------
 
 *class method version of detect_boundary
-*rename Chunking
 *usage examples
 are max rgb values coupled to rmagick?
 private methods untested
@@ -28,20 +24,20 @@ detect_colour_test.rb
 *finish test_should_annotate_correctly
 quite a few tests want drying up
 
-lib/chunking/chunking.rb
+lib/image_traversal/image_traversal.rb
 ------------------------
 this file just includes all the modules in the lib. find out convention.
 
-test/unit/chunking/factories.rb
+test/unit/image_traversal/factories.rb
 -------------------------------
 build_run can only be called once per test because it stubs the 'new' method
 
-lib/chunking/image/rmagick.rb
+lib/image_traversal/image/rmagick.rb
 -----------------------------
 whole module untested 
 must be a method to do - get_pixel_colour
 
-lib/chunking/image/base.rb
+lib/image_traversal/image/base.rb
 --------------------------
 *compare colours really wants testing!
 whole module untested 
@@ -51,22 +47,22 @@ aliases created here would refer to the template methods and raise.
 draw_pixel_map! this require the base_image to be the same size as the pixel_map
 new_from_pixel_map assumes 'new' method creates a new blank base_image from cols, rows
 
-lib/chunking/boundary.rb
+lib/image_traversal/boundary.rb
 ------------------------
 whole thing untested
 
-test/unit/chunking/pixel_is_colour_test.rb
+test/unit/image_traversal/pixel_is_colour_test.rb
 ------------------------------------------
 *these test are fr Image::Base
 all these nils seem suspicious.
 test_equal_if_any_item_is_equal - redo using sequence
 
-test/unit/chunking/behavioral/test_cases.rb
+test/unit/image_traversal/behavioral/test_cases.rb
 -------------------------------------------
 surely you don't have to require the other files in the module...
 test_should_work_with_image_path - not right place for test, not a good test either.
 
-test/unit/chunking/behavioral/behavioral.rb
+test/unit/image_traversal/behavioral/behavioral.rb
 -------------------------------------------
 run these tests again, swapping image library
 behavioral tests for other methods e.g. nth_boundary
@@ -77,7 +73,7 @@ remove these 2 lines from all over this file
         img = img.invert( @axis ) if invert?
 test_fuzz not implemented
 
-test/unit/chunking/detect_boundary_test.rb
+test/unit/image_traversal/detect_boundary_test.rb
 ------------------------------------------
 be able to run these tests with various detector options
 is this really needed everywhere?

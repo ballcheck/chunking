@@ -1,4 +1,4 @@
-module Chunking
+module ImageTraversal
   module Factories
     def build_image( size = 1 )
       img = stub_everything( "image", :size => size )

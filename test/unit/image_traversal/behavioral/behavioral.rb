@@ -1,5 +1,5 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
-module Chunking
+module ImageTraversal
 
   # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.
   module Behavioral

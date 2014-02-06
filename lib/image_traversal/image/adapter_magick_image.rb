@@ -2,7 +2,7 @@ require File.expand_path( "../pixel_colour.rb", __FILE__ )
 require File.expand_path( "../masking.rb", __FILE__ )
 require "RMagick"
 
-module Chunking
+module ImageTraversal
   module Image
     # TODO: coupled to rmagick.
     BLACK_RGB = [ 0, 0, 0 ]

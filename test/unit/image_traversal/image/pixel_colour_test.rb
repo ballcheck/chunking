@@ -1,7 +1,7 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
-require File.expand_path( "../../../../../lib/chunking/image/pixel_colour.rb", __FILE__ )
+require File.expand_path( "../../../../../lib/image_traversal/image/pixel_colour.rb", __FILE__ )
 
-module Chunking
+module ImageTraversal
   
   module Image
     class MixedIn
