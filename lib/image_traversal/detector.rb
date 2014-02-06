@@ -49,7 +49,7 @@ module ImageTraversal
 
       lines.to_i.times do |line|
         index = start_index + line
-        run.state = detect_colour?( image, index, ( annotate ? run.annotation_mask : false ) )
+        run.state = detect_colour?( image, index, ( annotate ? run.annotation_mask : nil ) )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
         if run.tolerance_reached?
@@ -125,9 +125,6 @@ module ImageTraversal
 
     # start of untested methods
     def retrieve_image( image )
-# TODO: remove this filthly hack!!!!
-#return image if image.is_a?( Mocha::Mock )
-
       image.is_a?( image_adapter_class ) ? image : image_adapter_class.factory( image )
     end
 

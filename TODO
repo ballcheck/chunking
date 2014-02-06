@@ -39,9 +39,6 @@ must be a method to do - get_pixel_colour
 
 lib/image_traversal/image/base.rb
 --------------------------
-*compare colours really wants testing!
-whole module untested 
-Look into the ruby convention for template enforcemnet
 create colour / color aliases
 aliases created here would refer to the template methods and raise.
 draw_pixel_map! this require the base_image to be the same size as the pixel_map
