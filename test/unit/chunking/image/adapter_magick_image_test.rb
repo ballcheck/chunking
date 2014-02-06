@@ -1,10 +1,11 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
+require "RMagick"
 module Chunking
 
   class AdapterMagickImageTest < TestCase
 
     def max_colour_value
-      Magick::Image::QuantumRange
+      ::Magick::QuantumRange
     end
 
     def test_initialize
@@ -18,13 +19,32 @@ module Chunking
     # b) writing heavily mocked test that are brittle.
 
     def test_method_size
-      rows = rand( 100 )
-      cols = rand( 100 )
-      base_image = Magick::Image.new( cols, rows )
-      adapter = Image::AdapterMagickImage.new( base_image )
-      assert_equal cols, adapter.size( :x )
-      assert_equal rows, adapter.size( :y )
+      width, height  = (1..100).to_a.sample( 2 )
+      base_image = Magick::Image.new( width, height )
+      image_adapter = Image::AdapterMagickImage.new( base_image )
+      
+      # maps width/height to size( :x ) / size ( :y )
+      assert_equal width, image_adapter.size( :x )
+      assert_equal height, image_adapter.size( :y )
     end
 
+    def test_set_and_get_pixel_colour_methods
+      width, height  = (1..100).to_a.sample( 2 )
+
+      coords = [ (0..width).to_a.sample, (0..height).to_a.sample ]
+      initial_colour = [ max_colour_value, max_colour_value, max_colour_value, 0 ]
+      new_colour = (0..max_colour_value).to_a.sample( 4 )
+      
+      base_image = Magick::Image.new( width, height )
+      base_image.alpha(Magick::ActivateAlphaChannel)
+      image_adapter = Image::AdapterMagickImage.new( base_image )
+
+      # gets/set colour at coords
+      assert_equal initial_colour, image_adapter.get_pixel_colour( *coords )
+      image_adapter.set_pixel_colour( *coords, new_colour )
+      assert_equal new_colour, image_adapter.get_pixel_colour( *coords )
+    end
+
+      
   end
 end

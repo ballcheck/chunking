@@ -1,7 +1,6 @@
 require File.expand_path( "../pixel_colour.rb", __FILE__ )
 require File.expand_path( "../masking.rb", __FILE__ )
 require "RMagick"
-require "delegate"
 
 module Chunking
   module Image
