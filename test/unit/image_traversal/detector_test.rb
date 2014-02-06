@@ -8,7 +8,7 @@ module ImageTraversal
 
     def test_should_detect_black_by_default
       detector = Detector.new
-      assert_equal Detector::RGB_BLACK, detector.colour
+      assert_equal Pallete.black, detector.colour
     end
 
     #--------
@@ -61,17 +61,17 @@ module ImageTraversal
       assert detector.send( :density_reached?, 2 )
     end
 
-    def test_method_annotate_image
-      x = stub( "x" )
-      y = stub( "y" )
-      colour = stub( "colour" )
+    #def test_method_annotate_image
+    #  x = stub( "x" )
+    #  y = stub( "y" )
+    #  colour = stub( "colour" )
 
-      image = stub( "image" )
-      image.expects( :set_pixel_colour ).with( x, y, colour )
+    #  image = stub( "image" )
+    #  image.expects( :set_pixel_colour ).with( x, y, colour )
 
-      detector = build_detector( image )
-      detector.annotate_image( image, x, y, colour )
-    end
+    #  detector = build_detector( image )
+    #  detector.annotate_image( image, x, y, colour )
+    #end
 
     #--------------------------------------------
     # aliases, class versions of instance methods

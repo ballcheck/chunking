@@ -178,7 +178,7 @@ module ImageTraversal
     #def test_benchmark_annotate
     #  n = 1
     #  size = 100
-    #  image = Image::RMagick.new( size, size )
+    #  image = Image::AdapterMagickImage.factory( size, size )
 
     #  Benchmark.bm { |x|
 

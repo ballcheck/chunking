@@ -1,5 +1,6 @@
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
+require File.expand_path( "../pallete.rb", __FILE__ )
 
 # Extracting blocks of content from an image using boundary detection.
 # Applications includes extracting sections of text prior to ocr operations.
@@ -9,10 +10,6 @@ module ImageTraversal
   class Detector
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance
     attr_reader :runs
-    RGB_BLACK = [0,0,0]
-    ANNOTATE_DENSITY_REACHED = [ 65535, 0, 0, 0 ]
-    ANNOTATE_PIXEL_IS_COLOUR = [ 0, 0, 65535 ]
-    ANNOTATE_NIL = [ 40000, 40000, 40000 ]
 
     def initialize( args = {} )
       # "size" represents width OR height and "offset" represents
@@ -20,7 +17,7 @@ module ImageTraversal
       @axis = args.has_key?(:axis) ? args[:axis].to_sym : :x
       @offset = args.has_key?(:offset) ? args[:offset] : 0
       @size = args.has_key?(:size) ? args[:size] : Rational( 1 )
-      @colour = args.has_key?(:colour) ? args[:colour] : RGB_BLACK
+      @colour = args.has_key?(:colour) ? args[:colour] : Pallete.black
       @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
       # pixel "density", line "tolerance"
       @density = args.has_key?(:density) ? args[:density] : 1
@@ -86,28 +83,35 @@ module ImageTraversal
       size = determine_size( image )
       fuzz = determine_fuzz( image )
 
+      density_reached = false
+
       size.times do |ind|
         x = axis == :x ? ind + offset : line_index
         y = axis == :y ? image.size( axis ) - 1 - ( ind + offset ) : line_index
 
-        if image.pixel_is_colour?( x, y, colour, fuzz )
-          if density_reached?( pixel_count += 1, image )
-            annotate_image( annotation_mask, x, y, ANNOTATE_DENSITY_REACHED ) if annotation_mask
-            return true
-          else
-            annotate_image( annotation_mask, x, y, ANNOTATE_PIXEL_IS_COLOUR ) if annotation_mask
-          end
-        else
-          annotate_image( annotation_mask, x, y, ANNOTATE_NIL ) if annotation_mask
+        if colour_detected = image.pixel_is_colour?( x, y, colour, fuzz )
+          pixel_count += 1
+          density_reached = density_reached?( pixel_count, image )
         end
+        
+        annotate_image( annotation_mask, x, y, colour_detected, density_reached ) if annotation_mask
+        break if density_reached
       end
 
-      return false
+      return density_reached
     end
     
     alias detect_color? detect_colour?
 
-    def annotate_image( image, x, y, colour )
+    # TODO: test this!
+    def annotate_image( image, x, y, colour_detected = nil, density_reached = nil )
+      if density_reached
+        colour = Pallete.annotate_density_reached
+      elsif colour_detected
+        colour = Pallete.annotate_pixel_is_colour
+      else
+        colour = Pallete.annotate_nil
+      end
       image.set_pixel_colour( x, y, colour )
     end
         
