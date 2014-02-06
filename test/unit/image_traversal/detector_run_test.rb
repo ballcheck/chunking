@@ -85,12 +85,12 @@ module ImageTraversal
       image = mock( "image" )
       image.expects( :create_mask ).once
 
-      DetectorRun.any_instance.stubs( :initialize )
-      run1 = DetectorRun.new
+      DetectorRun.any_instance.stubs( :determine_initial_state )
+      run1 = DetectorRun.new( nil, nil )
       run1.stubs( :image ).returns( nil )
       run1.send( :create_annotation_mask )
 
-      run2 = DetectorRun.new
+      run2 = DetectorRun.new( nil, nil )
       run2.stubs( :image ).returns( image )
       run2.send( :create_annotation_mask )
     end
