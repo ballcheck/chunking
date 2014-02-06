@@ -1,5 +1,5 @@
 module ImageTraversal
-  class Pallete
+  class Palette
     
     class << self
       def max_colour_value; Image::AdapterMagickImage.max_colour_value end

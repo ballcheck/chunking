@@ -8,7 +8,7 @@ module ImageTraversal
 
     def test_should_detect_black_by_default
       detector = Detector.new
-      assert_equal Pallete.black, detector.colour
+      assert_equal Palette.black, detector.colour
     end
 
     #--------

@@ -8,9 +8,9 @@ module ImageTraversal
       # Set up for the test.
       def setup
         @axis = :x
-        @colour = Pallete.black
+        @colour = Palette.black
         @foreground_colour = @colour
-        @background_colour = Pallete.white
+        @background_colour = Palette.white
         @fuzz = 0
       end
 

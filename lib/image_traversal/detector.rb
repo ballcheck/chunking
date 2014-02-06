@@ -1,6 +1,6 @@
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
-require File.expand_path( "../pallete.rb", __FILE__ )
+require File.expand_path( "../palette.rb", __FILE__ )
 
 # Extracting blocks of content from an image using boundary detection.
 # Applications includes extracting sections of text prior to ocr operations.
@@ -17,7 +17,7 @@ module ImageTraversal
       @axis = args.has_key?(:axis) ? args[:axis].to_sym : :x
       @offset = args.has_key?(:offset) ? args[:offset] : 0
       @size = args.has_key?(:size) ? args[:size] : Rational( 1 )
-      @colour = args.has_key?(:colour) ? args[:colour] : Pallete.black
+      @colour = args.has_key?(:colour) ? args[:colour] : Palette.black
       @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
       # pixel "density", line "tolerance"
       @density = args.has_key?(:density) ? args[:density] : 1
@@ -106,11 +106,11 @@ module ImageTraversal
     # TODO: test this!
     def annotate_image( image, x, y, colour_detected = nil, density_reached = nil )
       if density_reached
-        colour = Pallete.annotate_density_reached
+        colour = Palette.annotate_density_reached
       elsif colour_detected
-        colour = Pallete.annotate_pixel_is_colour
+        colour = Palette.annotate_pixel_is_colour
       else
-        colour = Pallete.annotate_nil
+        colour = Palette.annotate_nil
       end
       image.set_pixel_colour( x, y, colour )
     end
