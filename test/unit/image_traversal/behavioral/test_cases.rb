@@ -70,7 +70,7 @@ module ImageTraversal
       def setup
         super
         @background_colour = @colour
-        @foreground_colour = Image::WHITE_RGB
+        @foreground_colour = Pallete.white
       end
     end
 
@@ -82,7 +82,7 @@ module ImageTraversal
       def setup
         super
         @background_colour = @colour
-        @foreground_colour = Image::WHITE_RGB
+        @foreground_colour = Pallete.white
         @axis = :y
       end
     end

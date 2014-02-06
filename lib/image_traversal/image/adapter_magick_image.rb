@@ -4,10 +4,6 @@ require "RMagick"
 
 module ImageTraversal
   module Image
-    # TODO: coupled to rmagick.
-    BLACK_RGB = [ 0, 0, 0 ]
-    WHITE_RGB = [ Magick::QuantumRange, Magick::QuantumRange, Magick::QuantumRange ]
-
     # Adapter class providing loose-coupling with RMagick
     class AdapterMagickImage
       include PixelColour
