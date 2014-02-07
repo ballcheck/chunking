@@ -12,6 +12,7 @@ GEM
     mocha (1.0.0)
       metaclass (~> 0.0.1)
     rmagick (2.13.2)
+    state_machine (1.2.0)
 
 PLATFORMS
   ruby
@@ -20,3 +21,4 @@ DEPENDENCIES
   debugger (~> 1.6.5)
   mocha (~> 1.0.0)
   rmagick (~> 2.13.2)
+  state_machine (~> 1.2.0)
