@@ -42,10 +42,6 @@ module ImageTraversal
 
     def test_method_detect_nth_boundary_should_create_n_runs
       n = 3
-      run1 = build_run
-      run2 = build_run
-      run3 = build_run
-      DetectorRun.stubs( :new ).returns( run1, run2, run3 )
       DetectorRun.any_instance.stubs( :tolerance_reached? => true )
       image = build_image
       detector = build_detector( image )
