@@ -33,7 +33,7 @@ module ImageTraversal
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or outside a content block).
-    def detect_boundary( image, start_index = 0, invert_direction = false, annotate = false )
+    def detect_boundary( image, start_index = 0, invert_direction = false )
       image = retrieve_image( image )
 
       # The default direction is left to right, top to bottom.
@@ -46,13 +46,16 @@ module ImageTraversal
 
       lines.to_i.times do |line|
         index = start_index + line
-        run.state = detect_colour?( image, index, ( annotate ? run.annotation_mask : nil ) )
+        run.state = detect_colour?( image, index )
         run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
 
         if run.tolerance_reached?
           run.boundary = Boundary.new( axis, index - tolerance )
           return run.boundary
         end
+#        result = detect_colour?( image, index )
+#        run.add_result( result, axis, index )
+#        return run.boundary unless run.boundary.nil?
       end
 
       # un-invert the run image
@@ -63,11 +66,11 @@ module ImageTraversal
     end
 
     # Skip n - 1 boundaries and return the nth.
-    def detect_nth_boundary( image, n, start_index = 0, invert_direction = false, annotate = false )
+    def detect_nth_boundary( image, n, start_index = 0, invert_direction = false )
       index = start_index
       boundary = nil
       n.times do
-        boundary = detect_boundary( image, index, invert_direction, annotate )
+        boundary = detect_boundary( image, index, invert_direction )
         return nil unless boundary
         index = boundary.index
       end
@@ -76,7 +79,7 @@ module ImageTraversal
     end
 
     # Tell if a given line within an image contains the Detector @colour.
-    def detect_colour?( image, line_index = nil, annotation_mask = nil )
+    def detect_colour?( image, line_index = nil )
       line_index ||= 0
       pixel_count = 0
       offset = determine_offset( image )
@@ -94,7 +97,6 @@ module ImageTraversal
           density_reached = density_reached?( pixel_count, image )
         end
         
-        annotate_image( annotation_mask, x, y, colour_detected, density_reached ) if annotation_mask
         break if density_reached
       end
 
@@ -102,19 +104,6 @@ module ImageTraversal
     end
     
     alias detect_color? detect_colour?
-
-    # TODO: test this!
-    def annotate_image( image, x, y, colour_detected = nil, density_reached = nil )
-      if density_reached
-        colour = Palette.annotate_density_reached
-      elsif colour_detected
-        colour = Palette.annotate_pixel_is_colour
-      else
-        colour = Palette.annotate_nil
-      end
-      image.set_pixel_colour( x, y, colour )
-    end
-        
 
     class << self
       # Class method version of instance method of the same name. Provided for simplicity.

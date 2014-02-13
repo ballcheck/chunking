@@ -61,46 +61,46 @@ module ImageTraversal
       assert !run.tolerance_reached?
     end
     
-    def test_method_annotate
-      file_path = "some_path"
-      new_filename = "#{file_path}.annotated"
-      mask = mock( "mask" )
-      new_image = mock( "new_image" )
+    #def test_method_annotate
+    #  file_path = "some_path"
+    #  new_filename = "#{file_path}.annotated"
+    #  mask = mock( "mask" )
+    #  new_image = mock( "new_image" )
 
-      image = mock( "image" )
-      image.stubs( :file_path ).returns( file_path )
-      image.expects( :annotate ).with{ |*a| a[0] == mask }.returns( new_image )
+    #  image = mock( "image" )
+    #  image.stubs( :file_path ).returns( file_path )
+    #  image.expects( :annotate ).with{ |*a| a[0] == mask }.returns( new_image )
 
-      new_image.expects( :write ).with( new_filename )
+    #  new_image.expects( :write ).with( new_filename )
 
-      run = build_run
-      run.stubs( :image ).returns( image )
-      run.stubs( :annotation_mask ).returns( mask )
-      result = run.annotate
+    #  run = build_run
+    #  run.stubs( :image ).returns( image )
+    #  run.stubs( :annotation_mask ).returns( mask )
+    #  result = run.annotate
 
-      assert_equal result, new_image
-    end
+    #  assert_equal result, new_image
+    #end
 
-    def test_method_create_annotation_mask
-      image = mock( "image" )
-      image.expects( :create_mask ).once
+    #def test_method_create_annotation_mask
+    #  image = mock( "image" )
+    #  image.expects( :create_mask ).once
 
-      DetectorRun.any_instance.stubs( :determine_initial_state )
-      run1 = DetectorRun.new( nil, nil )
-      run1.stubs( :image ).returns( nil )
-      run1.send( :create_annotation_mask )
+    #  DetectorRun.any_instance.stubs( :determine_initial_state )
+    #  run1 = DetectorRun.new( nil, nil )
+    #  run1.stubs( :image ).returns( nil )
+    #  run1.send( :create_annotation_mask )
 
-      run2 = DetectorRun.new( nil, nil )
-      run2.stubs( :image ).returns( image )
-      run2.send( :create_annotation_mask )
-    end
+    #  run2 = DetectorRun.new( nil, nil )
+    #  run2.stubs( :image ).returns( image )
+    #  run2.send( :create_annotation_mask )
+    #end
 
-    def test_annotation_mask_is_set_on_initialisation
-      mask = mock( "mask" )
-      DetectorRun.any_instance.expects( :create_annotation_mask ).returns( mask )
-      DetectorRun.any_instance.stubs( :determine_initial_state )
-      run = DetectorRun.new( nil, nil )
-      assert_equal mask, run.annotation_mask
-    end
+    #def test_annotation_mask_is_set_on_initialisation
+    #  mask = mock( "mask" )
+    #  DetectorRun.any_instance.expects( :create_annotation_mask ).returns( mask )
+    #  DetectorRun.any_instance.stubs( :determine_initial_state )
+    #  run = DetectorRun.new( nil, nil )
+    #  assert_equal mask, run.annotation_mask
+    #end
   end
 end

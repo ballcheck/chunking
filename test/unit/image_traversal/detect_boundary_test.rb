@@ -175,27 +175,6 @@ module ImageTraversal
     #  }
     #end
 
-    #def test_benchmark_annotate
-    #  n = 1
-    #  size = 100
-    #  image = Image::AdapterMagickImage.factory( size, size )
-
-    #  Benchmark.bm { |x|
-
-    #    x.report( "annotate" ){
-    #      n.times do
-    #        Detector.new.detect_boundary( image, 0, false, true )
-    #      end
-    #    }
-
-    #    x.report( "no-annotate" ){
-    #      n.times do
-    #        Detector.new.detect_boundary( image, 0, false, false )
-    #      end
-    #    }
-    #  }
-
-    #end
       
   end
 end
