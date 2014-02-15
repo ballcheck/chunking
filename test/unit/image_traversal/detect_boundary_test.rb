@@ -15,7 +15,7 @@ module ImageTraversal
       detector = build_detector( img )
       start_index = mock( "start_index", :to_i => 0 )
       run = mock( "run" )
-      DetectorRun.expects( :new ).once.with( detector, img, start_index ).returns( run )
+      Detector::Run.expects( :new ).once.returns( run )
       detector.detect_boundary( img, start_index )
       assert_equal [ run ], detector.runs
     end
@@ -26,7 +26,7 @@ module ImageTraversal
       start_index = stub( "start_index", :to_i => 0 )
       run1 = mock( "run1" )
       run2 = mock( "run2" )
-      DetectorRun.expects( :new ).times( 2 ).with( detector, img, start_index ).returns( run1, run2 )
+      Detector::Run.expects( :new ).times( 2 ).returns( run1, run2 )
       detector.detect_boundary( img, start_index )
       detector.detect_boundary( img, start_index )
       assert_equal [ run1, run2 ], detector.runs
@@ -35,48 +35,16 @@ module ImageTraversal
     def test_should_return_nil_if_we_run_out_of_image
       img = build_image( 0 )
       detector = build_detector( img )
-      DetectorRun.stubs( :new )
+      Detector::Run.stubs( :new )
       assert_equal nil, detector.detect_boundary( img )
     end
 
-    def test_should_change_state_on_detect_colour
-      img = build_image
-      detector = build_detector( img )
-      detector.stubs( :detect_colour? )
-      run = build_run( detector, img )
-      state = mock( "state" )
-      detector.expects( :detect_colour? ).once.returns( state )
-      assert_not_equal state, run.state
-      detector.detect_boundary( img )
-      assert_equal state, run.state
-    end
-      
-    def test_should_increment_runs_tolerance_counter_when_state_changes
-      img = build_image( 2 )
-      detector = build_detector( img )
-      detector.stubs( :detect_colour? )
-      run = build_run( detector, img )
-      run.expects( :state_changed? ).times( 2 ).returns( false, true )
-      run.expects( :increment_tolerance_counter ).once
-      detector.detect_boundary( img )
-    end
-
-    def test_should_reset_runs_tolerance_when_state_changes_back
-      img = build_image( 2 )
-      detector = build_detector( img )
-      detector.stubs( :detect_colour? )
-      run = build_run( detector, img )
-      run.expects( :state_changed? ).times( 2 ).returns( false, true )
-      run.expects( :reset_tolerance_counter ).once
-      detector.detect_boundary( img )
-    end
-
+    # TODO: what is this testing?
     def test_should_check_all_rows
       row_count = 5
       img = build_image( row_count )
       detector = build_detector( img )
-      detector.stubs( :detect_colour? )
-      build_run( detector, img ).expects( :state_changed? ).times( row_count ).returns( false )
+      detector.expects( :detect_colour? ).times( row_count ).returns( Detector::Result.new( false ) )
       detector.detect_boundary( img )
     end
 
@@ -84,8 +52,7 @@ module ImageTraversal
       row_count = 5
       img = build_image( row_count )
       detector = build_detector( img )
-      detector.stubs( :detect_colour? )
-      build_run( detector, img ).expects( :state_changed? ).once.returns( true )
+      detector.expects( :detect_colour? ).times( 2 ).returns( Detector::Result.new( true ), Detector::Result.new( false ) )
       assert detector.detect_boundary( img )
     end
 
@@ -93,9 +60,8 @@ module ImageTraversal
       row_count = 5
       img = build_image( row_count )
       detector = build_detector( img )
-      detector.stubs( :detect_colour? )
       starting_index = 1
-      build_run( detector, img ).expects( :state_changed? ).times( row_count - starting_index ).returns( false )
+      detector.expects( :detect_colour? ).times( row_count - starting_index ).returns( Detector::Result.new( false ) )
       assert !detector.detect_boundary( img, starting_index )
     end
 
@@ -104,16 +70,16 @@ module ImageTraversal
       tolerance = 99
       detector = build_detector( img, :tolerance => tolerance )
       detector.stubs( :detect_colour? )
-      build_run( detector, img ).expects( :tolerance_reached? ).once.returns( true )
+      build_run( detector, img ).expects( :tolerance_exceeded? ).once.returns( true )
       assert result = detector.detect_boundary( img )
       assert_equal -tolerance, result.index
     end
 
-    def test_should_detect_if_tolerance_reached
+    def test_should_detect_if_tolerance_exceeded
       img = build_image
       detector = build_detector( img )
       detector.stubs( :detect_colour? )
-      build_run( detector, img ).expects( :tolerance_reached? ).once.returns( true )
+      build_run( detector, img ).expects( :tolerance_exceeded? ).once.returns( true )
       assert result = detector.detect_boundary( img )
       assert_equal Boundary, result.class
     end
@@ -121,15 +87,15 @@ module ImageTraversal
     def test_should_not_detect_if_tolerance_not_reached
       img = build_image
       detector = build_detector( img )
-      detector.stubs( :detect_colour? )
-      build_run( detector, img ).expects( :tolerance_reached? ).once.returns( false )
+      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
+      build_run( detector, img ).expects( :tolerance_exceeded? ).once.returns( false )
       assert !detector.detect_boundary( img )
     end
 
     def test_should_invert_image_to_invert_direction
       img = build_image
       detector = build_detector( img )
-      detector.stubs( :detect_colour? )
+      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
       img.expects( :invert ).once.with( detector.axis ).returns( img )
       detector.detect_boundary( img, 0, true )
     end
@@ -137,20 +103,19 @@ module ImageTraversal
     def test_should_not_alter_original_image_to_invert_direction
       img = build_image
       detector = build_detector( img )
-      detector.stubs( :detect_colour? )
+      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
       img_copy = build_image
       img.stubs( :invert ).returns( img_copy )
       img.expects( :invert! ).never
       img_copy.expects( :invert! ).once.with( detector.axis )
       detector.detect_boundary( img, 0, true )
-      assert_equal img_copy, detector.runs.last.image
     end
 
 
     def test_should_not_invert_image_to_invert_direction
       img = build_image
       detector = build_detector( img )
-      detector.stubs( :detect_colour? )
+      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
       img.expects( :invert ).never
       detector.detect_boundary( img, 0, false )
     end

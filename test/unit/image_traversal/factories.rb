@@ -5,12 +5,13 @@ module ImageTraversal
       return img
     end
 
+    # TODO: lots of tests pass in these 2 attributes, which are no longer required.
     def build_run( detector = nil, image = nil )
-      DetectorRun.any_instance.stubs( :determine_initial_state )
-      run = DetectorRun.new( detector, image )
+      Detector::Run.any_instance.stubs( :determine_initial_state )
+      run = Detector::Run.new
       # ensure that when a run is created in 'detect_boundary' this run (the one
       # that was created with *args) is returned
-      DetectorRun.stubs( :new ).returns( run )
+      Detector::Run.stubs( :new ).returns( run )
       return run
     end
 

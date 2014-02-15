@@ -13,7 +13,7 @@ module ImageTraversal
       img = mock( "img" )
       img.expects( :pixel_is_colour? ).returns( false )
       detector = build_detector( img )
-      assert !detector.detect_colour?( img )
+      assert !detector.detect_colour?( img ).colour_detected?
     end
 
     #def test_should_annotate_correctly
@@ -71,7 +71,7 @@ module ImageTraversal
       img.stubs( :pixel_is_colour? ).returns( true )
       detector = build_detector( img )
       detector.expects( :density_reached? ).with( 1, img ).returns( false )
-      assert !detector.detect_colour?( img )
+      assert !detector.detect_colour?( img ).colour_detected?
     end
 
     def test_should_correctly_observe_offset_and_size_on_x_axis

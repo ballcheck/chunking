@@ -1,4 +1,5 @@
 require File.expand_path( "../detector_run.rb", __FILE__ )
+require File.expand_path( "../detector_result.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
 require File.expand_path( "../palette.rb", __FILE__ )
 
@@ -39,23 +40,18 @@ module ImageTraversal
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top we simply invert the image.
       image = image.invert( axis ) if invert_direction
-      run = DetectorRun.new( self, image, start_index )
+      run = Detector::Run.new
       runs << run
 
       lines = determine_remaining_lines( image, start_index )
 
       lines.to_i.times do |line|
         index = start_index + line
-        run.state = detect_colour?( image, index )
-        run.state_changed? ? run.increment_tolerance_counter : run.reset_tolerance_counter
-
-        if run.tolerance_reached?
-          run.boundary = Boundary.new( axis, index - tolerance )
-          return run.boundary
+        result = detect_colour?( image, index )
+        run.add_result( result )
+        if run.tolerance_exceeded?( tolerance )
+          return Boundary.new( axis, index - tolerance )
         end
-#        result = detect_colour?( image, index )
-#        run.add_result( result, axis, index )
-#        return run.boundary unless run.boundary.nil?
       end
 
       # un-invert the run image
@@ -82,25 +78,22 @@ module ImageTraversal
     def detect_colour?( image, line_index = nil )
       line_index ||= 0
       pixel_count = 0
+
       offset = determine_offset( image )
       size = determine_size( image )
       fuzz = determine_fuzz( image )
-
-      density_reached = false
 
       size.times do |ind|
         x = axis == :x ? ind + offset : line_index
         y = axis == :y ? image.size( axis ) - 1 - ( ind + offset ) : line_index
 
-        if colour_detected = image.pixel_is_colour?( x, y, colour, fuzz )
+        if image.pixel_is_colour?( x, y, colour, fuzz )
           pixel_count += 1
-          density_reached = density_reached?( pixel_count, image )
+          return Result.new( true ) if density_reached?( pixel_count, image )
         end
-        
-        break if density_reached
       end
 
-      return density_reached
+      return Result.new( false )
     end
     
     alias detect_color? detect_colour?

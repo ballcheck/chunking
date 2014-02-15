@@ -87,17 +87,5 @@ module ImageTraversal
       end
     end
 
-    class Other < TestCase
-      def test_should_work_with_image_path
-        ::Dir.mktmpdir do |d|
-          file_path = File.join( d, "image.jpg" )
-          Magick::Image.new( 10, 10 ).write( file_path )
-          detector = Detector.new
-          detector.detect_boundary( file_path )
-          assert_equal detector.runs.last.image.base_image, Magick::Image.read( file_path ).first
-        end
-      end
-    end
-
   end
 end
