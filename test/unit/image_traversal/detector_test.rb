@@ -15,6 +15,34 @@ module ImageTraversal
     # methods
     #--------
 
+    def image_adapter_class
+      Image::AdapterMagickImage
+    end
+
+    def test_method_detect_colour_should_add_pixels_to_result
+      n = (2..99).to_a.sample
+      line_index = (0..n-1).to_a.sample
+      offset = (0..n-1).to_a.sample
+      size = (1..n-offset).to_a.sample
+      colour_states = (0..size).to_a.map{ |x| [true, false].sample }
+
+      img = image_adapter_class.factory( n, n )
+      img.stubs( :pixel_is_colour? ).returns( *colour_states )
+
+      detector = build_detector( nil, :size => size, :offset => offset )
+      detector.stubs( :density_reached? ).returns( false ) # ignore tolerance, make it run to the end
+
+      result = detector.detect_colour?( img, line_index )
+
+      assert result.pixels.count == size
+      size.times do |i|
+        pixel = result.pixels[i]
+        assert_equal line_index, pixel.y
+        assert_equal offset+i, pixel.x
+        assert_equal colour_states[i], pixel.colour_state
+      end
+    end
+
     def test_method_detect_nth_boundary
       img = mock( "img" )
       detector = build_detector( img )

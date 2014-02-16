@@ -74,6 +74,7 @@ module ImageTraversal
       return boundary
     end
 
+    # TODO: this method needs testing. Also it is possibly doing too much.
     # Tell if a given line within an image contains the Detector @colour.
     def detect_colour?( image, line_index = nil )
       line_index ||= 0
@@ -83,17 +84,26 @@ module ImageTraversal
       size = determine_size( image )
       fuzz = determine_fuzz( image )
 
+      result = Result.new
+
       size.times do |ind|
         x = axis == :x ? ind + offset : line_index
         y = axis == :y ? image.size( axis ) - 1 - ( ind + offset ) : line_index
 
-        if image.pixel_is_colour?( x, y, colour, fuzz )
+        colour_state = image.pixel_is_colour?( x, y, colour, fuzz )
+
+        if colour_state
           pixel_count += 1
-          return Result.new( true ) if density_reached?( pixel_count, image )
+          if density_reached?( pixel_count, image )
+            result.set_colour_state( true )
+            break
+          end
         end
+
+        result.add_pixel( x, y, colour_state )
       end
 
-      return Result.new( false )
+      return result
     end
     
     alias detect_color? detect_colour?
