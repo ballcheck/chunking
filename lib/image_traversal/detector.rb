@@ -78,17 +78,16 @@ module ImageTraversal
     # Tell if a given line within an image contains the Detector @colour.
     def detect_colour?( image, line_index = nil )
       line_index ||= 0
-      pixel_count = 0
 
       offset = determine_offset( image )
       size = determine_size( image )
       fuzz = determine_fuzz( image )
 
       result = Result.new
+      pixel_count = 0
 
       size.times do |ind|
-        x = axis == :x ? ind + offset : line_index
-        y = axis == :y ? image.size( axis ) - 1 - ( ind + offset ) : line_index
+        x, y = determine_coords( axis, offset, ind, line_index, image )
 
         colour_state = image.pixel_is_colour?( x, y, colour, fuzz )
 
@@ -120,6 +119,18 @@ module ImageTraversal
     private 
 
     # start of untested methods
+    # TODO: rename this method.
+    def determine_coords( axis, offset, ind, line_index, image )
+      if axis == :x
+        x = ind + offset
+        y = line_index
+      elsif axis == :y
+        x = line_index
+        y = image.size( axis ) - 1 - ( ind + offset )
+      end
+      [ x, y ]
+    end
+
     def retrieve_image( image )
       image.is_a?( image_adapter_class ) ? image : image_adapter_class.factory( image )
     end
