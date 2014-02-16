@@ -5,7 +5,7 @@ module ImageTraversal
       attr_reader :results
 
       def initialize
-        @results = []
+        @results = ResultsCollection.new
         @tolerance_counter = 0
       end
 
@@ -31,6 +31,9 @@ module ImageTraversal
 
       def reset_tolerance_counter
         @tolerance_counter = 0
+      end
+
+      class ResultsCollection < Array
       end
 
     end
