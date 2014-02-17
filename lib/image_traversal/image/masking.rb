@@ -9,7 +9,7 @@ module ImageTraversal
       end
 
       # Annotate this image using another as a mask
-      def apply_mask( mask, opacity = 5 )
+      def apply_mask( mask, opacity = Palette.max_colour_value )
         new_image = base_image.dissolve( mask.base_image, opacity, 1 )
         self.class.new( new_image )
       end
