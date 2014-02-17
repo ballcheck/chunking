@@ -24,7 +24,7 @@ module ImageTraversal
       end
 
       # Annotate supplied image with results
-      def annotate( image )
+      def annotate( image, opacity = 0.5 )
         mask = image.create_mask( image )
 
         # draw results on mask
@@ -32,7 +32,7 @@ module ImageTraversal
           result.annotate!( mask )
         end
 
-        image.apply_mask( mask )
+        image.apply_mask( mask, opacity )
       end
 
       private
