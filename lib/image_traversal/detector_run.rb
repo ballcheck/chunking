@@ -23,6 +23,18 @@ module ImageTraversal
         @tolerance_counter > tolerance
       end
 
+      # Annotate supplied image with results
+      def annotate( image )
+        mask = image.create_mask( image )
+
+        # draw results on mask
+        results.each do |result|
+          result.annotate!( mask )
+        end
+
+        image.apply_mask( mask )
+      end
+
       private
 
       def increment_tolerance_counter

@@ -44,6 +44,31 @@ module ImageTraversal
       assert_equal [ x, y ], pixel.coords
     end
 
+    def test_should_annotate_image
+      image = mock( "image" )
+
+      result = Detector::Result.new
+      assert !result.colour_detected?
+
+      x1, y1, colour_state1 = stub( "x1" ), stub( "y1" ), false
+      result.add_pixel( x1, y1, colour_state1 )
+      image.expects( :set_colour ).twice.with( x1, y1, Palette.annotate_nil )
+
+      x2, y2, colour_state2 = stub( "x2" ), stub( "y2" ), true
+      result.add_pixel( x2, y2, colour_state2 )
+      image.expects( :set_colour ).once.with( x2, y2, Palette.annotate_pixel_is_colour )
+
+      result.annotate!( image )
+
+      # only annotate density_reached for the last pixel when result.colour_detected?
+      result.set_colour_state( true )
+      assert result.colour_detected?
+   
+      image.expects( :set_colour ).once.with( x2, y2, Palette.annotate_density_reached )
+
+      # do it
+      result.annotate!( image )
+    end
   end
 
 end

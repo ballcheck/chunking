@@ -43,5 +43,24 @@ module ImageTraversal
       assert_equal true, run.tolerance_exceeded?( tolerance )
     end
 
+    def test_should_annotate_image
+      mask = stub( "mask" )
+      image = mock( "image", :create_mask => mask, :apply_mask => mask )
+
+      run = Detector::Run.new
+
+      # create n run.results, each one expecting :annotate!
+      n = (2..10).to_a.sample
+      n.times do |i|
+        result = Detector::Result.new
+        result.expects( :annotate! ).with( mask )
+        run.add_result( result )
+      end
+
+      assert_equal n, run.results.count
+
+      run.annotate( image )
+    end
+
   end
 end
