@@ -52,11 +52,11 @@ module ImageTraversal
 
       x1, y1, colour_state1 = stub( "x1" ), stub( "y1" ), false
       result.add_pixel( x1, y1, colour_state1 )
-      image.expects( :set_colour ).twice.with( x1, y1, Palette.annotate_nil )
+      image.expects( :set_pixel_colour ).twice.with( x1, y1, Palette.annotate_nil )
 
       x2, y2, colour_state2 = stub( "x2" ), stub( "y2" ), true
       result.add_pixel( x2, y2, colour_state2 )
-      image.expects( :set_colour ).once.with( x2, y2, Palette.annotate_pixel_is_colour )
+      image.expects( :set_pixel_colour ).once.with( x2, y2, Palette.annotate_pixel_is_colour )
 
       result.annotate!( image )
 

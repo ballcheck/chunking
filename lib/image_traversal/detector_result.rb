@@ -30,7 +30,7 @@ module ImageTraversal
           colour_state = pixel.colour_state
           density_state = colour_detected? && pixel.equal?( pixels.last )
           annotation_colour = determine_annotation_colour( colour_state, density_state )
-          image.set_colour( pixel.x, pixel.y, annotation_colour )
+          image.set_pixel_colour( pixel.x, pixel.y, annotation_colour )
         end
       end
 
