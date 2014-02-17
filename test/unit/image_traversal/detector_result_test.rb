@@ -64,7 +64,7 @@ module ImageTraversal
       result.set_colour_state( true )
       assert result.colour_detected?
    
-      image.expects( :set_colour ).once.with( x2, y2, Palette.annotate_density_reached )
+      image.expects( :set_pixel_colour ).once.with( x2, y2, Palette.annotate_density_reached )
 
       # do it
       result.annotate!( image )
