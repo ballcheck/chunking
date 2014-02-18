@@ -13,7 +13,7 @@ module ImageTraversal
   class PixelColourTest < TestCase
 
     def max_colour_value
-      Image::AdapterMagickImage.max_colour_value
+      Palette.max_colour_value
     end
 
     def test_compare_single_colours_method

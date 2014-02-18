@@ -5,7 +5,7 @@ module ImageTraversal
   class AdapterMagickImageTest < TestCase
 
     def max_colour_value
-      ::Magick::QuantumRange
+      Palette.max_colour_value
     end
 
     def test_initialize
