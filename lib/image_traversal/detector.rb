@@ -49,9 +49,10 @@ module ImageTraversal
         run.add_result( result )
         if run.tolerance_exceeded?( tolerance )
 # TODO: if invert_direction is true, then this ends up having x,y coords relative to bottom (or right) edge. 
-# consider boundary having 2 indexes.
+# consider boundary having 2 indexes. This will break behavioural tests.
           boundary_index = line_index - tolerance
-          return Boundary.new( axis, boundary_index )
+          absolute_boundary_index = last_line_index - boundary_index
+          return Boundary.new( axis, boundary_index, absolute_boundary_index )
         end
       end
 
