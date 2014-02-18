@@ -1,4 +1,6 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
+# TODO: this should be a gem or lib file
+require "./../array/array.rb"
 module ImageTraversal
 
   # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.
@@ -214,6 +216,47 @@ module ImageTraversal
         5.times do |i|
            detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :density => i + 1, :size => size, :colour => @colour )
            assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
+        end
+      end
+
+      def test_annotation
+        o = @background_colour
+        x = @foreground_colour
+
+        pixel_map = [
+          [ o, o, o, o, o ],
+          [ o, o, x, o, o ],
+          [ o, x, x, o, o ]
+        ]
+
+        img = build_image_from_pixel_map pixel_map
+        img = img.rotate( -90 ) if @axis == :y
+        img = img.invert( @axis ) if invert?
+
+        size = img.size( @axis ) - 2
+
+        detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :density => 2, :size => size, :colour => @colour, :offset => 1 )
+        assert_equal 2, detector.detect_boundary( img, 0, invert? ).index
+        annotated_img = detector.runs.last.annotate( img, 1 )
+
+        a = Palette.annotate_nil
+        b = Palette.annotate_pixel_is_colour
+        c = Palette.annotate_density_reached
+
+        annotation_colour_map = [ 
+          [ o, a, a, a, o ],
+          [ o, a, b, a, o ],
+          [ o, b, c, o, o ]
+        ]
+
+        annotation_colour_map = annotation_colour_map.rotate( true ) if @axis == :y
+        annotation_colour_map = annotation_colour_map.invert( @axis ) if invert?
+
+        annotation_colour_map.each_with_index do |row, row_ind|
+          row.each_with_index do |col, col_ind|
+            pixel_colour = annotated_img.get_pixel_colour( col_ind, row_ind )
+            assert_equal col, pixel_colour, "row_ind: #{row_ind}, col_ind: #{col_ind}"
+          end
         end
       end
 
