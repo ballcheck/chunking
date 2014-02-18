@@ -92,33 +92,33 @@ module ImageTraversal
       assert !detector.detect_boundary( img )
     end
 
-    def test_should_invert_image_to_invert_direction
-      img = build_image
-      detector = build_detector( img )
-      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
-      img.expects( :invert ).once.with( detector.axis ).returns( img )
-      detector.detect_boundary( img, 0, true )
-    end
+    #def test_should_invert_image_to_invert_direction
+    #  img = build_image
+    #  detector = build_detector( img )
+    #  detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
+    #  img.expects( :invert ).once.with( detector.axis ).returns( img )
+    #  detector.detect_boundary( img, 0, true )
+    #end
 
-    def test_should_not_alter_original_image_to_invert_direction
-      img = build_image
-      detector = build_detector( img )
-      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
-      img_copy = build_image
-      img.stubs( :invert ).returns( img_copy )
-      img.expects( :invert! ).never
-      img_copy.expects( :invert! ).once.with( detector.axis )
-      detector.detect_boundary( img, 0, true )
-    end
+    #def test_should_not_alter_original_image_to_invert_direction
+    #  img = build_image
+    #  detector = build_detector( img )
+    #  detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
+    #  img_copy = build_image
+    #  img.stubs( :invert ).returns( img_copy )
+    #  img.expects( :invert! ).never
+    #  img_copy.expects( :invert! ).once.with( detector.axis )
+    #  detector.detect_boundary( img, 0, true )
+    #end
 
 
-    def test_should_not_invert_image_to_invert_direction
-      img = build_image
-      detector = build_detector( img )
-      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
-      img.expects( :invert ).never
-      detector.detect_boundary( img, 0, false )
-    end
+    #def test_should_not_invert_image_to_invert_direction
+    #  img = build_image
+    #  detector = build_detector( img )
+    #  detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
+    #  img.expects( :invert ).never
+    #  detector.detect_boundary( img, 0, false )
+    #end
       
     #def test_benchmark_compare_colours?
     #  n = 100000

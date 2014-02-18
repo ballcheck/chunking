@@ -35,27 +35,25 @@ module ImageTraversal
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or outside a content block).
     def detect_boundary( image, start_index = 0, invert_direction = false )
-      image = retrieve_image( image )
-
       # The default direction is left to right, top to bottom.
-      # To go from right to left, or bottom to top we simply invert the image.
-      image = image.invert( axis ) if invert_direction
-      run = Detector::Run.new
-      runs << run
+      # To go from right to left, or bottom to top, we invert_direction.
+      runs << run = Detector::Run.new
+      image = retrieve_image( image )
+      last_line_index = image.size( axis_of_travel ) - 1
 
       lines = determine_remaining_lines( image, start_index )
-
       lines.to_i.times do |line|
-        index = start_index + line
-        result = detect_colour?( image, index )
+        line_index = start_index + line
+        absolute_line_index = invert_direction ? last_line_index - line_index : line_index
+        result = detect_colour?( image, absolute_line_index )
         run.add_result( result )
         if run.tolerance_exceeded?( tolerance )
-          return Boundary.new( axis, index - tolerance )
+# TODO: if invert_direction is true, then this ends up having x,y coords relative to bottom (or right) edge. 
+# consider boundary having 2 indexes.
+          boundary_index = line_index - tolerance
+          return Boundary.new( axis, boundary_index )
         end
       end
-
-      # un-invert the run image
-      image.invert!( axis ) if invert_direction
 
       # we've run out of lines, so no boundary was detected in the image.
       return nil
