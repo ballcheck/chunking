@@ -164,6 +164,9 @@ module ImageTraversal
     # ---------------
     # private methods
     # ---------------
+    def test_method_determine_coords_from_params
+#offset, index, line_index, image
+    end
 
     def test_method_determine_last_line_index
       # create image of random size

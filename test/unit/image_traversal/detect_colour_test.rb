@@ -3,14 +3,14 @@ module ImageTraversal
   class DetectColourTest < TestCase
     
     def test_should_detect_colour_if_pixel_is_colour
-      img = mock( "img" )
+      img = build_image
       img.expects( :pixel_is_colour? ).once.returns( true )
       detector = build_detector( img )
       assert detector.detect_colour?( img )
     end
 
     def test_should_not_detect_colour_if_pixel_is_not_colour
-      img = mock( "img" )
+      img = build_image
       img.expects( :pixel_is_colour? ).returns( false )
       detector = build_detector( img )
       assert !detector.detect_colour?( img ).colour_detected?
@@ -35,7 +35,7 @@ module ImageTraversal
 
     def test_should_check_all_pixels
       size = 3
-      img = mock( "img" )
+      img = build_image
       img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 0 }
       img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 1 }
       img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 2 }
@@ -45,21 +45,21 @@ module ImageTraversal
 
     def test_should_stop_checking_when_detected
       size = 5
-      img = mock( "img" )
+      img = build_image
       img.expects( :pixel_is_colour? ).times( 1 ).returns( true )
       detector = build_detector( img, :size => size )
       assert detector.detect_colour?( img )
     end
 
     def test_should_not_return_nil_if_colour_not_detected
-      img = mock( "img" )
+      img = build_image
       img.expects( :pixel_is_colour? ).returns( false )
       detector = build_detector( img )
       assert !detector.detect_colour?( img ).nil?
     end
 
     def test_should_detect_colour_if_density_reached
-      img = mock( "img" )
+      img = build_image
       img.stubs( :pixel_is_colour? ).returns( true )
       detector = build_detector( img )
       detector.expects( :density_reached? ).with( 1, img ).returns( true )
@@ -67,7 +67,7 @@ module ImageTraversal
     end
 
     def test_should_not_detect_colour_if_density_not_reached
-      img = mock( "img" )
+      img = build_image
       img.stubs( :pixel_is_colour? ).returns( true )
       detector = build_detector( img )
       detector.expects( :density_reached? ).with( 1, img ).returns( false )
@@ -75,7 +75,7 @@ module ImageTraversal
     end
 
     def test_should_correctly_observe_offset_and_size_on_x_axis
-      img = mock( "img" )
+      img = build_image
       size = 4
       offset = 3
       line_index = 2
@@ -89,7 +89,7 @@ module ImageTraversal
     end
 
     def test_should_correctly_observe_offset_and_size_on_y_axis
-      img = mock( "img" )
+      img = build_image
       size = 4
       offset = 3
       line_index = 2
