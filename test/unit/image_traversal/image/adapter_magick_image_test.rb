@@ -18,6 +18,8 @@ module ImageTraversal
     # a) testing functionality already testing by RMagick
     # b) writing heavily mocked test that are brittle.
 
+    # TODO: test factory method.
+
     def test_method_size
       width, height  = (1..100).to_a.sample( 2 )
       base_image = Magick::Image.new( width, height )

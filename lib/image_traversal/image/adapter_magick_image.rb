@@ -1,5 +1,6 @@
 require File.expand_path( "../pixel_colour.rb", __FILE__ )
 require File.expand_path( "../masking.rb", __FILE__ )
+require File.expand_path( "../adapter_magick_image_factory.rb", __FILE__ )
 require "RMagick"
 
 module ImageTraversal
@@ -8,28 +9,10 @@ module ImageTraversal
     class AdapterMagickImage
       include PixelColour
       include Masking
+      extend AdapterMagickImageFactory::ClassMethods
       attr_reader :base_image
 
-      # TODO: don't think the factory should be in the adapter.
       class << self
-        def factory( *args, &block )
-          arg = args[0]
-
-          if arg.is_a?( Magick::Image )
-            self.new( arg )
-          elsif arg.is_a?( String )
-            # assume it's a file path
-            self.new( Magick::Image.read( arg ).first )
-          elsif arg.is_a?( Array )
-            # assume it's a pixel map
-            magick_image = Magick::Image.new( arg[0].length, arg.length )
-            self.new( magick_image ).draw_pixel_map!( arg )
-          else
-            # give the lib a chance
-            self.new( Magick::Image.new( *args, &block ) )
-          end
-        end
-
         def max_colour_value
           Magick::QuantumRange
         end
