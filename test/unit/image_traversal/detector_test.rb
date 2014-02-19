@@ -161,6 +161,20 @@ module ImageTraversal
       assert Detector.method( :detect_color? ) == Detector.method( :detect_colour? )
     end
 
+    # ---------------
+    # private methods
+    # ---------------
+
+    def test_method_determine_last_line_index
+      # create image of random size
+      width, height = (1..100).to_a.sample( 2 )
+      img = ImageTraversal.image_adapter_class.factory( width, height )
+
+      # then...
+      assert_equal width - 1, Detector.factory( :axis => :y ).send( :determine_last_line_index, img )
+      assert_equal height - 1, Detector.factory( :axis => :x ).send( :determine_last_line_index, img )
+    end
+
     def test_method_determine_absolute_line_index
       detector = build_detector
       last_line_index, line_index = (0..100).to_a.sample( 2 )

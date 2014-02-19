@@ -45,7 +45,7 @@ module ImageTraversal
       # To go from right to left, or bottom to top, we invert_direction.
       runs << run = Detector::Run.new
       image = retrieve_image( image )
-      last_line_index = image.size( axis_of_travel ) - 1
+      last_line_index = determine_last_line_index( image )
 
       lines = determine_remaining_lines( image, start_index )
       lines.to_i.times do |line|
@@ -120,8 +120,6 @@ module ImageTraversal
 
     private 
 
-    # start of untested methods
-    # TODO: rename this method.
     def determine_coords_from_params( axis, offset, index, line_index, image )
       if axis == :x
         x = index + offset
@@ -131,6 +129,10 @@ module ImageTraversal
         y = image.size( axis ) - 1 - ( index + offset )
       end
       [ x, y ]
+    end
+    
+    def determine_last_line_index( image )
+      image.size( axis_of_travel ) - 1
     end
 
     def determine_absolute_line_index( invert_direction, last_line_index, line_index )
