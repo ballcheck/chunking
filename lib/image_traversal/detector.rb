@@ -44,7 +44,7 @@ module ImageTraversal
       lines = determine_remaining_lines( image, start_index )
       lines.to_i.times do |line|
         line_index = start_index + line
-        absolute_line_index = invert_direction ? last_line_index - line_index : line_index
+        absolute_line_index = determine_absolute_line_index( invert_direction, last_line_index, line_index )
         result = detect_colour?( image, absolute_line_index )
         run.add_result( result )
         if run.tolerance_exceeded?( tolerance )
@@ -125,6 +125,11 @@ module ImageTraversal
         y = image.size( axis ) - 1 - ( index + offset )
       end
       [ x, y ]
+    end
+
+    def determine_absolute_line_index( invert_direction, last_line_index, line_index )
+      absolute_line_index = invert_direction ? last_line_index - line_index : line_index
+      absolute_line_index
     end
 
     def retrieve_image( image )

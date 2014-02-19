@@ -116,5 +116,16 @@ module ImageTraversal
       assert Detector.method( :detect_color? ) == Detector.method( :detect_colour? )
     end
 
+    def test_method_determine_absolute_line_index
+      detector = build_detector
+      last_line_index, line_index = (0..100).to_a.sample( 2 )
+   
+      # if not inverting direction, just use line index.
+      assert_equal line_index, detector.send( :determine_absolute_line_index, false, last_line_index, line_index )
+
+      # if inverting, factor in image size.
+      assert_equal ( last_line_index - line_index ), detector.send( :determine_absolute_line_index, true, last_line_index, line_index )
+    end
+
   end
 end
