@@ -41,12 +41,17 @@ module ImageTraversal
         [ axis, offset, size, colour, fuzz, density, tolerance ],
         [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance ]
       )
-
     end
 
-    def test_method_factory_should_detect_black_by_default
-      detector = Detector.factory
-      assert_equal Palette.black, detector.colour
+    def test_method_factory_should_set_defaults
+      # create detector with default values using factory
+      d = Detector.factory
+
+      # then...
+      assert_equal(
+        [ :x, 0, Rational( 1 ), Palette.black, 0, 1, 0 ],
+        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance ]
+      )
     end
 
     #--------
