@@ -2,6 +2,42 @@ module ImageTraversal
 
   require File.expand_path( "../behavioral.rb", __FILE__ )
   module Behavioral
+    class BenchmarkTests < TestCase
+      def xtest_image_size
+        Benchmark.bm { |bm|
+          n = 1000000
+          magick_image1 = Magick::Image.new( 500, 500 )
+          adapter_image1 = Image::AdapterMagickImage.factory( magick_image1 )
+          
+          bm.report( "rows" ){
+            n.times do
+              magick_image1.rows
+            end
+          }
+
+          bm.report( "size( :x )" ){
+            n.times do
+              adapter_image1.size( :x )
+            end
+          }
+
+          bm.report( "pixel_color" ){
+            n.times do
+              magick_image1.pixel_color( 1, 1 )
+            end
+          }
+
+          bm.report( "get_pixel_colour" ){
+            n.times do
+              adapter_image1.get_pixel_colour( 1, 1 )
+            end
+          }
+
+        }
+      end
+
+    end
+
     class XAxis < TestCase
       include AllTests
     end
