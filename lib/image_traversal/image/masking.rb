@@ -10,9 +10,7 @@ module ImageTraversal
 
       # Annotate this image using another as a mask
       def apply_mask( mask, opacity = 1 )
-        # TODO: coupled to RMagick
-        new_image = base_image.dissolve( mask.base_image, opacity, 1 )
-        self.class.new( new_image )
+        dissolve( mask.base_image, opacity, 1 )
       end
 
     end

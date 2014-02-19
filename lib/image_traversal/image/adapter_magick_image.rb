@@ -63,6 +63,9 @@ module ImageTraversal
         [ p.red, p.green, p.blue, p.opacity ]
       end
 
+      # TODO: some of these methods call self.class.new which means that if the adapter 
+      # instance were to have instance variables they would be lost.
+
       # Flip the image on the given axis.
       def invert( axis )
         case axis
@@ -102,6 +105,10 @@ module ImageTraversal
         base_image.write( path )
       end
 
+      def dissolve( *args )
+        new_image = base_image.dissolve( *args )
+        self.class.new( new_image )
+      end
     end
   end
 end
