@@ -29,7 +29,9 @@ module ImageTraversal
       offset = (0..img_width-1).to_a.sample
       size = (1..img_width-offset).to_a.sample
       detector = build_detector( nil, :size => size, :offset => offset )
-      detector.stubs( :density_reached? ).returns( false ) # ignore tolerance, make it run to the end
+
+      # make detector run to the end
+      detector.stubs( :density_reached? ).returns( false )
 
       # colour_states to expect later.
       colour_states = (0..size).to_a.map{ |x| [true, false].sample }
