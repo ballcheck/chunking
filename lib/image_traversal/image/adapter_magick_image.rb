@@ -46,16 +46,13 @@ module ImageTraversal
         [ p.red, p.green, p.blue, p.opacity ]
       end
 
-      # TODO: some of these methods call self.class.new which means that if the adapter 
-      # instance were to have instance variables they would be lost.
-
       # Flip the image on the given axis.
       def invert( axis )
         case axis
         when :x
-          self.class.new( base_image.flip )
+          set_base_image( base_image.flip )
         when :y
-          self.class.new( base_image.flop )
+          set_base_image( base_image.flop )
         else
           nil
         end
@@ -75,7 +72,7 @@ module ImageTraversal
 
       # Rotate image by the number of degrees given.
       def rotate( deg )
-        self.class.new( base_image.rotate( deg ) )
+        set_base_image( base_image.rotate( deg ) )
       end
 
       # The full path of the underlying image file
@@ -90,7 +87,14 @@ module ImageTraversal
 
       def dissolve( *args )
         new_image = base_image.dissolve( *args )
-        self.class.new( new_image )
+        set_base_image( new_image )
+      end
+
+      private
+
+      def set_base_image( img )
+        @base_image = img
+        self
       end
     end
   end

@@ -47,6 +47,17 @@ module ImageTraversal
       assert_equal new_colour, image_adapter.get_pixel_colour( *coords )
     end
 
+    def test_should_set_base_image
+      old_base_image = stub( "old_base_image" )
+      new_base_image = stub( "new_base_image" )
+      img = Image::AdapterMagickImage.new( old_base_image )
+
+      # get the original object back.
+      assert_equal img, img.send( :set_base_image, new_base_image )
+
+      # base_image has been set.
+      assert_equal new_base_image, img.base_image
+    end
       
   end
 end
