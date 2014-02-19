@@ -6,8 +6,46 @@ module ImageTraversal
     # initialisation
     #---------------
 
-    def test_should_detect_black_by_default
-      detector = Detector.new
+    def test_method_initialize_should_set_values
+      # all args.
+      axis, offset, size, colour, fuzz, density, tolerance = [
+        stub( "axis" ), stub( "offset" ), stub( "size" ), stub( "colour" ),
+        stub( "fuzz" ), stub( "density" ), stub( "tolerance" )
+      ]
+
+      # create detector with args.
+      d = Detector.new( axis, offset, size, colour, fuzz, density, tolerance )
+
+      # then...
+      assert_equal(
+        [ axis, offset, size, colour, fuzz, density, tolerance, [] ],
+        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance, d.runs ]
+      )
+    end
+
+    def test_method_factory_should_set_values
+      # all args.
+      axis, offset, size, colour, fuzz, density, tolerance = [
+        stub( "axis" ), stub( "offset" ), stub( "size" ), stub( "colour" ),
+        stub( "fuzz" ), stub( "density" ), stub( "tolerance" )
+      ]
+
+      # create detector with args using the factory.
+      d = Detector.factory( {
+        :axis => axis, :offset => offset, :size => size, :colour => colour,
+        :fuzz => fuzz, :density => density, :tolerance => tolerance
+      } )
+
+      # then...
+      assert_equal(
+        [ axis, offset, size, colour, fuzz, density, tolerance ],
+        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance ]
+      )
+
+    end
+
+    def test_method_factory_should_detect_black_by_default
+      detector = Detector.factory
       assert_equal Palette.black, detector.colour
     end
 

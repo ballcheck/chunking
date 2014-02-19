@@ -4,7 +4,6 @@ require File.expand_path( "../boundary.rb", __FILE__ )
 require File.expand_path( "../palette.rb", __FILE__ )
 
 # Extracting blocks of content from an image using boundary detection.
-# Applications includes extracting sections of text prior to ocr operations.
 # Image traversal.
 module ImageTraversal
 
@@ -12,17 +11,28 @@ module ImageTraversal
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance
     attr_reader :runs
 
-    def initialize( args = {} )
+    def self.factory( args = {} )
+      axis = args.has_key?(:axis) ? args[:axis] : :x
+      offset = args.has_key?(:offset) ? args[:offset] : 0
+      size = args.has_key?(:size) ? args[:size] : Rational( 1 )
+      colour = args.has_key?(:colour) ? args[:colour] : Palette.black
+      fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
+      density = args.has_key?(:density) ? args[:density] : 1
+      tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
+
+      return self.new( axis, offset, size, colour, fuzz, density, tolerance )
+    end
+
+    def initialize( axis, offset, size, colour, fuzz, density, tolerance )
       # "size" represents width OR height and "offset" represents
       # left or bottom depending on axis supplied 
-      @axis = args.has_key?(:axis) ? args[:axis].to_sym : :x
-      @offset = args.has_key?(:offset) ? args[:offset] : 0
-      @size = args.has_key?(:size) ? args[:size] : Rational( 1 )
-      @colour = args.has_key?(:colour) ? args[:colour] : Palette.black
-      @fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
-      # pixel "density", line "tolerance"
-      @density = args.has_key?(:density) ? args[:density] : 1
-      @tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
+      @axis = axis
+      @offset = offset
+      @size = size
+      @colour = colour
+      @fuzz = fuzz
+      @density = density # pixel density
+      @tolerance = tolerance # line tolerance
       @runs = []
     end
 

@@ -47,7 +47,7 @@ module ImageTraversal
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
-        detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :size => 5, :colour => @colour )
+        detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :size => 5, :colour => @colour )
 
         # immediate boundary
         assert_equal 1, detector.detect_boundary( img, 0, invert? ).index
@@ -75,10 +75,10 @@ module ImageTraversal
 
         size = img.size( @axis )
 
-        detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
+        detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
         assert_equal 1, detector.detect_boundary( img, 0, invert? ).index
        
-        detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
+        detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
         assert_equal 2, detector.detect_boundary( img, 0, !invert? ).index
       end
 
@@ -99,7 +99,7 @@ module ImageTraversal
         img = img.invert( @axis ) if invert?
         size = img.size( @axis )
 
-        detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
+        detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
         assert_equal nil, detector.detect_boundary( img, 0, invert? )
       end
 
@@ -136,7 +136,7 @@ module ImageTraversal
         }
 
         tolerance_index_map.each do |k,v|
-          detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :tolerance => k, :size => size, :colour => @colour )
+          detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :tolerance => k, :size => size, :colour => @colour )
           boundary = detector.detect_boundary( img, 0, invert? )
           index = boundary ? boundary.index : nil
           assert_equal v, index
@@ -166,7 +166,7 @@ module ImageTraversal
         size = img.size( @axis )
 
         size.times do |i|
-           detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :offset => i, :size => size - i, :colour => @colour )
+           detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :offset => i, :size => size - i, :colour => @colour )
            assert_equal i+1,  detector.detect_boundary( img, 0, invert? ).index
         end
       end
@@ -190,7 +190,7 @@ module ImageTraversal
         size = img.size( @axis )
 
         size.times do |i|
-           detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :size => size - i, :colour => @colour )
+           detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :size => size - i, :colour => @colour )
            assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
         end
       end
@@ -214,7 +214,7 @@ module ImageTraversal
         size = img.size( @axis )
 
         5.times do |i|
-           detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :density => i + 1, :size => size, :colour => @colour )
+           detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :density => i + 1, :size => size, :colour => @colour )
            assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
         end
       end
@@ -235,7 +235,7 @@ module ImageTraversal
 
         size = img.size( @axis ) - 2
 
-        detector = Detector.new( :fuzz => @fuzz, :axis => @axis, :density => 2, :size => size, :colour => @colour, :offset => 1 )
+        detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :density => 2, :size => size, :colour => @colour, :offset => 1 )
         assert_equal 2, detector.detect_boundary( img, 0, invert? ).index
         annotated_img = detector.runs.last.annotate( img, 1 )
 

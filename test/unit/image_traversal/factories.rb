@@ -16,7 +16,7 @@ module ImageTraversal
 
     def build_detector( image = nil, args = {} )
       args[:size] = args.include?( :size ) ? args[:size] : 1
-      detector = Detector.new( args )
+      detector = Detector.factory( args )
       detector.stubs( :retrieve_image => image ) if image
       return detector
     end
