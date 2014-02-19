@@ -36,10 +36,6 @@ module ImageTraversal
       @runs = []
     end
 
-    def image_adapter_class
-      Image::AdapterMagickImage
-    end
-
     #:main:
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
@@ -143,7 +139,7 @@ module ImageTraversal
     end
 
     def retrieve_image( image )
-      image.is_a?( image_adapter_class ) ? image : image_adapter_class.factory( image )
+      image.is_a?( ImageTraversal.image_adapter_class ) ? image : ImageTraversal.image_adapter_class.factory( image )
     end
 
     def density_reached?( pixel_count, image = nil )

@@ -58,14 +58,10 @@ module ImageTraversal
     # methods
     #--------
 
-    def image_adapter_class
-      Image::AdapterMagickImage
-    end
-
     def test_method_detect_colour_should_add_pixels_to_result
       # img with random dimensions
       img_height = img_width = (2..99).to_a.sample
-      img = image_adapter_class.factory( img_width, img_height )
+      img = ImageTraversal.image_adapter_class.factory( img_width, img_height )
 
       # detector with random params.
       line_index = (0..img_height-1).to_a.sample
