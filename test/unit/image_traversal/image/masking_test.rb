@@ -25,8 +25,11 @@ module ImageTraversal
       img = build_img( 1, 1 )
       mask = img.create_mask
       opacity = stub( "opacity" )
-      img.expects( :dissolve ).once.with( mask.base_image, opacity, 1 )
-      img.apply_mask( mask, opacity )
+      new_img = stub( "new_img" )
+
+      # calls adapter method :disolve
+      img.expects( :dissolve ).once.with( mask.base_image, opacity, 1 ).returns( new_img )
+      assert_equal new_img, img.apply_mask( mask, opacity )
     end
   end
 end
