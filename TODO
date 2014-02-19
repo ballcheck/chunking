@@ -3,9 +3,7 @@ use "__some_method" type methods for internal operations?
 detector.rb
 -----------
 
-*class method version of detect_boundary
 *usage examples
-are max rgb values coupled to rmagick?
 private methods untested
 
 new features
@@ -18,11 +16,11 @@ split_image method
 recycle annotation mask on detect_nth_boundary, giving a full report of all runs.
 image crop to coords
 what should happen when detector bigger than image?
+class method version of detect_boundary
 
 detect_colour_test.rb
 ---------------------
 *finish test_should_annotate_correctly
-quite a few tests want drying up
 
 lib/image_traversal/image_traversal.rb
 ------------------------
@@ -32,39 +30,18 @@ test/unit/image_traversal/factories.rb
 -------------------------------
 build_run can only be called once per test because it stubs the 'new' method
 
-lib/image_traversal/image/rmagick.rb
------------------------------
-whole module untested 
-must be a method to do - get_pixel_colour
-
 lib/image_traversal/image/base.rb
 --------------------------
 create colour / color aliases
-aliases created here would refer to the template methods and raise.
-draw_pixel_map! this require the base_image to be the same size as the pixel_map
-new_from_pixel_map assumes 'new' method creates a new blank base_image from cols, rows
 
 lib/image_traversal/boundary.rb
 ------------------------
 whole thing untested
 
-test/unit/image_traversal/pixel_is_colour_test.rb
-------------------------------------------
-*these test are fr Image::Base
-all these nils seem suspicious.
-test_equal_if_any_item_is_equal - redo using sequence
-
-test/unit/image_traversal/behavioral/test_cases.rb
--------------------------------------------
-surely you don't have to require the other files in the module...
-test_should_work_with_image_path - not right place for test, not a good test either.
-
 test/unit/image_traversal/behavioral/behavioral.rb
 -------------------------------------------
 run these tests again, swapping image library
-behavioral tests for other methods e.g. nth_boundary
 these tests are only really for detect_boundary.rb so should be reorganised.
-cmyk? rgba?
 remove these 2 lines from all over this file
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
@@ -76,5 +53,3 @@ be able to run these tests with various detector options
 is this really needed everywhere?
   detector.stubs( :detect_colour? )
 these tests (if/if not) could be combined
-test_should_alias_colour_with_color - is it conclusive? is it needed?
-
