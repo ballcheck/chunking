@@ -1,7 +1,6 @@
 module ImageTraversal
-  # TODO: untested
   class Boundary
-    attr_accessor :index, :axis
+    attr_accessor :index, :axis, :absolute_index
     def initialize( axis, index, absolute_index = nil )
       # x or y image axis.
       @axis = axis
