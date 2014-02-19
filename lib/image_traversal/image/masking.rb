@@ -4,7 +4,7 @@ module ImageTraversal
 
       # TODO: untested?
       # Create a blank image of the same size, but with a transparent background.
-      def create_mask( *args )
+      def create_mask
         self.class.factory( size( :x ), size( :y ) ){ self.background_color = "none" }
       end
 

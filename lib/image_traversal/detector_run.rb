@@ -25,7 +25,7 @@ module ImageTraversal
 
       # Annotate supplied image with results
       def annotate( image, opacity = 0.5 )
-        mask = image.create_mask( image )
+        mask = image.create_mask
 
         # draw results on mask
         results.each do |result|
