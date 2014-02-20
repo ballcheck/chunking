@@ -57,13 +57,43 @@ module ImageTraversal
     #--------
     # methods
     #--------
-    def test_method_detect_boundary
-      img = build_image
-      d = build_detector( img )
 
+    # TODO: see detect_boundary_test.rb & detect_colour_test.rb
 
+    def test_method_detect_nth_boundary
+      img = mock( "img" )
+      detector = build_detector( img )
+      invert = mock( "invert" )
+      start_index = 0
+      first_index = 1
+      second_index = 5
+      first_boundary = Boundary.new( nil, first_index )
+      second_boundary = Boundary.new( nil, second_index )
+      # 'n' times
+      n = 2
+      detector.expects( :detect_boundary ).times( 1 ).with( img, start_index, invert ).returns( first_boundary )
+      detector.expects( :detect_boundary ).times( 1 ).with( img, start_index + first_index, invert ).returns( second_boundary )
+      final_index = detector.detect_nth_boundary( img, n, start_index, invert ).index
+      assert_equal second_index, final_index
     end
 
+    def test_method_detect_nth_boundary_should_return_nil_when_boundaries_exhausted
+      detector = build_detector
+      n = 5
+      detector.expects( :detect_boundary ).times( 1 ).returns( false )
+      boundary = detector.detect_nth_boundary( nil, n )
+      assert_equal nil, boundary
+    end
+
+    def test_method_detect_nth_boundary_should_create_n_runs
+      n = 3
+      image = build_image( n )
+      detector = build_detector( image )
+      detector.stubs( :tolerance_exceeded? => true )
+      detector.detect_nth_boundary( image, n )
+      assert_equal n, detector.runs.length
+    end
+      
     def test_method_detect_colour_should_add_pixels_to_result
       # img with random dimensions
       img_height = img_width = (2..99).to_a.sample
@@ -94,40 +124,6 @@ module ImageTraversal
       end
     end
 
-    def test_method_detect_nth_boundary
-      img = mock( "img" )
-      detector = build_detector( img )
-      invert = mock( "invert" )
-      start_index = 0
-      first_index = 1
-      second_index = 5
-      first_boundary = Boundary.new( nil, first_index )
-      second_boundary = Boundary.new( nil, second_index )
-      # 'n' times
-      n = 2
-      detector.expects( :detect_boundary ).times( 1 ).with( img, start_index, invert ).returns( first_boundary )
-      detector.expects( :detect_boundary ).times( 1 ).with( img, start_index + first_index, invert ).returns( second_boundary )
-      final_index = detector.detect_nth_boundary( img, n, start_index, invert ).index
-      assert_equal second_index, final_index
-    end
-
-    def test_method_detect_nth_boundary_should_return_nil_when_boundaries_exhausted
-      detector = build_detector
-      n = 5
-      detector.expects( :detect_boundary ).times( 1 ).returns( false )
-      boundary = detector.detect_nth_boundary( nil, n )
-      assert_equal nil, boundary
-    end
-
-    def test_method_detect_nth_boundary_should_create_n_runs
-      n = 3
-      Detector::Run.any_instance.stubs( :tolerance_exceeded? => true )
-      image = build_image( n )
-      detector = build_detector( image )
-      detector.detect_nth_boundary( image, n )
-      assert_equal n, detector.runs.length
-    end
-      
     # ---------------
     # private methods
     # ---------------
