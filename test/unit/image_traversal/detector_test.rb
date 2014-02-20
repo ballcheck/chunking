@@ -164,13 +164,22 @@ module ImageTraversal
     # ---------------
     # private methods
     # ---------------
-    def test_method_determine_coords_from_params
-#offset, index, line_index, image
+    def test_method_determine_pixel_coords
+      # args with random values.
+      offset, index, line_index, image_size = (1..99).to_a.sample( 4 )
+      args = [ offset, index, line_index, image_size ]
+
+      # then...
+      coords_x_axis = Detector.factory( :axis => :x ).send( :determine_pixel_coords, *args )
+      assert_equal [ index + offset, line_index ], coords_x_axis
+
+      coords_y_axis = Detector.factory( :axis => :y ).send( :determine_pixel_coords, *args )
+      assert_equal [ line_index, image_size - 1 - ( index + offset ) ], coords_y_axis
     end
 
     def test_method_determine_last_line_index
       # create image of random size
-      width, height = (1..100).to_a.sample( 2 )
+      width, height = (1..99).to_a.sample( 2 )
       img = ImageTraversal.image_adapter_class.factory( width, height )
 
       # then...

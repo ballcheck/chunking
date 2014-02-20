@@ -92,7 +92,7 @@ module ImageTraversal
       pixel_count = 0
 
       size.times do |ind|
-        x, y = determine_coords_from_params( offset, ind, line_index, image_size  )
+        x, y = determine_pixel_coords( offset, ind, line_index, image_size  )
         colour_state = image.pixel_is_colour?( x, y, colour, fuzz )
         result.add_pixel( x, y, colour_state )
 
@@ -122,7 +122,7 @@ module ImageTraversal
 
     private 
 
-    def determine_coords_from_params( offset, index, line_index, image_size )
+    def determine_pixel_coords( offset, index, line_index, image_size )
       if axis == :x
         x = index + offset
         y = line_index
