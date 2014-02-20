@@ -140,7 +140,6 @@ module ImageTraversal
       pixel_count >= density ? true : false
     end
 
-    # start of untested
     def retrieve_image( image )
       image.is_a?( ImageTraversal.image_adapter_class ) ? image : ImageTraversal.image_adapter_class.factory( image )
     end
@@ -149,6 +148,7 @@ module ImageTraversal
       cnt > tolerance
     end
 
+    # start of untested
     def determine_offset( image )
       offset_value = offset.is_a?( Rational ) ? image.size * offset.to_f : offset
       return offset_value.to_i

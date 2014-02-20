@@ -163,8 +163,11 @@ module ImageTraversal
 
     def test_method_retrieve_image
       d = build_detector
+
+      # image of the class ImageTraversal.image_adapter_class
       img = build_image
 
+      # any other image value
       non_img = stub
       new_img = stub
       ImageTraversal.image_adapter_class.stubs( :factory ).with( non_img ).returns( new_img )
@@ -175,6 +178,17 @@ module ImageTraversal
 
       # but anything else goes to the factory
       assert_equal new_img, d.send( :retrieve_image, non_img )
+    end
+
+    def test_method_tolerance_exceeded
+      # detector with random tolerance
+      tolerance = (0..99).to_a.sample
+      d = build_detector( :tolerance => tolerance )
+
+      # then...
+      assert_equal false, d.send( :tolerance_exceeded?, tolerance-1 )
+      assert_equal false, d.send( :tolerance_exceeded?, tolerance )
+      assert_equal true, d.send( :tolerance_exceeded?, tolerance+1 )
     end
   end
 end
