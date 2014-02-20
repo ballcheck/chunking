@@ -7,11 +7,8 @@ module ImageTraversal
     #---------------
 
     def test_method_initialize_should_set_values
-      # all args.
-      axis, offset, size, colour, fuzz, density, tolerance = [
-        stub( "axis" ), stub( "offset" ), stub( "size" ), stub( "colour" ),
-        stub( "fuzz" ), stub( "density" ), stub( "tolerance" )
-      ]
+      # dummy args.
+      axis, offset, size, colour, fuzz, density, tolerance = stub, stub, stub, stub, stub, stub, stub
 
       # create detector with args.
       d = Detector.new( axis, offset, size, colour, fuzz, density, tolerance )
@@ -25,10 +22,7 @@ module ImageTraversal
 
     def test_method_factory_should_set_values
       # all args.
-      axis, offset, size, colour, fuzz, density, tolerance = [
-        stub( "axis" ), stub( "offset" ), stub( "size" ), stub( "colour" ),
-        stub( "fuzz" ), stub( "density" ), stub( "tolerance" )
-      ]
+      axis, offset, size, colour, fuzz, density, tolerance = stub, stub, stub, stub, stub, stub, stub
 
       # create detector with args using the factory.
       d = build_detector( nil, {
