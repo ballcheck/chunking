@@ -57,6 +57,12 @@ module ImageTraversal
     #--------
     # methods
     #--------
+    def test_method_detect_boundary
+      img = build_image
+      d = build_detector( img )
+
+
+    end
 
     def test_method_detect_colour_should_add_pixels_to_result
       # img with random dimensions
