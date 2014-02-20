@@ -16,23 +16,6 @@ module ImageTraversal
       assert !detector.detect_colour?( img ).colour_detected?
     end
 
-    #def test_should_annotate_correctly
-    #  img = stub_everything( "img" )
-    #  detector = build_detector( img )
-    #  with_vals = [ [ 0, 0, nil ], [ 0, 0, :pixel_is_colour ], [ 0, 0, :density_reached ] ]
-    #  with_pos = 0
-    #  detector.expects( :annotate_image ).times( 3 ).with{ |*a| a == with_vals[with_pos]; with_pos +=1 }
-    #  #seq = sequence( "seq" )
-    #  #detector.expects( :annotate_image ).once.with( 0, 0, nil ).in_sequence( seq )
-    #  #detector.expects( :annotate_image ).once.with( 0, 0, :pixel_is_colour ).in_sequence( seq )
-    #  #detector.expects( :annotate_image ).once.with( 0, 0, :density_reached ).in_sequence( seq )
-    #  detector.expects( :density_reached? ).times( 2 ).returns( false, true )
-    #  img.expects( :pixel_is_colour? ).times( 3 ).returns( false, true, true )
-    #  assert !detector.detect_colour?( img, nil, true )
-    #  assert !detector.detect_colour?( img, nil, true )
-    #  assert detector.detect_colour?( img, nil, true )
-    #end
-
     def test_should_check_all_pixels
       size = 3
       img = build_image
