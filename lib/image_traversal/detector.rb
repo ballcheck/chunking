@@ -47,8 +47,8 @@ module ImageTraversal
       image = retrieve_image( image )
       last_line_index = determine_last_line_index( image )
 
-      lines = determine_remaining_lines( image, start_index )
-      lines.to_i.times do |line|
+      line_count = determine_remaining_lines( image, start_index )
+      line_count.to_i.times do |line|
         line_index = start_index + line
         absolute_line_index = determine_absolute_line_index( invert_direction, last_line_index, line_index )
         result = detect_colour?( image, absolute_line_index )
