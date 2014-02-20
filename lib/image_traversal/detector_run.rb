@@ -2,7 +2,7 @@ module ImageTraversal
   # Container used in Detector.detect_boundary to monitor detection progress and hold results.
   class Detector
     class Run
-      attr_reader :results
+      attr_reader :results, :tolerance_counter
 
       def initialize
         @results = ResultsCollection.new

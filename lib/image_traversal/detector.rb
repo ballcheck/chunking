@@ -44,19 +44,21 @@ module ImageTraversal
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top, we invert_direction.
       runs << run = Detector::Run.new
+
       image = retrieve_image( image )
       last_line_index = determine_last_line_index( image )
 
-      line_count = determine_remaining_lines( image, start_index )
-      line_count.to_i.times do |line|
-        line_index = start_index + line
+      # detect_colour on each line and add results to run.
+      (start_index..last_line_index).each do |line_index|
         absolute_line_index = determine_absolute_line_index( invert_direction, last_line_index, line_index )
         result = detect_colour?( image, absolute_line_index )
         run.add_result( result )
+
+        # if tolerance has been exceeded then we have a boundary.
         if run.tolerance_exceeded?( tolerance )
-          boundary_index = line_index - tolerance
-          absolute_boundary_index = last_line_index - boundary_index
-          return Boundary.new( axis, boundary_index, absolute_boundary_index )
+          # the boundary index should be where the tolerance counter started.
+          boundary_index = line_index - run.tolerance_counter + 1
+          return Boundary.new( axis, boundary_index )
         end
       end
 
@@ -176,7 +178,7 @@ module ImageTraversal
       axis == :x ? :y : :x
     end
     
-    def determine_remaining_lines( image, index )
+    def determine_remaining_line_count( image, index )
       image.size( axis_of_travel ) - index.to_i
     end
     # end of untested.

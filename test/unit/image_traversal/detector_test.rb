@@ -116,7 +116,7 @@ module ImageTraversal
     def test_method_detect_nth_boundary_should_create_n_runs
       n = 3
       Detector::Run.any_instance.stubs( :tolerance_exceeded? => true )
-      image = build_image
+      image = build_image( n )
       detector = build_detector( image )
       detector.detect_nth_boundary( image, n )
       assert_equal n, detector.runs.length

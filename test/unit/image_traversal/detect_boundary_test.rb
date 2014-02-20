@@ -13,7 +13,7 @@ module ImageTraversal
     def test_should_create_run_correctly
       img = build_image( 0 )
       detector = build_detector( img )
-      start_index = mock( "start_index", :to_i => 0 )
+      start_index = 0
       run = mock( "run" )
       Detector::Run.expects( :new ).once.returns( run )
       detector.detect_boundary( img, start_index )
@@ -23,7 +23,7 @@ module ImageTraversal
     def test_runs_should_persist
       img = build_image( 0 )
       detector = build_detector( img )
-      start_index = stub( "start_index", :to_i => 0 )
+      start_index = 0
       run1 = mock( "run1" )
       run2 = mock( "run2" )
       Detector::Run.expects( :new ).times( 2 ).returns( run1, run2 )
@@ -65,14 +65,16 @@ module ImageTraversal
       assert !detector.detect_boundary( img, starting_index )
     end
 
-    def test_should_not_include_tolerance_in_boundary_index
+    def test_should_not_include_tolerance_counter_in_boundary_index
       img = build_image
-      tolerance = 99
-      detector = build_detector( img, :tolerance => tolerance )
+      tolerance_counter = 99
+      detector = build_detector( img )
       detector.stubs( :detect_colour? )
-      build_run.expects( :tolerance_exceeded? ).once.returns( true )
+      run = build_run
+      run.expects( :tolerance_exceeded? ).once.returns( true )
+      run.stubs( :tolerance_counter ).returns( tolerance_counter )
       assert result = detector.detect_boundary( img )
-      assert_equal -tolerance, result.index
+      assert_equal -tolerance_counter+1, result.index
     end
 
     def test_should_detect_if_tolerance_exceeded
