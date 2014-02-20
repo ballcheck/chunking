@@ -31,33 +31,6 @@ module ImageTraversal
       assert_equal 1, run.send( :tolerance_counter )
     end
 
-    def test_should_correctly_observe_tolerance
-      run = Detector::Run.new
-
-      tolerance = 1
-      result_a = Detector::Result.new( true )
-      result_b = Detector::Result.new( false )
-
-      assert_equal [], run.results
-      assert_equal false, run.tolerance_exceeded?( tolerance )
-
-      run.add_result( result_a )
-      assert_equal false, run.tolerance_exceeded?( tolerance )
-
-      run.add_result( result_b )
-      assert_equal false, run.tolerance_exceeded?( tolerance )
-
-      run.add_result( result_a )
-      assert_equal false, run.tolerance_exceeded?( tolerance )
-
-      # when 2 are the same, tolerance is exceeded.
-      run.add_result( result_b )
-      assert_equal false, run.tolerance_exceeded?( tolerance )
-
-      run.add_result( result_b )
-      assert_equal true, run.tolerance_exceeded?( tolerance )
-    end
-
     def test_should_annotate_image
       mask = stub( "mask" )
       image = mock( "image", :create_mask => mask, :apply_mask => mask )

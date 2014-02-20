@@ -12,15 +12,12 @@ module ImageTraversal
       def add_result( result )
         results.push( result )
 
+        # if the result does not equal the very first result, increment counter.
         if results.first && results.first.colour_detected? != result.colour_detected?
           increment_tolerance_counter
         else
           reset_tolerance_counter
         end
-      end
-
-      def tolerance_exceeded?( tolerance )
-        @tolerance_counter > tolerance
       end
 
       # Annotate supplied image with results

@@ -71,7 +71,7 @@ module ImageTraversal
       detector = build_detector( img )
       detector.stubs( :detect_colour? )
       run = build_run
-      run.expects( :tolerance_exceeded? ).once.returns( true )
+      detector.expects( :tolerance_exceeded? ).once.returns( true )
       run.stubs( :tolerance_counter ).returns( tolerance_counter )
       assert result = detector.detect_boundary( img )
       assert_equal -tolerance_counter+1, result.index
@@ -81,7 +81,7 @@ module ImageTraversal
       img = build_image
       detector = build_detector( img )
       detector.stubs( :detect_colour? )
-      build_run.expects( :tolerance_exceeded? ).once.returns( true )
+      detector.expects( :tolerance_exceeded? ).once.returns( true )
       assert result = detector.detect_boundary( img )
       assert_equal Boundary, result.class
     end
@@ -90,7 +90,7 @@ module ImageTraversal
       img = build_image
       detector = build_detector( img )
       detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
-      build_run.expects( :tolerance_exceeded? ).once.returns( false )
+      detector.expects( :tolerance_exceeded? ).once.returns( false )
       assert !detector.detect_boundary( img )
     end
 

@@ -55,7 +55,7 @@ module ImageTraversal
         run.add_result( result )
 
         # if tolerance has been exceeded then we have a boundary.
-        if run.tolerance_exceeded?( tolerance )
+        if tolerance_exceeded?( run.tolerance_counter )
           # the boundary index should be where the tolerance counter started.
           boundary_index = line_index - run.tolerance_counter + 1
           return Boundary.new( axis, boundary_index )
@@ -135,14 +135,18 @@ module ImageTraversal
       absolute_line_index
     end
 
+    def density_reached?( pixel_count, image = nil )
+      density = determine_density( image )
+      pixel_count >= density ? true : false
+    end
+
     # start of untested
     def retrieve_image( image )
       image.is_a?( ImageTraversal.image_adapter_class ) ? image : ImageTraversal.image_adapter_class.factory( image )
     end
 
-    def density_reached?( pixel_count, image = nil )
-      density = determine_density( image )
-      pixel_count >= density ? true : false
+    def tolerance_exceeded?( cnt )
+      cnt > tolerance
     end
 
     def determine_offset( image )
