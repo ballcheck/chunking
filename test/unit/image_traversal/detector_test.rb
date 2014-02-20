@@ -135,28 +135,10 @@ module ImageTraversal
     #  detector.annotate_image( image, x, y, colour )
     #end
 
-    #--------------------------------------------
-    # aliases, class versions of instance methods
-    #--------------------------------------------
-
-    def test_should_call_detect_colour_as_class_method
-      img = stub( "img" )
-      detector = build_detector( img )
-      args = stub( "args" )
-      index = stub( "index" )
-      Detector.expects( :new ).once.with( args ).returns( detector )
-      detector.expects( :detect_colour? ).once.with( img, index )
-      Detector.detect_colour? img, index, args
-    end
-
-    def test_should_alias_colour_with_color
-      assert Detector.instance_method( :detect_color? ) == Detector.instance_method( :detect_colour? )
-      assert Detector.method( :detect_color? ) == Detector.method( :detect_colour? )
-    end
-
     # ---------------
     # private methods
     # ---------------
+
     def test_method_determine_pixel_coords
       # args with random values.
       offset, index, line_index, image_size = (1..99).to_a.sample( 4 )

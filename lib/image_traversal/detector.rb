@@ -113,15 +113,6 @@ module ImageTraversal
     
     alias detect_color? detect_colour?
 
-    class << self
-      # Class method version of instance method of the same name. Provided for simplicity.
-      def detect_colour?( image, index = nil, *args )
-        self.new( *args ).detect_colour?( image, index )
-      end
-
-      alias detect_color? detect_colour?
-    end
-
     private 
 
     def determine_pixel_coords( offset, index, line_index, image_size )
