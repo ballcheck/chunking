@@ -2,10 +2,10 @@ require File.expand_path( "../test_helper.rb", __FILE__ )
 module ImageTraversal
   class DetectorRunTest < TestCase
     
-    def test_should_add_results
+    def test_method_add_results
       run = Detector::Run.new
-      result_a = Detector::Result.new( true )
-      result_b = Detector::Result.new( false )
+      result_a = Detector::Result.new
+      result_b = Detector::Result.new
 
       assert_equal [], run.results
 
@@ -14,6 +14,21 @@ module ImageTraversal
 
       run.add_result( result_b )
       assert_equal [ result_a, result_b ], run.results
+    end
+
+    def test_method_add_results_should_increment_tolerance_counter
+      run = Detector::Run.new
+      result_a = Detector::Result.new( true )
+      result_b = Detector::Result.new( false )
+
+      assert_equal 0, run.send( :tolerance_counter )
+
+      run.add_result( result_a )
+      assert_equal 0, run.send( :tolerance_counter )
+
+      # if the result does not equal the very first result, increment counter.
+      run.add_result( result_b )
+      assert_equal 1, run.send( :tolerance_counter )
     end
 
     def test_should_correctly_observe_tolerance
