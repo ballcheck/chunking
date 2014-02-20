@@ -1,8 +1,7 @@
 module ImageTraversal
   module Factories
     def build_image( size = 1 )
-      img = stub_everything( "image", :size => size )
-      return img
+      return ImageTraversal.image_adapter_class.factory( size, size )
     end
 
     def build_run
