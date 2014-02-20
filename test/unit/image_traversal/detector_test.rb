@@ -122,19 +122,6 @@ module ImageTraversal
       assert_equal n, detector.runs.length
     end
       
-      
-    #def test_method_annotate_image
-    #  x = stub( "x" )
-    #  y = stub( "y" )
-    #  colour = stub( "colour" )
-
-    #  image = stub( "image" )
-    #  image.expects( :set_pixel_colour ).with( x, y, colour )
-
-    #  detector = build_detector( image )
-    #  detector.annotate_image( image, x, y, colour )
-    #end
-
     # ---------------
     # private methods
     # ---------------
