@@ -31,7 +31,7 @@ module ImageTraversal
       ]
 
       # create detector with args using the factory.
-      d = Detector.factory( {
+      d = build_detector( nil, {
         :axis => axis, :offset => offset, :size => size, :colour => colour,
         :fuzz => fuzz, :density => density, :tolerance => tolerance
       } )
@@ -123,13 +123,6 @@ module ImageTraversal
     end
       
       
-    def test_method_density_reached?
-      detector = build_detector( :density => 1 )
-      assert !detector.send( :density_reached?, 0 )
-      assert detector.send( :density_reached?, 1 )
-      assert detector.send( :density_reached?, 2 )
-    end
-
     #def test_method_annotate_image
     #  x = stub( "x" )
     #  y = stub( "y" )
@@ -170,10 +163,10 @@ module ImageTraversal
       args = [ offset, index, line_index, image_size ]
 
       # then...
-      coords_x_axis = Detector.factory( :axis => :x ).send( :determine_pixel_coords, *args )
+      coords_x_axis = build_detector( nil, :axis => :x ).send( :determine_pixel_coords, *args )
       assert_equal [ index + offset, line_index ], coords_x_axis
 
-      coords_y_axis = Detector.factory( :axis => :y ).send( :determine_pixel_coords, *args )
+      coords_y_axis = build_detector( nil, :axis => :y ).send( :determine_pixel_coords, *args )
       assert_equal [ line_index, image_size - 1 - ( index + offset ) ], coords_y_axis
     end
 
@@ -183,20 +176,33 @@ module ImageTraversal
       img = ImageTraversal.image_adapter_class.factory( width, height )
 
       # then...
-      assert_equal width - 1, Detector.factory( :axis => :y ).send( :determine_last_line_index, img )
-      assert_equal height - 1, Detector.factory( :axis => :x ).send( :determine_last_line_index, img )
+      assert_equal width - 1, build_detector( nil, :axis => :y ).send( :determine_last_line_index, img )
+      assert_equal height - 1, build_detector( nil, :axis => :x ).send( :determine_last_line_index, img )
     end
 
     def test_method_determine_absolute_line_index
-      detector = build_detector
-      last_line_index, line_index = (0..100).to_a.sample( 2 )
+      d = build_detector
+
+      # args with random values.
+      last_line_index, line_index = (0..99).to_a.sample( 2 )
    
+      # then...
       # if not inverting direction, just use line index.
-      assert_equal line_index, detector.send( :determine_absolute_line_index, false, last_line_index, line_index )
+      assert_equal line_index, d.send( :determine_absolute_line_index, false, last_line_index, line_index )
 
       # if inverting, factor in image size.
-      assert_equal ( last_line_index - line_index ), detector.send( :determine_absolute_line_index, true, last_line_index, line_index )
+      assert_equal ( last_line_index - line_index ), d.send( :determine_absolute_line_index, true, last_line_index, line_index )
     end
 
+    def test_method_density_reached?
+      # detector with random density
+      density = (1..99).to_a.sample
+      detector = build_detector( nil, :density => density )
+
+      # then...
+      assert !detector.send( :density_reached?, density - 1 )
+      assert detector.send( :density_reached?, density )
+      assert detector.send( :density_reached?, density + 1 )
+    end
   end
 end

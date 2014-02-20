@@ -142,6 +142,7 @@ module ImageTraversal
       absolute_line_index
     end
 
+    # start of untested
     def retrieve_image( image )
       image.is_a?( ImageTraversal.image_adapter_class ) ? image : ImageTraversal.image_adapter_class.factory( image )
     end
