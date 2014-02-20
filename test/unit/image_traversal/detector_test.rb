@@ -153,12 +153,28 @@ module ImageTraversal
     def test_method_density_reached?
       # detector with random density
       density = (1..99).to_a.sample
-      detector = build_detector( nil, :density => density )
+      d = build_detector( nil, :density => density )
 
       # then...
-      assert !detector.send( :density_reached?, density - 1 )
-      assert detector.send( :density_reached?, density )
-      assert detector.send( :density_reached?, density + 1 )
+      assert !d.send( :density_reached?, density - 1 )
+      assert d.send( :density_reached?, density )
+      assert d.send( :density_reached?, density + 1 )
+    end
+
+    def test_method_retrieve_image
+      d = build_detector
+      img = build_image
+
+      non_img = stub
+      new_img = stub
+      ImageTraversal.image_adapter_class.stubs( :factory ).with( non_img ).returns( new_img )
+
+      # then...
+      # an img of image_adapter_class comes back untouched
+      assert_equal img, d.send( :retrieve_image, img )
+
+      # but anything else goes to the factory
+      assert_equal new_img, d.send( :retrieve_image, non_img )
     end
   end
 end
