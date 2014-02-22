@@ -24,12 +24,8 @@ module ImageTraversal
       return Detector::Result.new( *args )
     end
 
-    # TODO: args should be first argument, otherwise lots of call have to pass in nil
-    # could have seperate method - build_detector_with_stubbed_image
-    # TODO: passing in image is redundant now because were using real images.
-    def build_detector( image = nil, args = {} )
+    def build_detector( args = {} )
       detector = Detector.factory( args )
-      detector.stubs( :retrieve_image => image ) if image
       return detector
     end
 

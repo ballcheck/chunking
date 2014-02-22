@@ -5,14 +5,14 @@ module ImageTraversal
     def test_should_detect_colour_if_pixel_is_colour
       img = build_image
       img.expects( :pixel_is_colour? ).once.returns( true )
-      detector = build_detector( img )
+      detector = build_detector
       assert detector.detect_colour?( img )
     end
 
     def test_should_not_detect_colour_if_pixel_is_not_colour
       img = build_image
       img.expects( :pixel_is_colour? ).returns( false )
-      detector = build_detector( img )
+      detector = build_detector
       assert !detector.detect_colour?( img ).colour_detected?
     end
 
@@ -22,7 +22,7 @@ module ImageTraversal
       img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 0 }
       img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 1 }
       img.expects( :pixel_is_colour? ).once.with{ |*args| args[0] == 2 }
-      detector = build_detector( img, :size => size )
+      detector = build_detector( :size => size )
       detector.detect_colour?( img )
     end
 
@@ -30,21 +30,21 @@ module ImageTraversal
       size = 5
       img = build_image
       img.expects( :pixel_is_colour? ).times( 1 ).returns( true )
-      detector = build_detector( img, :size => size )
+      detector = build_detector( :size => size )
       assert detector.detect_colour?( img )
     end
 
     def test_should_not_return_nil_if_colour_not_detected
       img = build_image
       img.expects( :pixel_is_colour? ).returns( false )
-      detector = build_detector( img )
+      detector = build_detector
       assert !detector.detect_colour?( img ).nil?
     end
 
     def test_should_detect_colour_if_density_reached
       img = build_image
       img.stubs( :pixel_is_colour? ).returns( true )
-      detector = build_detector( img )
+      detector = build_detector
       detector.expects( :density_reached? ).with( 1, img ).returns( true )
       assert detector.detect_colour?( img )
     end
@@ -52,7 +52,7 @@ module ImageTraversal
     def test_should_not_detect_colour_if_density_not_reached
       img = build_image
       img.stubs( :pixel_is_colour? ).returns( true )
-      detector = build_detector( img )
+      detector = build_detector
       detector.expects( :density_reached? ).with( 1, img ).returns( false )
       assert !detector.detect_colour?( img ).colour_detected?
     end
@@ -62,7 +62,7 @@ module ImageTraversal
       size = 4
       offset = 3
       line_index = 2
-      detector = build_detector( img, :size => size, :offset => offset, :axis => :x )
+      detector = build_detector( :size => size, :offset => offset, :axis => :x )
 
       img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset && args[1] == line_index }
       img.expects( :pixel_is_colour? ).once.with { |*args| args[0] == offset + 1 && args[1] == line_index }
@@ -76,7 +76,7 @@ module ImageTraversal
       size = 4
       offset = 3
       line_index = 2
-      detector = build_detector( img, :size => size, :offset => offset, :axis => :y )
+      detector = build_detector( :size => size, :offset => offset, :axis => :y )
       img_size = 10
       img.stubs( :size ).returns( img_size )
       real_offset = img_size - 1 - offset

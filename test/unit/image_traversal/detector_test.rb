@@ -25,7 +25,7 @@ module ImageTraversal
       axis, offset, size, colour, fuzz, density, tolerance = stub, stub, stub, stub, stub, stub, stub
 
       # create detector with args using the factory.
-      d = build_detector( nil, {
+      d = build_detector( {
         :axis => axis, :offset => offset, :size => size, :colour => colour,
         :fuzz => fuzz, :density => density, :tolerance => tolerance
       } )
@@ -89,7 +89,7 @@ module ImageTraversal
       line_index = (0..img_height-1).to_a.sample
       offset = (0..img_width-1).to_a.sample
       size = (1..img_width-offset).to_a.sample
-      detector = build_detector( nil, :size => size, :offset => offset )
+      detector = build_detector( :size => size, :offset => offset )
 
       # make detector run to the end
       detector.stubs( :density_reached? ).returns( false )
@@ -120,10 +120,10 @@ module ImageTraversal
       args = [ offset, index, line_index, image_size ]
 
       # then...
-      coords_x_axis = build_detector( nil, :axis => :x ).send( :determine_pixel_coords, *args )
+      coords_x_axis = build_detector( :axis => :x ).send( :determine_pixel_coords, *args )
       assert_equal [ index + offset, line_index ], coords_x_axis
 
-      coords_y_axis = build_detector( nil, :axis => :y ).send( :determine_pixel_coords, *args )
+      coords_y_axis = build_detector( :axis => :y ).send( :determine_pixel_coords, *args )
       assert_equal [ line_index, image_size - 1 - ( index + offset ) ], coords_y_axis
     end
 
@@ -133,8 +133,8 @@ module ImageTraversal
       img = ImageTraversal.image_adapter_class.factory( width, height )
 
       # then...
-      assert_equal width - 1, build_detector( nil, :axis => :y ).send( :determine_last_line_index, img )
-      assert_equal height - 1, build_detector( nil, :axis => :x ).send( :determine_last_line_index, img )
+      assert_equal width - 1, build_detector( :axis => :y ).send( :determine_last_line_index, img )
+      assert_equal height - 1, build_detector( :axis => :x ).send( :determine_last_line_index, img )
     end
 
     def test_method_determine_absolute_line_index
@@ -154,7 +154,7 @@ module ImageTraversal
     def test_method_density_reached?
       # detector with random density
       density = (1..99).to_a.sample
-      d = build_detector( nil, :density => density )
+      d = build_detector( :density => density )
 
       # then...
       assert !d.send( :density_reached?, density - 1 )
@@ -206,7 +206,7 @@ module ImageTraversal
     def test_method_tolerance_exceeded
       # detector with random tolerance
       tolerance = (0..99).to_a.sample
-      d = build_detector( nil, :tolerance => tolerance )
+      d = build_detector( :tolerance => tolerance )
 
       # then...
       assert_equal false, d.send( :tolerance_exceeded?, tolerance-1 )
@@ -218,7 +218,7 @@ module ImageTraversal
     # also some tests should be stubbing detector axis, so it's passed correctly to image.size
     def test_method_determine_offset
       axis = stub
-      d = build_detector( nil, :axis => axis )
+      d = build_detector( :axis => axis )
 
       # image of random size
       image_size = (1..99).to_a.sample
@@ -233,13 +233,13 @@ module ImageTraversal
       # also...
       # get the original back if it's an int.
       d.offset = offset = (0..99).to_a.sample
-      offset_result = build_detector( nil, :offset => offset ).send( :determine_offset, image )
+      offset_result = build_detector( :offset => offset ).send( :determine_offset, image )
       assert_equal offset, offset_result
     end
       
     def test_method_determine_size
       axis = stub
-      d = build_detector( nil, :axis => axis )
+      d = build_detector( :axis => axis )
 
       # image of random size
       image_size = (1..99).to_a.sample
@@ -254,13 +254,13 @@ module ImageTraversal
       # also...
       # get the original back if it's an int.
       d.size = size = (0..99).to_a.sample
-      size_result = build_detector( nil, :size => size ).send( :determine_size, image )
+      size_result = build_detector( :size => size ).send( :determine_size, image )
       assert_equal size, size_result
     end
 
     def test_method_determine_density
       axis = stub
-      d = build_detector( nil, :axis => axis )
+      d = build_detector( :axis => axis )
 
       # image of random size
       image_size = (1..99).to_a.sample
@@ -275,7 +275,7 @@ module ImageTraversal
       # also...
       # get the original back if it's an int.
       d.density = density = (0..99).to_a.sample
-      density_result = build_detector( nil, :density => density ).send( :determine_density, image )
+      density_result = build_detector( :density => density ).send( :determine_density, image )
       assert_equal density, density_result
     end
 
