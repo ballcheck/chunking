@@ -40,6 +40,7 @@ module ImageTraversal
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or outside a content block).
+    # TODO: consider moving this whole logic into Run. It makes some sense.
     def detect_boundary( image, start_index = 0, invert_direction = false )
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top, we invert_direction.
@@ -54,11 +55,9 @@ module ImageTraversal
         result = detect_colour?( image, absolute_line_index )
         run.add_result( result )
 
-        # if tolerance has been exceeded then we have a boundary.
-        if tolerance_exceeded?( run.tolerance_counter )
-          # the boundary index should be where the tolerance counter started.
-          boundary_index = line_index - run.tolerance_counter + 1
-          return Boundary.new( axis, boundary_index )
+        # return boundary if present
+        if boundary = determine_boundary( line_index, run )
+          return boundary
         end
       end
 
@@ -138,6 +137,15 @@ module ImageTraversal
     def density_reached?( pixel_count, image = nil )
       density = determine_density( image )
       pixel_count >= density ? true : false
+    end
+
+    def determine_boundary( line_index, run )
+      if tolerance_exceeded?( run.tolerance_counter )
+        # the real boundary is where the tolerance_counter started.
+        return Boundary.new( axis, line_index - run.tolerance_counter + 1 )
+      else
+        return nil
+      end
     end
 
     def retrieve_image( image )

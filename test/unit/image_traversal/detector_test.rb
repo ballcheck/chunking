@@ -161,6 +161,28 @@ module ImageTraversal
       assert d.send( :density_reached?, density + 1 )
     end
 
+    def test_method_determine_boundary
+      d = build_detector
+      run = build_run
+
+      # args with random values.
+      line_index = (0..99).to_a.sample
+      run_tolerance_counter = (0..99).to_a.sample
+
+      # frig run.tolerance_counter
+      run.stubs( :tolerance_counter ).returns( run_tolerance_counter )
+
+      # then...
+      d.stubs( :tolerance_exceeded? ).with( run_tolerance_counter ).returns( true )
+      boundary = d.send( :determine_boundary, line_index, run )
+      assert_equal d.axis, boundary.axis
+      assert_equal ( line_index - run.tolerance_counter + 1 ), boundary.index
+
+      # also...
+      d.stubs( :tolerance_exceeded? ).with( run_tolerance_counter ).returns( false )
+      assert_equal nil, d.send( :determine_boundary, line_index, run )
+    end
+
     def test_method_retrieve_image
       d = build_detector
 
@@ -183,7 +205,7 @@ module ImageTraversal
     def test_method_tolerance_exceeded
       # detector with random tolerance
       tolerance = (0..99).to_a.sample
-      d = build_detector( :tolerance => tolerance )
+      d = build_detector( nil, :tolerance => tolerance )
 
       # then...
       assert_equal false, d.send( :tolerance_exceeded?, tolerance-1 )
