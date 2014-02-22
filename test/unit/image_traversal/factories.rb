@@ -5,6 +5,12 @@ module ImageTraversal
       return ImageTraversal.image_adapter_class.factory( width, height )
     end
 
+    def build_image_with_stubbed_size( axis, size )
+      image = build_image
+      image.stubs( :size ).with( axis ).returns( size )
+      return image
+    end
+
     def build_run
       Detector::Run.any_instance.stubs( :determine_initial_state )
       run = Detector::Run.new
@@ -21,6 +27,10 @@ module ImageTraversal
       detector = Detector.factory( args )
       detector.stubs( :retrieve_image => image ) if image
       return detector
+    end
+
+    def given_a_random_rational
+      Rational( (1..100).to_a.sample / 100.0 )
     end
   end
 end
