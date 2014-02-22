@@ -1,7 +1,8 @@
 module ImageTraversal
   module Factories
-    def build_image( size = 1 )
-      return ImageTraversal.image_adapter_class.factory( size, size )
+    def build_image( size_or_width = 1, height = nil )
+      width, height = height ? [ size_or_width, height ] : [ size_or_width, size_or_width ]
+      return ImageTraversal.image_adapter_class.factory( width, height )
     end
 
     def build_run
