@@ -184,10 +184,6 @@ module ImageTraversal
         :x
       end
     end
-    
-    def determine_remaining_line_count( image, index )
-      image.size( axis_of_travel ) - index.to_i
-    end
 
   end
 end
