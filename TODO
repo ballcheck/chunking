@@ -8,6 +8,7 @@ private methods untested
 
 new features
 ------------
+Detector schedule
 have colour_tolerance and non_colour_tolerance.
 @axis could be a class, thus preventing passing strings / syms around.
 method for traversing image - as_tree?
