@@ -85,7 +85,7 @@ module ImageTraversal
 
       offset = determine_offset( image )
       size = determine_size( image )
-      fuzz = determine_fuzz( image )
+      fuzz = determine_fuzz
 
       image_size = image.size( axis )
 
@@ -158,7 +158,7 @@ module ImageTraversal
 
     # start of untested
     def determine_offset( image )
-      offset_value = offset.is_a?( Rational ) ? image.size * offset.to_f : offset
+      offset_value = offset.is_a?( Rational ) ? image.size( axis ) * offset.to_f : offset
       return offset_value.to_i
     end
       
@@ -172,8 +172,8 @@ module ImageTraversal
       return density_value.to_i
     end
 
-    def determine_fuzz( image )
-      fuzz_value = fuzz.is_a?( Rational ) ? image.quantum_range * fuzz.to_f : fuzz
+    def determine_fuzz
+      fuzz_value = fuzz.is_a?( Rational ) ? Palette.max_colour_value * fuzz.to_f : fuzz
       return fuzz_value.to_i
     end
 
