@@ -74,7 +74,8 @@ module ImageTraversal
       # the nth boundary is returned
       assert_equal b3, d.detect_nth_boundary( img, n, start_index, invert_direction )
 
-      # but we get nil if no boundary is returned.
+      # also...
+      # we get nil if no boundary is returned.
       d.stubs( :detect_boundary ).with( img, b2.index, invert_direction ).returns( nil )
       assert_equal nil, d.detect_nth_boundary( img, n, start_index, invert_direction )
     end
