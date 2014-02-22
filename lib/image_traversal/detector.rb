@@ -156,7 +156,6 @@ module ImageTraversal
       cnt > tolerance
     end
 
-    # start of untested
     def determine_offset( image )
       offset_value = offset.is_a?( Rational ) ? image.size( axis ) * offset.to_f : offset
       return offset_value.to_i
@@ -178,13 +177,17 @@ module ImageTraversal
     end
 
     def axis_of_travel
-      axis == :x ? :y : :x
+      case axis
+      when :x
+        :y
+      when :y
+        :x
+      end
     end
     
     def determine_remaining_line_count( image, index )
       image.size( axis_of_travel ) - index.to_i
     end
-    # end of untested.
 
   end
 end
