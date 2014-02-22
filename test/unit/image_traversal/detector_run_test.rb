@@ -4,8 +4,8 @@ module ImageTraversal
     
     def test_method_add_results
       run = Detector::Run.new
-      result_a = Detector::Result.new
-      result_b = Detector::Result.new
+      result_a = build_result
+      result_b = build_result
 
       assert_equal [], run.results
 
@@ -18,8 +18,8 @@ module ImageTraversal
 
     def test_method_add_results_should_increment_tolerance_counter
       run = Detector::Run.new
-      result_a = Detector::Result.new( true )
-      result_b = Detector::Result.new( false )
+      result_a = build_result( true )
+      result_b = build_result( false )
 
       assert_equal 0, run.send( :tolerance_counter )
 
@@ -40,7 +40,7 @@ module ImageTraversal
       # create n run.results, each one expecting :annotate!
       n = (2..10).to_a.sample
       n.times do |i|
-        result = Detector::Result.new
+        result = build_result
         result.expects( :annotate! ).with( mask )
         run.add_result( result )
       end

@@ -3,7 +3,7 @@ module ImageTraversal
   class DetectorResultTest < TestCase
 
     def test_should_set_colour_state_and_detect_colour
-      result = Detector::Result.new
+      result = build_result
 
       assert !result.colour_detected?
 
@@ -15,7 +15,7 @@ module ImageTraversal
     end
 
     def test_should_add_pixel
-      result = Detector::Result.new
+      result = build_result
 
       assert_equal [], result.pixels
 
@@ -47,7 +47,7 @@ module ImageTraversal
     def test_should_annotate_image
       image = mock( "image" )
 
-      result = Detector::Result.new
+      result = build_result
       assert !result.colour_detected?
 
       x1, y1, colour_state1 = stub( "x1" ), stub( "y1" ), false

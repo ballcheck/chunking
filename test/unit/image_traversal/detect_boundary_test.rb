@@ -44,7 +44,7 @@ module ImageTraversal
       row_count = 5
       img = build_image( row_count )
       detector = build_detector( img )
-      detector.expects( :detect_colour? ).times( row_count ).returns( Detector::Result.new( false ) )
+      detector.expects( :detect_colour? ).times( row_count ).returns( build_result( false ) )
       detector.detect_boundary( img )
     end
 
@@ -52,7 +52,7 @@ module ImageTraversal
       row_count = 5
       img = build_image( row_count )
       detector = build_detector( img )
-      detector.expects( :detect_colour? ).times( 2 ).returns( Detector::Result.new( true ), Detector::Result.new( false ) )
+      detector.expects( :detect_colour? ).times( 2 ).returns( build_result( true ), build_result( false ) )
       assert detector.detect_boundary( img )
     end
 
@@ -61,7 +61,7 @@ module ImageTraversal
       img = build_image( row_count )
       detector = build_detector( img )
       starting_index = 1
-      detector.expects( :detect_colour? ).times( row_count - starting_index ).returns( Detector::Result.new( false ) )
+      detector.expects( :detect_colour? ).times( row_count - starting_index ).returns( build_result( false ) )
       assert !detector.detect_boundary( img, starting_index )
     end
 
@@ -89,7 +89,7 @@ module ImageTraversal
     def test_should_not_detect_if_tolerance_not_reached
       img = build_image
       detector = build_detector( img )
-      detector.expects( :detect_colour? ).returns( Detector::Result.new( false ) )
+      detector.expects( :detect_colour? ).returns( build_result( false ) )
       detector.expects( :tolerance_exceeded? ).once.returns( false )
       assert !detector.detect_boundary( img )
     end
