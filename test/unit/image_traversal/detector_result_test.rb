@@ -7,66 +7,70 @@ module ImageTraversal
 
       assert !result.colour_detected?
 
+      # then...
       result.set_colour_state( true )
       assert result.colour_detected?
 
+      # also...
       result.set_colour_state( false )
       assert !result.colour_detected?
     end
 
     def test_should_add_pixel
+      # create result with no pixels.
       result = build_result
-
       assert_equal [], result.pixels
-
+      
+      # stub out creating a pixel
       x = stub( "x" )
       y = stub( "y" )
       colour_state = stub( "colour_state" )
-
       pixel = stub( "pixel" )
-      Detector::Result::Pixel.expects( :new ).with( x, y, colour_state ).returns( pixel )
+      Detector::Result::Pixel.stubs( :new ).with( x, y, colour_state ).returns( pixel )
 
+      # then...
       result.add_pixel( x, y, colour_state )
       assert_equal [ pixel ], result.pixels
     end
 
     # Detector::Result::Pixel tests
     def test_should_initialize
+      # initialize a Pixel using stubs.
       x = stub( "x" )
       y = stub( "y" )
       colour_state = stub( "colour_state" )
       pixel = Detector::Result::Pixel.new( x, y, colour_state )
 
+      # then...
       assert_equal x, pixel.x
       assert_equal y, pixel.y
       assert_equal colour_state, pixel.colour_state
-
-      assert_equal [ x, y ], pixel.coords
     end
 
     def test_should_annotate_image
-      image = mock( "image" )
-
       result = build_result
-      assert !result.colour_detected?
 
+      # add pixels to result using stubbed values.
       x1, y1, colour_state1 = stub( "x1" ), stub( "y1" ), false
-      result.add_pixel( x1, y1, colour_state1 )
-      image.expects( :set_pixel_colour ).twice.with( x1, y1, Palette.annotate_nil )
-
       x2, y2, colour_state2 = stub( "x2" ), stub( "y2" ), true
+      result.add_pixel( x1, y1, colour_state1 )
       result.add_pixel( x2, y2, colour_state2 )
-      image.expects( :set_pixel_colour ).once.with( x2, y2, Palette.annotate_pixel_is_colour )
 
+      # then...
+      # expect image to be annotated with different colours depending on state.
+      image = mock( "image" )
+      image.expects( :set_pixel_colour ).once.with( x1, y1, Palette.annotate_nil )
+      image.expects( :set_pixel_colour ).once.with( x2, y2, Palette.annotate_pixel_is_colour )
       result.annotate!( image )
 
-      # only annotate density_reached for the last pixel when result.colour_detected?
+      # also...
+      # when result.colour_detected? use colour annotate_density_reached for the last pixel.
       result.set_colour_state( true )
       assert result.colour_detected?
    
+      image = mock( "image" )
+      image.expects( :set_pixel_colour ).once.with( x1, y1, Palette.annotate_nil )
       image.expects( :set_pixel_colour ).once.with( x2, y2, Palette.annotate_density_reached )
-
-      # do it
       result.annotate!( image )
     end
   end
