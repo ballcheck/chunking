@@ -27,6 +27,10 @@ module ImageTraversal
         img = img.invert( @axis ) if invert?
         return img
       end
+
+      def detector_args( args_to_merge )
+        { :fuzz => @fuzz, :axis => @axis, :colour => @colour }.merge( args_to_merge )
+      end
     end
 
     # Tests that work the same way when background / foreground colours are inverted.
@@ -43,8 +47,10 @@ module ImageTraversal
           [ _, _, _, _, _ ]
         ])
 
-        detector = build_detector( :fuzz => @fuzz, :axis => @axis, :size => 5, :colour => @colour )
+        size = img.size( @axis )
+        detector = build_detector( detector_args( :size => size ) )
 
+        # then...
         # immediate boundary
         assert_equal 1, detector.detect_boundary( img, 0, invert? ).index
         # jump a row to boundary
@@ -65,15 +71,15 @@ module ImageTraversal
         ])
 
         size = img.size( @axis )
+        detector = build_detector( detector_args( :size => size ) )
 
-        detector = build_detector( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
+        # then...
+        # boundary is from the top of the image.
         assert_equal 1, detector.detect_boundary( img, 0, invert? ).index
        
-        detector = build_detector( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
+        # also...
+        # boundary is from the bottom of the image.
         assert_equal 2, detector.detect_boundary( img, 0, !invert? ).index
-      end
-
-      def test_fuzz
       end
 
       def test_no_matches
@@ -85,8 +91,10 @@ module ImageTraversal
         ])
 
         size = img.size( @axis )
+        detector = build_detector( detector_args( :size => size ) )
 
-        detector = build_detector( :fuzz => @fuzz, :axis => @axis, :size => size, :colour => @colour )
+        # then...
+        # no boundary is returned
         assert_equal nil, detector.detect_boundary( img, 0, invert? )
       end
 
@@ -102,26 +110,23 @@ module ImageTraversal
           [ _, _, _ ],
           [ x, x, x ],
           [ x, x, x ],
-          [ _, _, _ ],
-          [ x, x, x ],
-          [ x, x, x ],
-          [ x, x, x ],
         ])
 
         size = img.size( @axis )
 
+        # expected boundaries at different tolerance levels.
         tolerance_index_map = {
           0 => 1,
           1 => 3,
-          2 => 6,
-          3 => nil
+          2 => nil
         }
 
-        tolerance_index_map.each do |k,v|
-          detector = build_detector( :fuzz => @fuzz, :axis => @axis, :tolerance => k, :size => size, :colour => @colour )
+        # then...
+        tolerance_index_map.each do |key,val|
+          detector = build_detector( detector_args( :size => size, :tolerance => key ) )
           boundary = detector.detect_boundary( img, 0, invert? )
           index = boundary ? boundary.index : nil
-          assert_equal v, index
+          assert_equal val, index
         end
       end
     end
@@ -142,9 +147,11 @@ module ImageTraversal
 
         size = img.size( @axis )
 
+        # then...
         size.times do |i|
-           detector = build_detector( :fuzz => @fuzz, :axis => @axis, :offset => i, :size => size - i, :colour => @colour )
-           assert_equal i+1,  detector.detect_boundary( img, 0, invert? ).index
+          # offset increasing by 1 each time
+          detector = build_detector( detector_args( :size => size-i, :offset => i ) )
+          assert_equal i+1,  detector.detect_boundary( img, 0, invert? ).index
         end
       end
 
@@ -161,9 +168,11 @@ module ImageTraversal
 
         size = img.size( @axis )
 
+        # then...
         size.times do |i|
-           detector = build_detector( :fuzz => @fuzz, :axis => @axis, :size => size - i, :colour => @colour )
-           assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
+          # size decreasing by 1 each time
+          detector = build_detector( detector_args( :size => size - i ) )
+          assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
         end
       end
 
@@ -180,12 +189,15 @@ module ImageTraversal
 
         size = img.size( @axis )
 
-        5.times do |i|
-           detector = build_detector( :fuzz => @fuzz, :axis => @axis, :density => i + 1, :size => size, :colour => @colour )
-           assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
+        # then...
+        size.times do |i|
+          # density increasing by 1 each time
+          detector = build_detector( detector_args( :size => size, :density => i + 1 ) )
+          assert_equal i+1, detector.detect_boundary( img, 0, invert? ).index
         end
       end
 
+      # TODO: this wants some comments.
       def test_annotation
         _, x = @background_colour, @foreground_colour
 
@@ -197,7 +209,7 @@ module ImageTraversal
 
         size = img.size( @axis ) - 2
 
-        detector = build_detector( :fuzz => @fuzz, :axis => @axis, :density => 2, :size => size, :colour => @colour, :offset => 1 )
+        detector = build_detector( detector_args( :size => size, :density => 2, :offset => 1 ) )
         assert_equal 2, detector.detect_boundary( img, 0, invert? ).index
         annotated_img = detector.runs.last.annotate( img, 1 )
 
