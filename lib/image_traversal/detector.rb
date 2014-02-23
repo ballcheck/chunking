@@ -44,7 +44,7 @@ module ImageTraversal
     def detect_boundary( image, start_index = 0, invert_direction = false )
       # The default direction is left to right, top to bottom.
       # To go from right to left, or bottom to top, we invert_direction.
-      runs << run = Detector::Run.new
+      runs << run = create_run
 
       image = retrieve_image( image )
       last_line_index = determine_last_line_index( image )
@@ -183,6 +183,10 @@ module ImageTraversal
       when :y
         :x
       end
+    end
+
+    def create_run
+      Detector::Run.new
     end
 
   end

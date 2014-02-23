@@ -12,11 +12,9 @@ module ImageTraversal
     end
 
     def build_run
-      Detector::Run.any_instance.stubs( :determine_initial_state )
       run = Detector::Run.new
-      # ensure that when a run is created in 'detect_boundary' this run (the one
-      # that was created with *args) is returned
-      Detector::Run.stubs( :new ).returns( run )
+      # ensure that when a run is created in Detector this run is returned.
+      Detector.any_instance.stubs( :create_run ).returns( run )
       return run
     end
 
