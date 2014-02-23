@@ -12,10 +12,7 @@ module ImageTraversal
     end
 
     def build_run
-      run = Detector::Run.new
-      # ensure that when a run is created in Detector this run is returned.
-      Detector.any_instance.stubs( :create_run ).returns( run )
-      return run
+      return Detector::Run.new
     end
 
     def build_result( *args )
@@ -23,8 +20,7 @@ module ImageTraversal
     end
 
     def build_detector( args = {} )
-      detector = Detector.factory( args )
-      return detector
+      return Detector.factory( args )
     end
 
     def given_a_random_rational
