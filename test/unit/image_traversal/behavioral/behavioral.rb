@@ -3,9 +3,9 @@ require File.expand_path( "../../test_helper.rb", __FILE__ )
 require "./../array/array.rb"
 module ImageTraversal
 
-  # A suite of behavioural tests written in such a way that the tests can be repeated under varying conditions.
+  # A suite of behavioural tests that can be repeated under varying conditions.
   module Behavioral
-    # These methods get overridden in test_cases.rb in this module.
+    # These methods are overridden in test_cases.rb
     module Setup
       # Set up for the test.
       def setup
@@ -21,10 +21,6 @@ module ImageTraversal
         false
       end
 
-      # Build a new image based an array of pixels
-      def build_image_from_pixel_map( pixel_map )
-        Image::AdapterMagickImage.factory( pixel_map )
-      end
     end
 
     # Tests that work the same when background / foreground colours are inverted.
@@ -42,7 +38,7 @@ module ImageTraversal
           [ o, o, o, o, o ]
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
 
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
@@ -69,7 +65,7 @@ module ImageTraversal
           [ o, o, o, o, o ],
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
@@ -94,7 +90,7 @@ module ImageTraversal
           [ o, o, o, o, o ],
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
         size = img.size( @axis )
@@ -122,7 +118,7 @@ module ImageTraversal
           [ x, x, x ],
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
@@ -159,7 +155,7 @@ module ImageTraversal
           [ x, x, x, x, x ]
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
@@ -183,7 +179,7 @@ module ImageTraversal
           [ x, x, x, x, x ]
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
@@ -207,7 +203,7 @@ module ImageTraversal
           [ x, x, x, x, x ]
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
@@ -229,7 +225,7 @@ module ImageTraversal
           [ o, x, x, o, o ]
         ]
 
-        img = build_image_from_pixel_map pixel_map
+        img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
