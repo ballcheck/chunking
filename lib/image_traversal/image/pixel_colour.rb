@@ -45,6 +45,7 @@ module ImageTraversal
 
       alias pixel_is_color? pixel_is_colour?
 
+      # TODO: this method should use import_pixels
       # Draw an Image from an array (map) of pixels (only really used in testing).
       def draw_pixel_map!( pixel_map )
         pixel_map.each_with_index do |row, row_ind|

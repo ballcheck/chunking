@@ -70,6 +70,12 @@ module ImageTraversal
         end
       end
 
+      def to_pixel_map
+        pixels = self.base_image.export_pixels
+        pixels_rgb = pixels.each_slice( 3 ).to_a
+        pixel_map = pixels_rgb.each_slice( self.base_image.rows ).to_a
+      end
+
       # Rotate image by the number of degrees given.
       def rotate( deg )
         set_base_image( base_image.rotate( deg ) )

@@ -14,6 +14,21 @@ module ImageTraversal
       assert_equal base_image, adapter.base_image
     end
 
+    def test_to_pixel_map
+      # random 10x10 img
+      width = height = 10
+      img = Image::AdapterMagickImage.factory( width, height )
+
+      # populated with random colours
+      pixels = (0..max_colour_value).to_a.sample( width*height*3 )
+      img.base_image.import_pixels( 0, 0, width, height, "RGB", pixels )
+      assert_equal pixels, img.base_image.export_pixels
+
+      # then...
+      pixel_map = img.to_pixel_map
+      assert_equal pixels, pixel_map.flatten
+    end
+
     # TODO: not sure how to test this adapter without - 
     # a) testing functionality already testing by RMagick
     # b) writing heavily mocked test that are brittle.
