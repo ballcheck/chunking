@@ -42,7 +42,7 @@ module ImageTraversal
         img = img.rotate( -90 ) if @axis == :y
         img = img.invert( @axis ) if invert?
 
-        detector = Detector.factory( :fuzz => @fuzz, :axis => @axis, :size => 5, :colour => @colour )
+        detector = build_detector( :fuzz => @fuzz, :axis => @axis, :size => 5, :colour => @colour )
 
         # immediate boundary
         assert_equal 1, detector.detect_boundary( img, 0, invert? ).index
