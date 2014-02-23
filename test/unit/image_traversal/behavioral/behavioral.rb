@@ -23,19 +23,18 @@ module ImageTraversal
 
     end
 
-    # Tests that work the same when background / foreground colours are inverted.
+    # Tests that work the same way when background / foreground colours are inverted.
     module ColourFastTests
       include Setup
       def test_start_index
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
         pixel_map = [
-          [ o, o, o, o, o ],
+          [ _, _, _, _, _ ],
           [ x, x, x, x, x ],
-          [ o, o, o, o, o ],
-          [ o, o, o, o, o ],
+          [ _, _, _, _, _ ],
+          [ _, _, _, _, _ ],
           [ x, x, x, x, x ],
-          [ o, o, o, o, o ]
+          [ _, _, _, _, _ ]
         ]
 
         img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
@@ -56,13 +55,12 @@ module ImageTraversal
       end
 
       def test_invert
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
         pixel_map = [
-          [ o, o, o, o, o ],
+          [ _, _, _, _, _ ],
           [ x, x, x, x, x ],
-          [ o, o, o, o, o ],
-          [ o, o, o, o, o ],
+          [ _, _, _, _, _ ],
+          [ _, _, _, _, _ ],
         ]
 
         img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
@@ -82,12 +80,11 @@ module ImageTraversal
       end
 
       def test_no_matches
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
         pixel_map = [
-          [ o, o, o, o, o ],
-          [ o, o, o, o, o ],
-          [ o, o, o, o, o ],
+          [ _, _, _, _, _ ],
+          [ _, _, _, _, _ ],
+          [ _, _, _, _, _ ],
         ]
 
         img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
@@ -104,15 +101,14 @@ module ImageTraversal
       # end
       
       def test_tolerance
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
         pixel_map = [
-          [ o, o, o ],
+          [ _, _, _ ],
           [ x, x, x ],
-          [ o, o, o ],
+          [ _, _, _ ],
           [ x, x, x ],
           [ x, x, x ],
-          [ o, o, o ],
+          [ _, _, _ ],
           [ x, x, x ],
           [ x, x, x ],
           [ x, x, x ],
@@ -144,14 +140,13 @@ module ImageTraversal
     module NonColourFastTests
       include Setup
       def test_offset
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
         pixel_map = [
-          [ o, o, o, o, o ],
-          [ x, o, o, o, o ],
-          [ x, x, o, o, o ],
-          [ x, x, x, o, o ],
-          [ x, x, x, x, o ],
+          [ _, _, _, _, _ ],
+          [ x, _, _, _, _ ],
+          [ x, x, _, _, _ ],
+          [ x, x, x, _, _ ],
+          [ x, x, x, x, _ ],
           [ x, x, x, x, x ]
         ]
 
@@ -168,14 +163,13 @@ module ImageTraversal
       end
 
       def test_size
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
         pixel_map = [
-          [ o, o, o, o, o ],
-          [ o, o, o, o, x ],
-          [ o, o, o, x, x ],
-          [ o, o, x, x, x ],
-          [ o, x, x, x, x ],
+          [ _, _, _, _, _ ],
+          [ _, _, _, _, x ],
+          [ _, _, _, x, x ],
+          [ _, _, x, x, x ],
+          [ _, x, x, x, x ],
           [ x, x, x, x, x ]
         ]
 
@@ -192,14 +186,13 @@ module ImageTraversal
       end
 
       def test_density
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
         pixel_map = [
-          [ o, o, o, o, o ],
-          [ o, o, x, o, o ],
-          [ o, x, x, o, o ],
-          [ o, x, x, x, o ],
-          [ x, x, x, x, o ],
+          [ _, _, _, _, _ ],
+          [ _, _, x, _, _ ],
+          [ _, x, x, _, _ ],
+          [ _, x, x, x, _ ],
+          [ x, x, x, x, _ ],
           [ x, x, x, x, x ]
         ]
 
@@ -216,13 +209,12 @@ module ImageTraversal
       end
 
       def test_annotation
-        o = @background_colour
-        x = @foreground_colour
+        _, x = @background_colour, @foreground_colour
 
         pixel_map = [
-          [ o, o, o, o, o ],
-          [ o, o, x, o, o ],
-          [ o, x, x, o, o ]
+          [ _, _, _, _, _ ],
+          [ _, _, x, _, _ ],
+          [ _, x, x, _, _ ]
         ]
 
         img = ImageTraversal.image_adapter_class.from_pixel_map( pixel_map )
@@ -240,9 +232,9 @@ module ImageTraversal
         c = Palette.annotate_density_reached
 
         annotation_colour_map = [ 
-          [ o, a, a, a, o ],
-          [ o, a, b, a, o ],
-          [ o, b, c, o, o ]
+          [ _, a, a, a, _ ],
+          [ _, a, b, a, _ ],
+          [ _, b, c, _, _ ]
         ]
 
         annotation_colour_map = annotation_colour_map.rotate( true ) if @axis == :y
