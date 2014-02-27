@@ -46,14 +46,13 @@ module ImageTraversal
     end
 
     def test_set_and_get_pixel_colour_methods
-      width, height  = (1..100).to_a.sample( 2 )
+      width, height  = (1..10).to_a.sample( 2 )
 
-      coords = [ (0..width).to_a.sample, (0..height).to_a.sample ]
-      initial_colour = [ max_colour_value, max_colour_value, max_colour_value, 0 ]
-      new_colour = (0..max_colour_value).to_a.sample( 4 )
+      coords = [ rand( width ), rand( height ) ]
+      initial_colour = given_a_random_rgba
+      new_colour = given_a_random_rgba
       
-      base_image = Magick::Image.new( width, height )
-      base_image.alpha(Magick::ActivateAlphaChannel)
+      base_image = Magick::Image.new( width, height ){ self.background_color = Magick::Pixel.new( *initial_colour ) }
       image_adapter = Image::AdapterMagickImage.new( base_image )
 
       # gets/set colour at coords

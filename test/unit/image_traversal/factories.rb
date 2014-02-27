@@ -26,5 +26,9 @@ module ImageTraversal
     def given_a_random_rational
       Rational( (1..100).to_a.sample / 100.0 )
     end
+
+    def given_a_random_rgba
+      rgb = Array.new( 4 ){ rand Palette.max_colour_value+1 }
+    end
   end
 end
