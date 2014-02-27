@@ -15,8 +15,8 @@ module ImageTraversal
     end
 
     def test_to_pixel_map
-      # random 10x10 img
-      width = height = 10
+      # image of random size
+      width, height = (1..10).to_a.sample( 2 )
       img = Image::AdapterMagickImage.factory( width, height )
 
       # populated with random colours
@@ -26,7 +26,7 @@ module ImageTraversal
 
       # then...
       pixel_map = img.to_pixel_map
-      assert_equal pixels, pixel_map.flatten
+      assert_equal pixels.each_slice( 3 ).each_slice( width ).to_a, pixel_map
     end
 
     # TODO: not sure how to test this adapter without - 
