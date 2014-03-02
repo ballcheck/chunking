@@ -89,7 +89,7 @@ module ImageTraversal
       line_index = (0..img_height-1).to_a.sample
       offset = (0..img_width-1).to_a.sample
       size = (1..img_width-offset).to_a.sample
-      detector = build_detector( :size => size, :offset => offset )
+      detector = build_detector( :size => size, :offset => offset, :add_pixels => true )
 
       # make detector run to the end
       detector.stubs( :density_reached? ).returns( false )

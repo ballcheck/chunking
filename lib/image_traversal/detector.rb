@@ -19,11 +19,12 @@ module ImageTraversal
       fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
       density = args.has_key?(:density) ? args[:density] : 1
       tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
+      add_pixels = args.has_key?(:add_pixels) ? args[:add_pixels] :false 
 
-      return self.new( axis, offset, size, colour, fuzz, density, tolerance )
+      return self.new( axis, offset, size, colour, fuzz, density, tolerance, add_pixels )
     end
 
-    def initialize( axis, offset, size, colour, fuzz, density, tolerance )
+    def initialize( axis, offset, size, colour, fuzz, density, tolerance, add_pixels )
       # "size" represents width OR height and "offset" represents
       # left or bottom depending on axis supplied 
       @axis = axis
@@ -33,6 +34,7 @@ module ImageTraversal
       @fuzz = fuzz
       @density = density # pixel density
       @tolerance = tolerance # line tolerance
+      @add_pixels = add_pixels
       @runs = []
     end
 
@@ -95,7 +97,7 @@ module ImageTraversal
       size.times do |ind|
         x, y = determine_pixel_coords( offset, ind, line_index, image_size  )
         colour_state = image.pixel_is_colour?( x, y, colour, fuzz )
-        result.add_pixel( x, y, colour_state )
+        result.add_pixel( x, y, colour_state ) if add_pixels_to_results?
 
         if colour_state
           pixel_count += 1
@@ -111,6 +113,10 @@ module ImageTraversal
     end
     
     alias detect_color? detect_colour?
+
+    def add_pixels_to_results?
+      @add_pixels
+    end
 
     private 
 
