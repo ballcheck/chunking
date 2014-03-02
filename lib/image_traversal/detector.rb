@@ -136,8 +136,7 @@ module ImageTraversal
     end
 
     def determine_absolute_line_index( invert_direction, last_line_index, line_index )
-      absolute_line_index = invert_direction ? last_line_index - line_index : line_index
-      absolute_line_index
+      invert_direction ? last_line_index - line_index : line_index
     end
 
     def density_reached?( pixel_count, image = nil )
