@@ -15,7 +15,7 @@ module ImageTraversal
         #  compare_colours?  0.240000   0.000000   0.240000   (0.241203)
         def compare_colours?( a, b, fuzz = 0 )
           # Expects a and b to be arrays of numerical 4 colour values - [r,g,b,a] / [c,m,y,k]
-          4.each do |i|
+          4.times do |i|
             return false unless compare_single_colours?( a[i], b[i], fuzz )
           end
 
