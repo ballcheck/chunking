@@ -8,10 +8,10 @@ module ImageTraversal
 
     def test_method_initialize_should_set_values
       # dummy args.
-      axis, offset, size, colour, fuzz, density, tolerance = stub, stub, stub, stub, stub, stub, stub
+      axis, offset, size, colour, fuzz, density, tolerance, add_pixels = stub, stub, stub, stub, stub, stub, stub
 
       # create detector with args.
-      d = Detector.new( axis, offset, size, colour, fuzz, density, tolerance )
+      d = Detector.new( axis, offset, size, colour, fuzz, density, tolerance, add_pixels )
 
       # then...
       assert_equal(
@@ -22,18 +22,18 @@ module ImageTraversal
 
     def test_method_factory_should_set_values
       # all args.
-      axis, offset, size, colour, fuzz, density, tolerance = stub, stub, stub, stub, stub, stub, stub
+      axis, offset, size, colour, fuzz, density, tolerance, add_pixels = stub, stub, stub, stub, stub, stub, stub
 
       # create detector with args using the factory.
       d = build_detector( {
         :axis => axis, :offset => offset, :size => size, :colour => colour,
-        :fuzz => fuzz, :density => density, :tolerance => tolerance
+        :fuzz => fuzz, :density => density, :tolerance => tolerance, :add_pixels => add_pixels
       } )
 
       # then...
       assert_equal(
-        [ axis, offset, size, colour, fuzz, density, tolerance ],
-        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance ]
+        [ axis, offset, size, colour, fuzz, density, tolerance, add_pixels ],
+        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance, d.add_pixels ]
       )
     end
 

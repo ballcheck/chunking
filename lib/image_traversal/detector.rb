@@ -8,7 +8,7 @@ require File.expand_path( "../palette.rb", __FILE__ )
 module ImageTraversal
 
   class Detector
-    attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance
+    attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance, :add_pixels
     attr_reader :runs
 
     def self.factory( args = {} )
