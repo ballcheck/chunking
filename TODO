@@ -3,7 +3,7 @@ stubbing SomeClass.new is not great, consider having a method like create_some_c
 only allow stubs on existing methods. does this exist? if not write stubs_existing.
 look into using state machines for things like Result.colour_detected? / colour_state
 colour_state us currently a boolean value. consider ColourState, or it may be covered using a state machine.
-enforce colour to be 4 values (rgba/cmyk)
+test usinig cmky values
 
 *some tests use random number of iterations, whereas some only have 2.
 
