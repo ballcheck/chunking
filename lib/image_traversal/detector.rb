@@ -8,7 +8,7 @@ require File.expand_path( "../palette.rb", __FILE__ )
 module ImageTraversal
 
   class Detector
-    attr_reader :runs, :axis, :offset, :size, :colour, :fuzz, :density, :tolerance, :add_pixels
+    attr_reader :runs, :axis, :offset, :size, :colour, :fuzz, :density, :tolerance, :do_add_pixels
 
     class << self
       def default( args = {} )
@@ -19,7 +19,7 @@ module ImageTraversal
         args[:fuzz]       = 0             unless args.has_key?(:fuzz)
         args[:density]    = 1             unless args.has_key?(:density)
         args[:tolerance]  = 0             unless args.has_key?(:tolerance)
-        args[:add_pixels] = :false        unless args.has_key?(:add_pixels)
+        args[:do_add_pixels] = false      unless args.has_key?(:do_add_pixels)
 
         return new( args )
       end
@@ -37,7 +37,7 @@ module ImageTraversal
       @fuzz       = args[:fuzz]
       @density    = args[:density] # pixel density
       @tolerance  = args[:tolerance] # line tolerance
-      @add_pixels = args[:add_pixels]
+      @do_add_pixels = args[:do_add_pixels]
 
       @runs = []
     end
@@ -106,7 +106,7 @@ module ImageTraversal
     alias detect_color? detect_colour?
 
     def add_pixels_to_results?
-      @add_pixels
+      @do_add_pixels
     end
 
     private 

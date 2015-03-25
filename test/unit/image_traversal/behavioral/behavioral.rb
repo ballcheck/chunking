@@ -211,7 +211,7 @@ module ImageTraversal
 
         size = img.size( @axis ) - 2
 
-        detector = build_detector( detector_args( :size => size, :density => 2, :offset => 1, :add_pixels => true ) )
+        detector = build_detector( detector_args( :size => size, :density => 2, :offset => 1, :do_add_pixels => true ) )
         assert_equal 2, detector.detect_boundary( img, 0, invert? ).index
         annotated_img = detector.runs.last.results.annotate( img, 1 )
 

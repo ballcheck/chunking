@@ -8,18 +8,18 @@ module ImageTraversal
 
     def test_method_factory_should_set_values
       # all args.
-      axis, offset, size, colour, fuzz, density, tolerance, add_pixels = stub, stub, stub, stub, stub, stub, stub
+      axis, offset, size, colour, fuzz, density, tolerance, do_add_pixels = stub, stub, stub, stub, stub, stub, stub
 
       # create detector with args using the factory.
       d = Detector.default( {
         :axis => axis, :offset => offset, :size => size, :colour => colour,
-        :fuzz => fuzz, :density => density, :tolerance => tolerance, :add_pixels => add_pixels
+        :fuzz => fuzz, :density => density, :tolerance => tolerance, :do_add_pixels => do_add_pixels
       } )
 
       # then...
       assert_equal(
-        [ axis, offset, size, colour, fuzz, density, tolerance, add_pixels ],
-        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance, d.add_pixels ]
+        [ axis, offset, size, colour, fuzz, density, tolerance, do_add_pixels ],
+        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance, d.do_add_pixels ]
       )
     end
 
@@ -47,7 +47,7 @@ module ImageTraversal
       line_index = (0..img_height-1).to_a.sample
       offset = (0..img_width-1).to_a.sample
       size = (1..img_width-offset).to_a.sample
-      detector = build_detector( :size => size, :offset => offset, :add_pixels => true )
+      detector = build_detector( :size => size, :offset => offset, :do_add_pixels => true )
 
       # make detector run to the end
       detector.stubs( :density_reached? ).returns( false )
