@@ -1,3 +1,5 @@
+require File.expand_path( "../detector_result_pixel.rb", __FILE__ )
+
 module ImageTraversal
 
   class Detector
@@ -16,12 +18,10 @@ module ImageTraversal
 
       def set_colour_state( colour_state )
         @colour_state = colour_state
-        self
       end
 
       def add_pixel( x, y, colour_state )
         pixels.push( Pixel.new( x, y, colour_state ) )
-        self
       end
         
       # Annotate supplied image (one row)
@@ -38,21 +38,6 @@ module ImageTraversal
 
       def determine_annotation_colour( colour_state, density_state )
         density_state ? Palette.annotate_density_reached : colour_state ? Palette.annotate_pixel_is_colour : Palette.annotate_nil
-      end
-
-      class Pixel
-        attr_reader :x, :y, :colour_state
-
-        def initialize( x, y, colour_state )
-          @x = x
-          @y = y
-          @colour_state = colour_state
-        end
-
-        def coords
-          [ @x, @y ]
-        end
-
       end
 
       class PixelCollection < Array

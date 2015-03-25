@@ -33,20 +33,6 @@ module ImageTraversal
       assert_equal [ pixel ], result.pixels
     end
 
-    # Detector::Result::Pixel tests
-    def test_should_initialize
-      # initialize a Pixel using stubs.
-      x = stub( "x" )
-      y = stub( "y" )
-      colour_state = stub( "colour_state" )
-      pixel = Detector::Result::Pixel.new( x, y, colour_state )
-
-      # then...
-      assert_equal x, pixel.x
-      assert_equal y, pixel.y
-      assert_equal colour_state, pixel.colour_state
-    end
-
     def test_should_annotate_image
       result = build_result
 
