@@ -67,19 +67,6 @@ module ImageTraversal
       return nil
     end
 
-    # Skip n - 1 boundaries and return the nth.
-    def detect_nth_boundary( image, n, start_index = 0, invert_direction = false )
-      index = start_index
-      boundary = nil
-      n.times do
-        boundary = detect_boundary( image, index, invert_direction )
-        return nil unless boundary
-        index = boundary.index
-      end
-
-      return boundary
-    end
-
     # TODO: this method needs testing. Also it is possibly doing too much.
     # Tell if a given line within an image contains the Detector @colour.
     def detect_colour?( image, line_index = nil )

@@ -52,34 +52,6 @@ module ImageTraversal
     # methods
     #--------
 
-    # TODO: see detect_boundary_test.rb & detect_colour_test.rb
-    def test_method_detect_nth_boundary
-      d = build_detector
-      n = 3
-
-      # dummy values to be passed in.
-      img, start_index, invert_direction = stub, stub, stub
-
-      # dummy boundaries.
-      b1 = Boundary.new( nil, stub )
-      b2 = Boundary.new( nil, stub )
-      b3 = Boundary.new( nil, stub )
-
-      # rig so each boundary's index gets passed to the next call.
-      d.stubs( :detect_boundary ).with( img, start_index, invert_direction ).returns( b1 )
-      d.stubs( :detect_boundary ).with( img, b1.index, invert_direction ).returns( b2 )
-      d.stubs( :detect_boundary ).with( img, b2.index, invert_direction ).returns( b3 )
-
-      # then...
-      # the nth boundary is returned
-      assert_equal b3, d.detect_nth_boundary( img, n, start_index, invert_direction )
-
-      # also...
-      # we get nil if no boundary is returned.
-      d.stubs( :detect_boundary ).with( img, b2.index, invert_direction ).returns( nil )
-      assert_equal nil, d.detect_nth_boundary( img, n, start_index, invert_direction )
-    end
-
     def test_method_detect_colour_should_add_pixels_to_result
       # img with random dimensions
       img_height = img_width = (2..99).to_a.sample
