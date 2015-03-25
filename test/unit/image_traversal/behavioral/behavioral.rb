@@ -1,6 +1,8 @@
 require File.expand_path( "../../test_helper.rb", __FILE__ )
+
 # TODO: this should be a gem or lib file
-require "./../array/array.rb"
+require File.expand_path( "../../../../../lib/array/array.rb", __FILE__ )
+
 module ImageTraversal
 
   # A suite of behavioural tests that can be repeated under varying conditions.
