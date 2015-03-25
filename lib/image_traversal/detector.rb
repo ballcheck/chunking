@@ -1,6 +1,7 @@
 require File.expand_path( "../detector_run.rb", __FILE__ )
 require File.expand_path( "../detector_result.rb", __FILE__ )
 require File.expand_path( "../boundary.rb", __FILE__ )
+require File.expand_path( "../boundary_locator.rb", __FILE__ )
 require File.expand_path( "../palette.rb", __FILE__ )
 
 # Extracting blocks of content from an image using boundary detection.
@@ -46,32 +47,17 @@ module ImageTraversal
     # Detects the next content boundary from a given starting position i.e.
     # the position where a block of content starts or finishes (depending on
     # whether the starting position was inside or outside a content block).
-    # TODO: consider moving this whole logic into Run. It makes some sense.
+
+    # NOTE: this "wart" is a relic from when we moved detect_boundary into
+    # the BoundaryLocator model.
     def detect_boundary( image, start_index = 0, invert_direction = false )
-      # The default direction is left to right, top to bottom.
-      # To go from right to left, or bottom to top, we invert_direction.
-      runs << run = create_run
-
-      image = retrieve_image( image )
-      last_line_index = determine_last_line_index( image )
-
-      # detect_colour on each line and add results to run.
-      (start_index..last_line_index).each do |line_index|
-        absolute_line_index = determine_absolute_line_index( invert_direction, last_line_index, line_index )
-        result = detect_colour?( image, absolute_line_index )
-        run.add_result( result )
-
-        # return boundary if present
-        if boundary = determine_boundary( line_index, run )
-          return boundary
-        end
-      end
-
-      # we've run out of lines, so no boundary was detected in the image.
-      return nil
+      locator = BoundaryLocator.new( self )
+      return locator.locate_boundary( image, start_index, invert_direction )
     end
 
-    # TODO: this method needs testing. Also it is possibly doing too much.
+    # TODO: this method is doing too much. Also the associate tests are too
+    # heavily stubbed and brittle.
+
     # Tell if a given line within an image contains the Detector @colour.
     def detect_colour?( image, line_index = nil )
       line_index ||= 0
@@ -105,11 +91,11 @@ module ImageTraversal
     
     alias detect_color? detect_colour?
 
-    def add_pixels_to_results?
-      @do_add_pixels
-    end
-
     private 
+
+    #-----------------------
+    # detect_colour? methods
+    #-----------------------
 
     def determine_pixel_coords( offset, index, line_index, image_size )
       if axis == :x
@@ -122,35 +108,18 @@ module ImageTraversal
       [ x, y ]
     end
     
-    def determine_last_line_index( image )
-      image.size( axis_of_travel ) - 1
-    end
-
-    def determine_absolute_line_index( invert_direction, last_line_index, line_index )
-      invert_direction ? last_line_index - line_index : line_index
-    end
-
     def density_reached?( pixel_count, image = nil )
       density = determine_density( image )
       pixel_count >= density ? true : false
     end
 
-    def determine_boundary( line_index, run )
-      if tolerance_exceeded?( run.tolerance_counter )
-        # the real boundary is where the tolerance_counter started.
-        return Boundary.new( axis, line_index - run.tolerance_counter + 1 )
-      else
-        return nil
-      end
+    def add_pixels_to_results?
+      @do_add_pixels
     end
 
-    def retrieve_image( image )
-      image.is_a?( ImageTraversal.image_adapter_class ) ? image : ImageTraversal.image_adapter_class.factory( image )
-    end
-
-    def tolerance_exceeded?( cnt )
-      cnt > tolerance
-    end
+    #-------------------------------------------------------------------------
+    # methods for working out absolute Detector argument values from Rationals
+    #-------------------------------------------------------------------------
 
     def determine_offset( image )
       offset_value = offset.is_a?( Rational ) ? image.size( axis ) * offset.to_f : offset
@@ -170,19 +139,6 @@ module ImageTraversal
     def determine_fuzz
       fuzz_value = fuzz.is_a?( Rational ) ? Palette.max_colour_value * fuzz.to_f : fuzz
       return fuzz_value.to_i
-    end
-
-    def axis_of_travel
-      case axis
-      when :x
-        :y
-      when :y
-        :x
-      end
-    end
-
-    def create_run
-      Detector::Run.new
     end
 
   end

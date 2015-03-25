@@ -85,30 +85,6 @@ module ImageTraversal
       assert_equal [ line_index, image_size - 1 - ( index + offset ) ], coords_y_axis
     end
 
-    def test_method_determine_last_line_index
-      # create image of random size
-      width, height = (1..99).to_a.sample( 2 )
-      img = ImageTraversal.image_adapter_class.factory( width, height )
-
-      # then...
-      assert_equal width - 1, build_detector( :axis => :y ).send( :determine_last_line_index, img )
-      assert_equal height - 1, build_detector( :axis => :x ).send( :determine_last_line_index, img )
-    end
-
-    def test_method_determine_absolute_line_index
-      d = build_detector
-
-      # args with random values.
-      last_line_index, line_index = (0..99).to_a.sample( 2 )
-   
-      # then...
-      # if not inverting direction, just use line index.
-      assert_equal line_index, d.send( :determine_absolute_line_index, false, last_line_index, line_index )
-
-      # if inverting, factor in image size.
-      assert_equal ( last_line_index - line_index ), d.send( :determine_absolute_line_index, true, last_line_index, line_index )
-    end
-
     def test_method_density_reached?
       # detector with random density
       density = (1..99).to_a.sample
@@ -118,58 +94,6 @@ module ImageTraversal
       assert !d.send( :density_reached?, density - 1 )
       assert d.send( :density_reached?, density )
       assert d.send( :density_reached?, density + 1 )
-    end
-
-    def test_method_determine_boundary
-      d = build_detector
-      run = build_run
-
-      # args with random values.
-      line_index = (0..99).to_a.sample
-      run_tolerance_counter = (0..99).to_a.sample
-
-      # frig run.tolerance_counter
-      run.stubs( :tolerance_counter ).returns( run_tolerance_counter )
-
-      # then...
-      d.stubs( :tolerance_exceeded? ).with( run_tolerance_counter ).returns( true )
-      boundary = d.send( :determine_boundary, line_index, run )
-      assert_equal d.axis, boundary.axis
-      assert_equal ( line_index - run.tolerance_counter + 1 ), boundary.index
-
-      # also...
-      d.stubs( :tolerance_exceeded? ).with( run_tolerance_counter ).returns( false )
-      assert_equal nil, d.send( :determine_boundary, line_index, run )
-    end
-
-    def test_method_retrieve_image
-      d = build_detector
-
-      # image of the class ImageTraversal.image_adapter_class
-      img = build_image
-
-      # any other image value
-      non_img = stub
-      new_img = stub
-      ImageTraversal.image_adapter_class.stubs( :factory ).with( non_img ).returns( new_img )
-
-      # then...
-      # an img of image_adapter_class comes back untouched
-      assert_equal img, d.send( :retrieve_image, img )
-
-      # but anything else goes to the factory
-      assert_equal new_img, d.send( :retrieve_image, non_img )
-    end
-
-    def test_method_tolerance_exceeded
-      # detector with random tolerance
-      tolerance = (0..99).to_a.sample
-      d = build_detector( :tolerance => tolerance )
-
-      # then...
-      assert_equal false, d.send( :tolerance_exceeded?, tolerance-1 )
-      assert_equal false, d.send( :tolerance_exceeded?, tolerance )
-      assert_equal true, d.send( :tolerance_exceeded?, tolerance+1 )
     end
 
     def test_method_determine_offset_rational

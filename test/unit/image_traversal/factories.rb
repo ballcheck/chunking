@@ -23,6 +23,10 @@ module ImageTraversal
       return Detector.default( args )
     end
 
+    def build_boundary_locator( *args )
+      return BoundaryLocator.new( *args )
+    end
+
     def given_a_random_rational
       Rational( (1..100).to_a.sample / 100.0 )
     end
