@@ -1,3 +1,5 @@
+require File.expand_path( "../detector_run_result_collection.rb", __FILE__ )
+
 module ImageTraversal
   # Container used in Detector.detect_boundary to monitor detection progress and hold results.
   class Detector
@@ -5,31 +7,19 @@ module ImageTraversal
       attr_reader :results, :tolerance_counter
 
       def initialize
-        @results = ResultsCollection.new
+        @results = ResultCollection.new
         @tolerance_counter = 0
       end
 
       def add_result( result )
         results << result
 
-        # if the result does not equal the very first result, increment counter.
         if results.first.colour_detected? != result.colour_detected?
+          # the state has changed since the first result
           increment_tolerance_counter
         else
           reset_tolerance_counter
         end
-      end
-
-      # Annotate supplied image with results
-      def annotate( image, opacity = 0.5 )
-        mask = image.create_mask
-
-        # draw results on mask
-        results.each do |result|
-          result.annotate!( mask )
-        end
-
-        image.apply_mask( mask, opacity )
       end
 
       private
@@ -40,9 +30,6 @@ module ImageTraversal
 
       def reset_tolerance_counter
         @tolerance_counter = 0
-      end
-
-      class ResultsCollection < Array
       end
 
     end

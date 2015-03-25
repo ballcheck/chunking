@@ -36,25 +36,5 @@ module ImageTraversal
       assert_equal 1, run.send( :tolerance_counter )
     end
 
-    def test_should_annotate_results
-      run = Detector::Run.new
-
-      # an image that creates mask.
-      image = build_image
-      mask = build_image
-      image.stubs( :create_mask => mask )
-
-      # then...
-      # create results expecting :annotate!
-      (2..10).to_a.sample.times do |i|
-        result = build_result
-        result.expects( :annotate! ).with( mask )
-        run.add_result( result )
-      end
-
-      # go
-      run.annotate( image )
-    end
-
   end
 end

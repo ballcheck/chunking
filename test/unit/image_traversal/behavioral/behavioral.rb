@@ -213,7 +213,7 @@ module ImageTraversal
 
         detector = build_detector( detector_args( :size => size, :density => 2, :offset => 1, :add_pixels => true ) )
         assert_equal 2, detector.detect_boundary( img, 0, invert? ).index
-        annotated_img = detector.runs.last.annotate( img, 1 )
+        annotated_img = detector.runs.last.results.annotate( img, 1 )
 
         a = Palette.annotate_nil
         b = Palette.annotate_pixel_is_colour
