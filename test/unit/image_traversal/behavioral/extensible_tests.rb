@@ -7,7 +7,7 @@ module ImageTraversal
 
   # A suite of behavioural tests that can be repeated under varying conditions.
   module Behavioral
-    # These methods are overridden in test_cases.rb
+    # These methods are overridden in behavioural_test.rb
     module Setup
       # Set up for the test.
       def setup
