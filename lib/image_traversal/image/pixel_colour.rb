@@ -26,18 +26,6 @@ module ImageTraversal
           ( a - b ).abs <= fuzz
         end
 
-        # TODO: move this type checking and interation into compare_colours? above
-        # Tell if the pixel and a given set of coordinates is the given colour.
-        def pixel_is_colour?( pixel_map, x, y, colours, fuzz = 0 )
-          colours = [colours] unless colours.is_a?( Array ) && colours.first.is_a?( Array )
-          colour_of_pixel = pixel_map[y][x]
-          colours.each do |colour|
-            return true if compare_colours?( colour, colour_of_pixel, fuzz )
-          end
-
-          return false
-        end
-
       end
 
       # Tell if the pixel and a given set of coordinates is the given colour.
