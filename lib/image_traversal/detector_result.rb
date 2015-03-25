@@ -1,4 +1,5 @@
 require File.expand_path( "../detector_result_pixel.rb", __FILE__ )
+require File.expand_path( "../detector_result_pixel_collection.rb", __FILE__ )
 
 module ImageTraversal
 
@@ -24,6 +25,7 @@ module ImageTraversal
         pixels.push( Pixel.new( x, y, colour_state ) )
       end
         
+      # TODO: move annotation related methods into separate class
       # Annotate supplied image (one row)
       def annotate!( image )
         pixels.each do |pixel|
@@ -40,8 +42,6 @@ module ImageTraversal
         density_state ? Palette.annotate_density_reached : colour_state ? Palette.annotate_pixel_is_colour : Palette.annotate_nil
       end
 
-      class PixelCollection < Array
-      end
     end
   end
 end
