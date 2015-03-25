@@ -6,26 +6,12 @@ module ImageTraversal
     # initialisation
     #---------------
 
-    def test_method_initialize_should_set_values
-      # dummy args.
-      axis, offset, size, colour, fuzz, density, tolerance, add_pixels = stub, stub, stub, stub, stub, stub, stub
-
-      # create detector with args.
-      d = Detector.new( axis, offset, size, colour, fuzz, density, tolerance, add_pixels )
-
-      # then...
-      assert_equal(
-        [ axis, offset, size, colour, fuzz, density, tolerance, [] ],
-        [ d.axis, d.offset, d.size, d.colour, d.fuzz, d.density, d.tolerance, d.runs ]
-      )
-    end
-
     def test_method_factory_should_set_values
       # all args.
       axis, offset, size, colour, fuzz, density, tolerance, add_pixels = stub, stub, stub, stub, stub, stub, stub
 
       # create detector with args using the factory.
-      d = build_detector( {
+      d = Detector.default( {
         :axis => axis, :offset => offset, :size => size, :colour => colour,
         :fuzz => fuzz, :density => density, :tolerance => tolerance, :add_pixels => add_pixels
       } )

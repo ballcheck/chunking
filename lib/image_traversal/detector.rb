@@ -8,33 +8,39 @@ require File.expand_path( "../palette.rb", __FILE__ )
 module ImageTraversal
 
   class Detector
+    # TODO: should these accessors be readers?
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance, :add_pixels
     attr_reader :runs
 
-    def self.default( args = {} )
-      axis = args.has_key?(:axis) ? args[:axis] : :x
-      offset = args.has_key?(:offset) ? args[:offset] : 0
-      size = args.has_key?(:size) ? args[:size] : Rational( 1 )
-      colour = args.has_key?(:colour) ? args[:colour] : Palette.black
-      fuzz = args.has_key?(:fuzz) ? args[:fuzz] : 0
-      density = args.has_key?(:density) ? args[:density] : 1
-      tolerance = args.has_key?(:tolerance) ? args[:tolerance] : 0
-      add_pixels = args.has_key?(:add_pixels) ? args[:add_pixels] :false 
+    class << self
+      def default( args = {} )
+        args[:axis]       = :x            unless args.has_key?(:axis)
+        args[:offset]     = 0             unless args.has_key?(:offset)
+        args[:size]       = Rational( 1 ) unless args.has_key?(:size)
+        args[:colour]     = Palette.black unless args.has_key?(:colour)
+        args[:fuzz]       = 0             unless args.has_key?(:fuzz)
+        args[:density]    = 1             unless args.has_key?(:density)
+        args[:tolerance]  = 0             unless args.has_key?(:tolerance)
+        args[:add_pixels] = :false        unless args.has_key?(:add_pixels)
 
-      return self.new( axis, offset, size, colour, fuzz, density, tolerance, add_pixels )
+        return new( args )
+      end
+
+      private :new
     end
 
-    def initialize( axis, offset, size, colour, fuzz, density, tolerance, add_pixels )
+    def initialize( args = {} )
       # "size" represents width OR height and "offset" represents
       # left or bottom depending on axis supplied 
-      @axis = axis
-      @offset = offset
-      @size = size
-      @colour = colour
-      @fuzz = fuzz
-      @density = density # pixel density
-      @tolerance = tolerance # line tolerance
-      @add_pixels = add_pixels
+      @axis       = args[:axis]
+      @offset     = args[:offset]
+      @size       = args[:size]
+      @colour     = args[:colour]
+      @fuzz       = args[:fuzz]
+      @density    = args[:density] # pixel density
+      @tolerance  = args[:tolerance] # line tolerance
+      @add_pixels = args[:add_pixels]
+
       @runs = []
     end
 
