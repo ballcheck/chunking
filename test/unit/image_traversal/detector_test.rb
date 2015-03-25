@@ -172,68 +172,118 @@ module ImageTraversal
       assert_equal true, d.send( :tolerance_exceeded?, tolerance+1 )
     end
 
-    # TODO: build_image should accept x, y NOT size to ensure the correct attribute is used (width/height)
-    # also some tests should be stubbing detector axis, so it's passed correctly to image.size
-    def test_method_determine_offset
+    def test_method_determine_offset_rational
+      # Given
+      # an image of random size
       axis = stub
-      d = build_detector( :axis => axis )
-
-      # image of random size
       image_size = (1..99).to_a.sample
       image = build_image_with_stubbed_size( axis, image_size )
 
-      # then...
-      # relative to image size if it's a Rational
-      d.offset = offset = given_a_random_rational
-      offset_result = d.send( :determine_offset, image )
-      assert_equal ( image_size * offset.to_f ).to_i, offset_result
+      # a Detector with random offset
+      offset = given_a_random_rational
+      d = build_detector( :axis => axis, :offset => offset )
 
-      # also...
+      # When
+      offset_result = d.send( :determine_offset, image )
+
+      # Then
+      # relative to image size if it's a Rational
+      assert_equal ( image_size * offset.to_f ).to_i, offset_result
+    end
+
+    def test_method_determine_offset_int
+      # Given
+      # an image of random size
+      axis = stub
+      image_size = (1..99).to_a.sample
+      image = build_image_with_stubbed_size( axis, image_size )
+
+      # a Detector with random offset
+      offset = (0..99).to_a.sample
+      d = build_detector( :axis => axis, :offset => offset )
+
+      # When
+      offset_result = d.send( :determine_offset, image )
+
+      # Then
       # get the original back if it's an int.
-      d.offset = offset = (0..99).to_a.sample
-      offset_result = build_detector( :offset => offset ).send( :determine_offset, image )
       assert_equal offset, offset_result
     end
       
-    def test_method_determine_size
+    def test_method_determine_size_rational
+      # Given
+      # an image of random size
       axis = stub
-      d = build_detector( :axis => axis )
-
-      # image of random size
       image_size = (1..99).to_a.sample
       image = build_image_with_stubbed_size( axis, image_size )
 
-      # then...
-      # relative to image size if it's a Rational
-      d.size = size = given_a_random_rational
-      size_result = d.send( :determine_size, image )
-      assert_equal ( image_size * size.to_f ).to_i, size_result
+      # a Detector of random size
+      size = given_a_random_rational
+      d = build_detector( :axis => axis, :size => size )
 
-      # also...
+      # When
+      size_result = d.send( :determine_size, image )
+
+      # Then
+      # relative to image size if it's a Rational
+      assert_equal ( image_size * size.to_f ).to_i, size_result
+    end
+
+    def test_method_determine_size_int
+      # Given
+      # an image of random size
+      axis = stub
+      image_size = (1..99).to_a.sample
+      image = build_image_with_stubbed_size( axis, image_size )
+
+      # a Detector of random size
+      size = (0..99).to_a.sample
+      d = build_detector( :axis => axis, :size => size )
+
+      # When
+      size_result = d.send( :determine_size, image )
+
+      # Then
       # get the original back if it's an int.
-      d.size = size = (0..99).to_a.sample
-      size_result = build_detector( :size => size ).send( :determine_size, image )
+      size_result = d.send( :determine_size, image )
       assert_equal size, size_result
     end
 
-    def test_method_determine_density
+    def test_method_determine_density_with_rational
+      # Given
+      # an image of random size
       axis = stub
-      d = build_detector( :axis => axis )
-
-      # image of random size
       image_size = (1..99).to_a.sample
       image = build_image_with_stubbed_size( axis, image_size )
 
-      # then...
-      # relative to image size if it's a Rational
-      d.density = density = given_a_random_rational
-      density_result = d.send( :determine_density, image )
-      assert_equal ( image_size * density.to_f ).to_i, density_result
+      # a detector of random density
+      density = given_a_random_rational
+      d = build_detector( :axis => axis, :density => density )
 
-      # also...
-      # get the original back if it's an int.
-      d.density = density = (0..99).to_a.sample
+      # When
+      density_result = d.send( :determine_density, image )
+
+      # Then
+      # relative to image size if it's a Rational
+      assert_equal ( image_size * density.to_f ).to_i, density_result
+    end
+
+    def test_method_determine_density_with_integer
+      # Given
+      # an image of random size
+      axis = stub
+      image_size = (1..99).to_a.sample
+      image = build_image_with_stubbed_size( axis, image_size )
+
+      # a detector of random density
+      density = (0..99).to_a.sample
+      d = build_detector( :axis => axis, :density => density )
+
+      # When
       density_result = build_detector( :density => density ).send( :determine_density, image )
+
+      # Then
+      # get the original back if it's an int.
       assert_equal density, density_result
     end
 
