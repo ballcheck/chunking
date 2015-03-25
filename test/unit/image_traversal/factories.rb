@@ -20,7 +20,7 @@ module ImageTraversal
     end
 
     def build_detector( args = {} )
-      return Detector.factory( args )
+      return Detector.default( args )
     end
 
     def given_a_random_rational

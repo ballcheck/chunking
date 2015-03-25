@@ -11,7 +11,7 @@ module ImageTraversal
     attr_accessor :axis, :offset, :size, :colour, :fuzz, :density, :tolerance, :add_pixels
     attr_reader :runs
 
-    def self.factory( args = {} )
+    def self.default( args = {} )
       axis = args.has_key?(:axis) ? args[:axis] : :x
       offset = args.has_key?(:offset) ? args[:offset] : 0
       size = args.has_key?(:size) ? args[:size] : Rational( 1 )

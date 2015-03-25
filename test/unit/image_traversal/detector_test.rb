@@ -39,7 +39,7 @@ module ImageTraversal
 
     def test_method_factory_should_set_defaults
       # create detector with default values using factory
-      d = Detector.factory
+      d = Detector.default
 
       # then...
       assert_equal(
